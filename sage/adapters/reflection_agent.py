@@ -148,8 +148,8 @@ class ReflectionAgentAdapter(AgentAdapter):
         )
 
         elapsed_ms = int((time.time() - start_time) * 1000)
-        tot_tok = (llm_resp.tokens_in + llm_resp.tokens_out) or 350
-        tot_cost = llm_resp.cost_usd or 0.0007
+        tot_tok = llm_resp.tokens_in + llm_resp.tokens_out
+        tot_cost = llm_resp.cost_usd
         return TaskResult(
             task_id=task.task_id,
             success=exec_res.get("exit_code", 0) == 0,
@@ -157,6 +157,10 @@ class ReflectionAgentAdapter(AgentAdapter):
             tool_calls=tool_records,
             submission=llm_resp.content[:300],
             tokens_used=tot_tok,
+            tokens_in=llm_resp.tokens_in,
+            tokens_out=llm_resp.tokens_out,
+            is_fallback=llm_resp.is_fallback,
+            model_name=llm_resp.model_name,
             cost_usd=tot_cost,
             wall_time_ms=elapsed_ms,
             metadata={"reflections_performed": 2},

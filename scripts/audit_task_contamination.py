@@ -36,7 +36,7 @@ def parse_args() -> argparse.Namespace:
         "--threshold",
         type=float,
         default=0.50,
-        help="Contamination overlap flag threshold (default: 0.50 / 50%)",
+        help="Contamination overlap flag threshold (default: 0.50 / 50%%)",
     )
     parser.add_argument(
         "--api-base",

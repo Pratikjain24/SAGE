@@ -13,10 +13,10 @@ G2 (Prompt Mutation) & 0.60 $\to$ 0.73 & +0.22 & 82.0\% & 0.58 $\to$ 0.71 & +0.2
 G3 (Procedural Memory) & 0.60 $\to$ 0.77 & +0.15 & 89.0\% & 0.58 $\to$ 0.76 & +0.14 & 89.5\% & Moderate Drift & None \\
 G4 (Compound Reflection) & 0.60 $\to$ 0.78 & +0.28 & 81.0\% & 0.58 $\to$ 0.77 & +0.26 & 82.5\% & Severe Drift & None \\
 G5 (Static Verifier) & 0.60 $\to$ 0.84 & +0.06 & 94.0\% & 0.58 $\to$ 0.83 & +0.06 & 94.5\% & Low Drift & Gate Only \\
-G7 (Proxy Canary Guard) & 0.60 $\to$ 0.84 & +0.02 & 96.0\% & 0.58 $\to$ 0.83 & +0.02 & 96.0\% & Minimal Drift & Deployable Rollback \\
+G6 (Proxy Canary Guard) & 0.60 $\to$ 0.84 & +0.02 & 96.0\% & 0.58 $\to$ 0.83 & +0.02 & 96.0\% & Minimal Drift & Deployable Rollback \\
 G6* (Oracle Skyline) & 0.60 $\to$ 0.92 & +0.02 & 98.0\% & 0.58 $\to$ 0.91 & +0.02 & 98.0\% & Minimal Drift & Oracle Rollback \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\caption*{\footnotesize \textit{Note}: Comparison of longitudinal dynamics across Qwen-2.5-Coder-7B and Llama-3.1-8B configuration profiles over 10 evolutionary cycles. Across both model families, unconstrained multi-surface mutation ($G_4$) reliably induces severe security boundary drift ($+0.28$ vs. $+0.26$) and capability forgetting ($81.0\%$ vs. $82.5\%$). In contrast, dynamic canary verification ($G_7, G_6^*$) universally halts security erosion ($+0.02$) and establishes rollback-guarded state preservation ($96.0\%\text{--}98.0\%$), confirming that these evolutionary dynamics represent general properties of self-modifying agent loops rather than tokenizer or single-architecture artifacts.}
+\caption*{\footnotesize \textit{Note}: Evaluated across representative multi-seed cohorts ($N=900$ task runs per model family across seeds 42, 43, 44; \texttt{pilot_canonical_3seeds} and \texttt{pilot_llama_canonical_3seeds}). Across both model families, unconstrained multi-surface mutation ($G_4$) reliably induces severe security boundary drift ($+0.28$ vs. $+0.26$) and capability forgetting ($81.0\%$ vs. $82.5\%$). In contrast, dynamic canary verification ($G_6, G_6^*$) universally halts security erosion ($+0.02$) and establishes rollback-guarded state preservation ($96.0\%\text{--}98.0\%$), confirming that these evolutionary dynamics represent general properties of self-modifying agent loops rather than tokenizer or single-architecture artifacts. $G_6$ denotes the deployable proxy canary guard (tracked as $G_7$ in internal ablation suites); $G_6^*$ denotes the theoretical oracle skyline.}
 \end{table*}

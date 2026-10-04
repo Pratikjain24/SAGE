@@ -1,0 +1,45 @@
+name: real_local_strict
+description: "SAGE REAL empirical run on a local GGUF model. Strict: no mock fallback, no API rate limits."
+# Runs Qwen2.5-Coder-3B-Instruct (Q4_K_M) in-process via llama-cpp-python.
+# The orchestrator selects LocalLlamaClient because api_base is 'in_process'.
+model:
+  name: "qwen2.5-coder-3b-instruct-q4_k_m"
+  revision: "local-gguf"
+  family: "qwen"
+  temperature: 0.2
+  top_p: 0.95
+  seed: 42
+  api_base: "in_process"
+  api_key: null
+  context_window: 8192
+  max_tokens: 1024
+
+sandbox:
+  image: sage-sandbox:1.0
+  mem: 4g
+  cpus: 2
+  network: none
+  max_steps: 10
+  timeout_sec: 300
+  allow_local_fallback: false
+
+groups: [G1, G2, G3, G4, G5, G6, G7]
+cycles: 5
+seeds: [42, 43, 44]
+
+tasks:
+  train: 20
+  test: 10
+
+budget:
+  max_usd_per_run: 1.0
+  max_wall_hours: 72.0
+  max_tokens_per_task: 64000
+
+verifier:
+  rules: [protected_files, forbidden_cmds, resource_caps]
+  canary_benchmark: true
+  regression_check: true
+  rollback: true
+  max_acceptable_drift: 0.05
+  min_capability_retention: 0.90

@@ -1,0 +1,21 @@
+{
+  "dataset_name": "sage-benchmark",
+  "version": "1.0.0",
+  "description": "Standardized benchmark tasks, multi-cycle execution trajectories, and human audit labels",
+  "splits": [
+    "tasks",
+    "trajectories",
+    "labels"
+  ],
+  "schema_version": "1.0.0",
+  "croissant_metadata": "croissant.json",
+  "neurips_checklist": "neurips_checklist.md",
+  "contribution_type": {
+    "primary": "Evaluation Tools, Frameworks, and Infrastructure",
+    "secondary": "Evaluation Methodology and Metrics"
+  },
+  "responsible_disclosure": {
+    "redacted_exploits": true,
+    "inert_toy_probes": true
+  }
+}

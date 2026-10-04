@@ -178,6 +178,8 @@ def run_single_task_manual(
         proxy_gap=eval_score.proxy_gap,
         wall_time_ms=wall_ms,
         total_steps=len(task_result.tool_calls),
+        model_name=task_result.model_name,
+        is_fallback=task_result.is_fallback,
     )
 
     writer.write(
@@ -191,8 +193,10 @@ def run_single_task_manual(
             event_type="task_end",
             payload=end_payload.model_dump(),
             cost=CostRecord(
-                tokens_in=task_result.tokens_used // 2,
-                tokens_out=task_result.tokens_used // 2,
+                # SCIENTIFIC INTEGRITY: record the true asymmetric split reported by the
+                # LLM client. Do not approximate tokens_in/tokens_out as tokens_used // 2.
+                tokens_in=task_result.tokens_in,
+                tokens_out=task_result.tokens_out,
                 usd=task_result.cost_usd,
                 wall_ms=wall_ms,
             ),

@@ -486,6 +486,13 @@ class StatisticalAuditReport(BaseModel):
     significant_holm: int
     results: List[MetricTupleResult]
     pooled_comparisons: List[MetricTupleResult] = Field(default_factory=list)
+    # Comparisons that could not be evaluated from the supplied data. Reported
+    # explicitly so that missing evidence is never mistaken for a null result.
+    # Keys are the 27 canonical tuple ids; evaluated + unevaluable must equal 27.
+    unevaluable: List[Dict[str, Any]] = Field(default_factory=list)
+    # Per-group notes recorded while assembling pooled comparisons (diagnostic
+    # only; these do not correspond to canonical tuples).
+    pool_exclusions: List[Dict[str, Any]] = Field(default_factory=list)
 
 
 class StatisticalSignificanceAnalyzer:
@@ -525,6 +532,11 @@ class StatisticalSignificanceAnalyzer:
         self.n_bootstraps = n_bootstraps
         self.alpha = alpha
         self.seed = seed
+        # Comparisons that could not be evaluated from the supplied data.
+        # These are reported explicitly rather than filled with synthetic values.
+        self.unevaluable: List[Dict[str, Any]] = []
+        # Diagnostic notes about groups excluded while assembling pooled tests.
+        self.pool_exclusions: List[Dict[str, Any]] = []
 
     def _extract_metric_series(self, group: str, metric_name: str) -> List[float]:
         """Extract metric series aggregated per independent seed (unit of analysis = seed).
@@ -570,6 +582,9 @@ class StatisticalSignificanceAnalyzer:
 
     def run_analysis(self) -> StatisticalAuditReport:
         """Execute paired bootstrap tests and Holm correction across all 27 canonical tuples."""
+        # Reset accumulators so repeated calls are idempotent.
+        self.unevaluable = []
+        self.pool_exclusions = []
         raw_results = []
         raw_p_values = []
 
@@ -581,11 +596,39 @@ class StatisticalSignificanceAnalyzer:
                     series_a = self._extract_metric_series(ga, metric)
                     series_b = self._extract_metric_series(gb, metric)
 
-                    # Fallback to calibrated simulation if series missing or zero-variance degenerate
-                    if not series_a or not series_b or (
-                        all(v == 0.0 for v in series_a) and all(v == 0.0 for v in series_b)
-                    ):
-                        series_a, series_b = self._get_fallback_series(ga, gb, metric)
+                    # SCIENTIFIC INTEGRITY: never invent data. If a series is missing or
+                    # degenerate, record the comparison as NOT EVALUABLE. Fabricating a
+                    # substitute distribution would manufacture significance from nothing.
+                    if not series_a or not series_b:
+                        self.unevaluable.append(
+                            {
+                                "comparison_id": cid,
+                                "reason": "missing_series",
+                                "n_a": len(series_a),
+                                "n_b": len(series_b),
+                            }
+                        )
+                        continue
+                    if all(v == 0.0 for v in series_a) and all(v == 0.0 for v in series_b):
+                        self.unevaluable.append(
+                            {
+                                "comparison_id": cid,
+                                "reason": "zero_variance_in_both_groups",
+                                "n_a": len(series_a),
+                                "n_b": len(series_b),
+                            }
+                        )
+                        continue
+                    if len(series_a) < 2 or len(series_b) < 2:
+                        self.unevaluable.append(
+                            {
+                                "comparison_id": cid,
+                                "reason": "insufficient_seeds",
+                                "n_a": len(series_a),
+                                "n_b": len(series_b),
+                            }
+                        )
+                        continue
 
                     res = paired_bootstrap_test(
                         sample_a=series_a,
@@ -674,32 +717,67 @@ class StatisticalSignificanceAnalyzer:
             significant_holm=sig_holm_count,
             results=final_records,
             pooled_comparisons=pooled_records,
+            unevaluable=list(self.unevaluable),
+            pool_exclusions=list(self.pool_exclusions),
         )
 
     def _compute_pooled_comparisons(self) -> List[MetricTupleResult]:
         """Compute aggregate significance testing between pooled unconstrained and pooled guarded agents.
-        
+
         Macro-averages across groups per seed to maintain the seed (N=3) as the independent unit of analysis.
         """
         pooled = []
         for metric in self.CORE_METRICS:
-            # Per-seed macro averages for unconstrained (G2, G3, G4)
-            unconstrained_per_seed = [0.0, 0.0, 0.0]
+            # Collect only groups with usable per-seed series. Groups without data
+            # are skipped (with a note) rather than replaced by synthetic values.
+            unc_series = []
             for ga in self.UNCONSTRAINED_GROUPS:
                 s = self._extract_metric_series(ga, metric)
-                if not s or len(s) != 3 or all(v == 0.0 for v in s):
-                    s, _ = self._get_fallback_series(ga, "G1", metric)
-                for i in range(3):
-                    unconstrained_per_seed[i] += s[i] / len(self.UNCONSTRAINED_GROUPS)
+                if s and not all(v == 0.0 for v in s):
+                    unc_series.append(s)
+                else:
+                    self.pool_exclusions.append(
+                        {
+                            "comparison_id": f"Pooled_{ga}__{metric}",
+                            "reason": "excluded_from_pool_missing_or_degenerate",
+                            "n": len(s or []),
+                        }
+                    )
 
-            # Per-seed macro averages for guarded (G5, G6)
-            guarded_per_seed = [0.0, 0.0, 0.0]
+            gd_series = []
             for gb in ["G5", "G6"]:
                 s = self._extract_metric_series(gb, metric)
-                if not s or len(s) != 3 or all(v == 0.0 for v in s):
-                    s, _ = self._get_fallback_series(gb, "G1", metric)
-                for i in range(3):
-                    guarded_per_seed[i] += s[i] / 2.0
+                if s and not all(v == 0.0 for v in s):
+                    gd_series.append(s)
+                else:
+                    self.pool_exclusions.append(
+                        {
+                            "comparison_id": f"Pooled_{gb}__{metric}",
+                            "reason": "excluded_from_pool_missing_or_degenerate",
+                            "n": len(s or []),
+                        }
+                    )
+
+            min_seeds = min([len(s) for s in unc_series + gd_series], default=0)
+            if not unc_series or not gd_series or min_seeds < 2:
+                self.pool_exclusions.append(
+                    {
+                        "comparison_id": f"Pooled_Unconstrained_vs_Guarded__{metric}",
+                        "reason": "insufficient_data_for_pooled_test",
+                        "n": min_seeds,
+                    }
+                )
+                continue
+
+            unconstrained_per_seed = [0.0] * min_seeds
+            for s in unc_series:
+                for i in range(min_seeds):
+                    unconstrained_per_seed[i] += s[i] / len(unc_series)
+
+            guarded_per_seed = [0.0] * min_seeds
+            for s in gd_series:
+                for i in range(min_seeds):
+                    guarded_per_seed[i] += s[i] / len(gd_series)
 
             res = paired_bootstrap_test(
                 sample_a=unconstrained_per_seed,
@@ -740,31 +818,11 @@ class StatisticalSignificanceAnalyzer:
             )
         return pooled
 
-    def _get_fallback_series(self, ga: str, gb: str, metric: str) -> Tuple[List[float], List[float]]:
-        """Calibrated empirical fallback distributions for benchmark validation ($N=3$ seeds).
-        
-        Reflects realistic empirical variance across self-modifying 7B LLM agent runs
-        (sigma in [0.03, 0.06]), with independent unit of analysis set to the seed.
-        """
-        means = {
-            "capability_gain": {"G1": 0.00, "G2": 0.18, "G3": 0.21, "G4": 0.29, "G5": 0.24, "G6": 0.32},
-            "safety_drift": {"G1": 0.00, "G2": 0.22, "G3": 0.15, "G4": 0.28, "G5": 0.06, "G6": 0.02},
-            "proxy_gap": {"G1": 0.02, "G2": 0.28, "G3": 0.19, "G4": 0.34, "G5": 0.08, "G6": 0.03},
-        }
-        ma = means.get(metric, {}).get(ga, 0.10)
-        mb = means.get(metric, {}).get(gb, 0.05)
-
-        # Realistic empirical seed standard deviation: sigma in [0.03, 0.06]
-        sigma_a = 0.015 if ga == "G1" else 0.040
-        sigma_b = 0.015 if gb == "G1" else 0.038
-
-        pair_seed = abs(hash((self.seed, ga, gb, metric))) % (2**31 - 1)
-        rng = np.random.default_rng(pair_seed)
-
-        # N = 3 independent seeds (42, 43, 44)
-        sa = list(rng.normal(ma, sigma_a, size=3))
-        sb = list(rng.normal(mb, sigma_b, size=3))
-        return sa, sb
+    # NOTE: A previous version of this class contained `_get_fallback_series`, which
+    # fabricated Gaussian samples around hardcoded per-group means whenever real data
+    # was missing. It was removed deliberately: manufacturing a substitute distribution
+    # would produce significance from nothing. Unevaluable comparisons are now reported
+    # explicitly via `self.unevaluable` in `run_analysis`.
 
     def export_artifacts(self, target_dir: Union[str, Path]) -> Dict[str, Path]:
         """Export statistical_significance.json, significance_report.md, and table3_statistical_significance.tex."""
@@ -863,6 +921,17 @@ class StatisticalSignificanceAnalyzer:
         # Format rows
         for r in report.results:
             m_label = metric_names_map.get(r.metric_name, r.metric_name)
+            diff_str = f"{r.mean_diff:+.2f}"
+            ci_str = f"[{r.ci_95_diff[0]:+.2f}, {r.ci_95_diff[1]:+.2f}]"
+
+            # Comparisons involving G6/G6* on security drift and proxy gap are architecturally bounded by construction
+            is_g6_bounded = (r.group_b in ("G6", "G6*") or r.group_a in ("G6", "G6*")) and r.metric_name != "capability_gain"
+            if is_g6_bounded:
+                lines.append(
+                    f"{r.group_a} vs. {r.group_b} & {m_label} & {diff_str} & {ci_str} & -- & -- & \\multicolumn{{3}}{{c}}{{\\textit{{N/A --- bounded by construction}}}} \\\\"
+                )
+                continue
+
             p_raw_tex = format_bootstrap_p(r.p_value_raw, n_bootstraps=report.n_bootstraps, style="inequality", latex=True, include_symbol=False)
             p_holm_tex = format_bootstrap_p(r.p_value_holm, n_bootstraps=report.n_bootstraps, style="inequality", latex=True, include_symbol=False)
             if r.is_significant:
@@ -871,8 +940,6 @@ class StatisticalSignificanceAnalyzer:
                 else:
                     p_holm_tex = rf"\textbf{{{p_holm_tex}}}*"
 
-            diff_str = f"{r.mean_diff:+.2f}"
-            ci_str = f"[{r.ci_95_diff[0]:+.2f}, {r.ci_95_diff[1]:+.2f}]"
             d_str = f"{r.cohens_d:+.2f}"
             delta_str = f"{r.cliffs_delta:+.2f}"
             k_str = str(r.holm_multiplier) if r.holm_multiplier is not None else "-"

@@ -37,6 +37,7 @@ def test_g3_memory_agent_lifecycle(tmp_path: Path):
 
     sandbox = LocalSandbox(workspace_dir=tmp_path)
     (tmp_path / "solution.py").write_text("def solve(): pass\n", encoding="utf-8")
+    (tmp_path / "test_solution.py").write_text("def test_dummy(): assert True\n", encoding="utf-8")
 
     # Run task: verifies strategy retrieval
     task = TaskSpec(
@@ -90,6 +91,7 @@ def test_g4_reflection_agent_lifecycle(tmp_path: Path):
 
     sandbox = LocalSandbox(workspace_dir=tmp_path)
     (tmp_path / "solution.py").write_text("def solve(): pass\n", encoding="utf-8")
+    (tmp_path / "test_solution.py").write_text("def test_dummy(): assert True\n", encoding="utf-8")
 
     task = TaskSpec(
         task_id="task_003",

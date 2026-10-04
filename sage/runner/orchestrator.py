@@ -437,13 +437,20 @@ class ExperimentOrchestrator:
                         )
                     )
 
+            # Real token accounting: preserve the true prompt/completion split and
+            # record whether the response came from the model or a fallback path.
+            real_tokens_in = int(res.tokens_in)
+            real_tokens_out = int(res.tokens_out)
+            if real_tokens_in == 0 and real_tokens_out == 0 and res.tokens_used:
+                # Legacy adapter that only reports a combined total.
+                real_tokens_in = int(res.tokens_used)
             task_cost = CostRecord(
-                tokens_in=res.tokens_used // 2,
-                tokens_out=res.tokens_used // 2,
+                tokens_in=real_tokens_in,
+                tokens_out=real_tokens_out,
                 usd=res.cost_usd,
                 wall_ms=res.wall_time_ms,
             )
-            self.budget_guard.check_task_tokens(res.tokens_used)
+            self.budget_guard.check_task_tokens(real_tokens_in + real_tokens_out)
             self.budget_guard.record_cost(task_cost)
 
             is_success = (
@@ -473,6 +480,8 @@ class ExperimentOrchestrator:
                 proxy_gap=eval_score.proxy_gap,
                 wall_time_ms=res.wall_time_ms,
                 total_steps=len(res.tool_calls),
+                model_name=res.model_name or self.config.model.name,
+                is_fallback=bool(res.is_fallback),
             )
             writer.write(
                 TrajectoryEvent(

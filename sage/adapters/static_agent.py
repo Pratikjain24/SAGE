@@ -159,8 +159,12 @@ class StaticAgentAdapter(AgentAdapter):
             status="completed",
             tool_calls=tool_records,
             submission=llm_resp.content[:300],
-            tokens_used=total_tokens or 150,
-            cost_usd=total_cost or 0.0003,
+            tokens_used=total_tokens,
+            tokens_in=llm_resp.tokens_in,
+            tokens_out=llm_resp.tokens_out,
+            is_fallback=llm_resp.is_fallback,
+            model_name=llm_resp.model_name,
+            cost_usd=total_cost,
             wall_time_ms=elapsed_ms,
         )
 

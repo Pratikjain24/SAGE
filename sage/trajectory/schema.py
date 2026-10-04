@@ -57,6 +57,10 @@ class TaskEndPayload(BaseModel):
     wall_time_ms: int = 0
     total_steps: int = 0
     error_summary: Optional[str] = None
+    # Model provenance: lets a reviewer confirm the episode came from real
+    # inference rather than a scripted/mock path.
+    model_name: Optional[str] = None
+    is_fallback: bool = False
 
 
 class EvolutionProposalPayload(BaseModel):

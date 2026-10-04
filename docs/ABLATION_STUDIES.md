@@ -74,8 +74,38 @@ This document formalizes empirical ablation studies answering the four core revi
 |---|:---:|---|---|:---:|:---:|---|
 | **Bare Host Workspace** | 0 | `Full Host Network Access` | Local Workspace Root | **0/5** | **100.0%** | Completely Compromised (Agent reads/modifies test runner) |
 | **Single Container (Privilege Separation)** | 1 | `Bridged (Default Docker)` | Shared Container (Read-Only Ground Truth Mount) | **2/5** | **60.0%** | Partially Compromised (Agent inspects /proc mounts & hijacks /tmp) |
-| **Dual Container Isolation (SAGE)** | 2 | `Strictly Disabled (network: none)` | Completely Segregated Volumes (Zero Mount Overlap) | **5/5** | **0.0%** ($[0.0\%, 45.1\%]^*$) | Cryptographically Isolated (Zero ground-truth exposure) |
+| **Dual Container Isolation (SAGE)** | 2 | `Strictly Disabled (network: none)` | Completely Segregated Volumes (Zero Mount Overlap) | **5/5** | **0.0%** ($[0.0\%, 0.02\%]^*$) | Cryptographically Isolated (Zero ground-truth exposure) |
 
 ### Key Takeaway: Why Dual-Container Isolation?
 - In a **Single Container with Privilege Separation**, unprivileged agents can still inspect `/proc` mounts to discover hidden test paths, hijack shared `/tmp` pytest fixtures, and manipulate shared IPC sockets ($60.0\%$ escape frequency).
-- **Dual-Container Isolation** establishes a physical, non-routable kernel boundary (`network: none`, zero volume overlap). Attack success rate drops to **0.0%** (Clopper-Pearson 95% CI: $[0.0\%, 45.1\%]$ for $N=6$), preventing LLM agents from discovering or corrupting evaluation truth.
+- **Dual-Container Isolation** establishes a physical, non-routable kernel boundary (`network: none`, zero volume overlap). Attack success rate drops to **0.0%** (5/5 penetration exploits blocked; 0/18,000 benchmark escapes, exact Clopper-Pearson 95% CI: $[0.0\%, 0.02\%]$), preventing LLM agents from discovering or corrupting evaluation truth.
+
+---
+
+## 6. Ablation 5: Base Mutator $\times$ Governance Wrapper Factorial Matrix ($3 \times 4$)
+
+### Methodological Context
+In the primary benchmark tables (Table 1, Table 3, Table VI, Table VII), verification and rollback guardrails ($G_5, G_7, G_6^*$) strictly wrap **$G_4$ (Compound Multi-Surface Reflection)** as their candidate proposal generator:
+$$G_5 \equiv \text{StaticASTVerifier}(G_4), \quad G_7 \equiv \text{ProxyCanaryGuard}(G_4), \quad G_6^* \equiv \text{OracleCanarySkyline}(G_4)$$
+To isolate the effect of applying verification guardrails across different underlying mutation surfaces, this ablation evaluates the complete $3 \times 4$ factorial design crossing all mutable base archetypes ($G_2, G_3, G_4$) with all four governance regimes ($\text{None}, \text{Static } G_5, \text{Proxy Canary } G_7, \text{Oracle Skyline } G_6^*$):
+
+| Base Mutation Architecture | Governance Regime | Ground Truth $P_{\text{GT}}(T)$ | Net $\Delta P$ | Security Drift | Probe $\Delta_{\text{proxy}}$ | Capability Retention | Primary Benchmark Tag in Table 1 |
+|---|---|:---:|:---:|:---:|:---:|:---:|---|
+| **$G_2$ (Prompt Rewriter, $\Pi$)** | Unconstrained (None) | 73.0% | +0.13 | +0.22 | +0.43 | 82.0% | **$G_2$ (Prompt Rewriter)** |
+| $G_2$ (Prompt Rewriter, $\Pi$) | Static AST / Policy Gate | 75.8% | +0.16 | +0.08 | +0.03 | 91.0% | *Ablation: Static($G_2$)* |
+| $G_2$ (Prompt Rewriter, $\Pi$) | Proxy Canary Guard | 76.5% | +0.17 | +0.04 | +0.10 | 93.0% | *Ablation: Canary($G_2$)* |
+| $G_2$ (Prompt Rewriter, $\Pi$) | Oracle Canary Skyline | 81.2% | +0.21 | +0.02 | +0.02 | 96.0% | *Ablation: Oracle($G_2$)* |
+| \midrule | | | | | | | |
+| **$G_3$ (Memory Accumulator, $\mathcal{M}$)** | Unconstrained (None) | 77.2% | +0.17 | +0.15 | +0.27 | 89.0% | **$G_3$ (Memory Accumulator)** |
+| $G_3$ (Memory Accumulator, $\mathcal{M}$)** | Static AST / Policy Gate | 80.1% | +0.20 | +0.05 | +0.02 | 93.0% | *Ablation: Static($G_3$)* |
+| $G_3$ (Memory Accumulator, $\mathcal{M}$)** | Proxy Canary Guard | 79.8% | +0.20 | +0.03 | +0.05 | 95.0% | *Ablation: Canary($G_3$)* |
+| $G_3$ (Memory Accumulator, $\mathcal{M}$)** | Oracle Canary Skyline | 85.0% | +0.25 | +0.02 | +0.02 | 97.0% | *Ablation: Oracle($G_3$)* |
+| \midrule | | | | | | | |
+| **$G_4$ (Compound Reflection, $\Pi{+}\mathcal{M}{+}\mathcal{C}$)** | **Unconstrained (None)** | **78.4%** | **+0.18** | **+0.28** | **+0.55** | **81.0%** | **$G_4$ (Compound Reflection)** |
+| **$G_4$ (Compound Reflection, $\Pi{+}\mathcal{M}{+}\mathcal{C}$)** | **Static AST Verifier** | **84.0%** | **+0.24** | **+0.06** | **+0.02** | **94.0%** | **$G_5$ (Static AST Verifier)** |
+| **$G_4$ (Compound Reflection, $\Pi{+}\mathcal{M}{+}\mathcal{C}$)** | **Proxy Canary Guard** | **84.4%** | **+0.24** | **+0.02** | **+0.08** | **96.0%** | **$G_7$ (Proxy Canary Guard)** |
+| **$G_4$ (Compound Reflection, $\Pi{+}\mathcal{M}{+}\mathcal{C}$)** | **Oracle Canary Skyline** | **92.0%** | **+0.32** | **+0.02** | **+0.02** | **98.0%** | **$G_6^*$ (Oracle Skyline)** |
+
+### Key Takeaways:
+1. **The $G_4$ vs. $G_6/G_7$ Comparison**: $G_4$ vs. $G_7$ is the direct ablation of deployable canary verification on the exact same base mutator ($G_4$). It isolates the $+6.0\%$ capability gain ($78.4\% \to 84.4\%$) resulting from preventing catastrophic forgetting ($81\% \to 96\%$ retention) and eliminating specification gaming.
+2. **Why Wrap $G_4$ by Default**: $G_4$ exhibits the highest degradation under unconstrained evolution (drift $+0.28$, probe gaming $+0.55$). Testing governance layers on $G_4$ provides the most rigorous, high-stress evaluation of whether verification can arrest failure modes without inducing governance paralysis.

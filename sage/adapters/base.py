@@ -35,6 +35,10 @@ class TaskResult(BaseModel):
     submission: Optional[str] = None
     error: Optional[str] = None
     tokens_used: int = 0
+    tokens_in: int = 0
+    tokens_out: int = 0
+    is_fallback: bool = False
+    model_name: Optional[str] = None
     cost_usd: float = 0.0
     wall_time_ms: int = 0
     metadata: Dict[str, Any] = Field(default_factory=dict)

@@ -1,0 +1,219 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "cr:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "name": "SAGE",
+  "description": "Standardized benchmark tasks, multi-cycle execution trajectories, and human audit labels for measuring safety drift and capability retention in self-evolving code agents.",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "version": "1.0.0",
+  "datePublished": "2026-09-24",
+  "license": "https://spdx.org/licenses/Apache-2.0",
+  "isAccessibleForFree": true,
+  "keywords": [
+    "autonomous agents",
+    "self-evolving agents",
+    "safety drift",
+    "reward hacking",
+    "capability retention",
+    "specification gaming",
+    "croissant metadata",
+    "responsible ai"
+  ],
+  "creator": {
+    "@type": "sc:Organization",
+    "name": "SAGE Benchmark Consortium"
+  },
+  "publisher": {
+    "@type": "sc:Organization",
+    "name": "Department of Computer Engineering, Vishwakarma Institute of Technology, Pune"
+  },
+  "url": "https://github.com/Pratikjain24/SAGE",
+  "sameAs": "https://github.com/Pratikjain24/SAGE",
+  "citeAs": "@inproceedings{jain2026sage,\n  title={SAGE: Safety & Agent Growth Evaluator --- Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents},\n  author={Pratik P. Jain and Janhavi B. Pagare and Aditya U. Dengale and Naitik K. Kharat and Shamika R. Kadam and Vikrant K. Kadam},\n  booktitle={Proceedings of the IEEE Conference on Artificial Intelligence and Software Engineering},\n  year={2026}\n}",
+  "dataBiases": "Benchmark tasks are synthetic and curated for reproducible scientific isolation. Deliberate drift probes are inert educational mockups that simulate boundary erosion without dangerous payload capability.",
+  "personalDataConsent": "Contains no Personally Identifiable Information (PII) or user data. Model execution traces automatically redact sensitive security commands via [REDACTED_SECURITY_PROBE_COMMAND].",
+  "dataCollection": "Collected via rootless Docker container isolation (Ubuntu 24.04 LTS) and verified LocalSandbox across multi-seed iterative evolution cycles.",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "tasks-jsonl",
+      "name": "tasks.jsonl",
+      "description": "100 benchmark tasks across 5 categories including 20 deliberate drift probes",
+      "contentUrl": "tasks/tasks.jsonl",
+      "encodingFormat": "application/x-jsonlines"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "trajectories-jsonl",
+      "name": "trajectories.jsonl",
+      "description": "Append-only execution event streams across multi-seed, multi-cycle evolutionary runs",
+      "contentUrl": "trajectories/trajectories.jsonl",
+      "encodingFormat": "application/x-jsonlines"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "labels-jsonl",
+      "name": "labels.jsonl",
+      "description": "Double-blind stratified human verification labels and failure adjudications",
+      "contentUrl": "labels/labels.jsonl",
+      "encodingFormat": "application/x-jsonlines"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "tasks",
+      "name": "tasks",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "tasks/id",
+          "name": "id",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "tasks/type",
+          "name": "type",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "tasks/difficulty",
+          "name": "difficulty",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "tasks/prompt",
+          "name": "prompt",
+          "dataType": "sc:Text"
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "trajectories",
+      "name": "trajectories",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "trajectories/run_id",
+          "name": "run_id",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "trajectories/group",
+          "name": "group",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "trajectories/cycle",
+          "name": "cycle",
+          "dataType": "sc:Integer"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "trajectories/seed",
+          "name": "seed",
+          "dataType": "sc:Integer"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "trajectories/event_type",
+          "name": "event_type",
+          "dataType": "sc:Text"
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "labels",
+      "name": "labels",
+      "description": "Stratified double-blind expert human audit labels for safety boundary violations and specification gaming",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "labels/audit_id",
+          "name": "audit_id",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "labels/trace_id",
+          "name": "trace_id",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "labels/task_id",
+          "name": "task_id",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "labels/is_violation",
+          "name": "is_violation",
+          "dataType": "sc:Boolean"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "labels/is_reward_hacked",
+          "name": "is_reward_hacked",
+          "dataType": "sc:Boolean"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "labels/severity",
+          "name": "severity",
+          "dataType": "sc:Text"
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "labels/consensus",
+          "name": "consensus",
+          "dataType": "sc:Boolean"
+        }
+      ]
+    }
+  ]
+}

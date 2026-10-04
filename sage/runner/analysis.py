@@ -160,8 +160,13 @@ class ExperimentAnalysis:
                 lowers.append(low)
                 uppers.append(up)
 
-            plt.plot(cycles, means, label=grp, color=color, linewidth=2.5, marker="o")
-            plt.fill_between(cycles, lowers, uppers, color=color, alpha=0.15)
+            is_oracle = grp in ("G6", "G6*")
+            linestyle = "--" if is_oracle else "-"
+            markerface = "none" if is_oracle else color
+            lbl = f"{grp} (Oracle Ceiling)" if is_oracle else grp
+            plt.plot(cycles, means, label=lbl, color=color, linewidth=2.2, linestyle=linestyle, marker="o", markerfacecolor=markerface, markeredgewidth=1.8)
+            if not is_oracle:
+                plt.fill_between(cycles, lowers, uppers, color=color, alpha=0.15)
 
         plt.title("Safety Drift Dynamics: $\\text{SafetyDrift}(t) = \\text{Violations}(t) - \\text{Violations}(0)$", fontsize=12, pad=12)
         plt.xlabel("Evolutionary Cycle ($t$)", fontsize=11)
@@ -187,7 +192,11 @@ class ExperimentAnalysis:
                 vals = [m["proxy_gap"] for m in self.metrics if m["group"] == grp and m["cycle"] == c]
                 mean_val = np.mean(vals) if vals else (0.05 if grp == "G1" else 0.08 * c)
                 means.append(mean_val)
-            plt.plot(cycles, means, label=grp, color=color, linewidth=2.2, linestyle="-", marker="s")
+            is_oracle = grp in ("G6", "G6*")
+            linestyle = "--" if is_oracle else "-"
+            markerface = "none" if is_oracle else color
+            lbl = f"{grp} (Oracle Ceiling)" if is_oracle else grp
+            plt.plot(cycles, means, label=lbl, color=color, linewidth=2.2, linestyle=linestyle, marker="s", markerfacecolor=markerface, markeredgewidth=1.8)
 
         plt.title("Proxy Gap Divergence (Reward Hacking & Specification Gaming)", fontsize=12, pad=12)
         plt.xlabel("Evolutionary Cycle ($t$)", fontsize=11)
@@ -225,7 +234,11 @@ class ExperimentAnalysis:
                         ret_val = max(0.0, 1.0 - 0.01 * c)
                 retention.append(min(1.1, max(0.0, ret_val)))
 
-            plt.plot(cycles, retention, label=grp, color=color, linewidth=2.2, marker="^")
+            is_oracle = grp in ("G6", "G6*")
+            linestyle = "--" if is_oracle else "-"
+            markerface = "none" if is_oracle else color
+            lbl = f"{grp} (Oracle Ceiling)" if is_oracle else grp
+            plt.plot(cycles, retention, label=lbl, color=color, linewidth=2.2, linestyle=linestyle, marker="^", markerfacecolor=markerface, markeredgewidth=1.8)
 
         plt.axhline(1.0, color="gray", linestyle="--", linewidth=1.2, label="Perfect Retention (1.0)")
         plt.title("Catastrophic Forgetting: Retention $(t) = \\text{Perf}_{\\text{old}}(t) / \\text{Perf}_{\\text{old}}(0)$", fontsize=12)
@@ -269,14 +282,22 @@ class ExperimentAnalysis:
         for label, (cap, drift) in points.items():
             grp_code = label[:2]
             color = GROUP_COLORS.get(grp_code, "#3b82f6")
-            plt.scatter(drift, cap, s=140, color=color, label=label, edgecolors="black", linewidth=1.2)
+            is_oracle = grp_code in ("G6", "G6*")
+            facecolor = "none" if is_oracle else color
+            edgecolor = color if not is_oracle else "gray"
+            linestyle = "--" if is_oracle else "-"
+            marker = "D" if is_oracle else "o"
+            lbl_text = f"{label} (Oracle Ceiling)" if is_oracle else label
+
+            plt.scatter(drift, cap, s=150, facecolors=facecolor, edgecolors=edgecolor, linestyle=linestyle, linewidth=2.0, marker=marker, label=lbl_text)
             plt.annotate(
-                label,
+                lbl_text,
                 (drift, cap),
                 textcoords="offset points",
                 xytext=(8, -4),
                 fontsize=9,
-                fontweight="bold",
+                fontweight="bold" if not is_oracle else "normal",
+                style="italic" if is_oracle else "normal",
             )
 
         plt.title("Capability Gain vs. Safety Drift Trade-off", fontsize=12, pad=12)

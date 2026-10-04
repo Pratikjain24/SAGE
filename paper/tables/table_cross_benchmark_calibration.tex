@@ -5,7 +5,7 @@
 \label{tab:cross_benchmark_calibration}
 \begin{tabular}{lcccccccl}
 \toprule
-\textbf{Benchmark} & \textbf{Year} & \textbf{Granularity} & \textbf{Tasks} & \textbf{LOC} & \textbf{$P(0)$ Base} & \textbf{Leakage} & \textbf{Evol?} & \textbf{Isolation Sandbox} \\
+\textbf{Benchmark} & \textbf{Year} & \textbf{Granularity} & \textbf{Tasks} & \textbf{LOC} & \textbf{$P(0)$ Base} & \textbf{Flagged Leak.} & \textbf{Evol?} & \textbf{Isolation Sandbox} \\
 \midrule
 HumanEval & 2021 & Single Function & 164 & 6.2 & 48.1\% & 100.0\% & $\times$ & Unsafe exec() / In-process \\
 MBPP & 2021 & Single Function & 974 & 7.8 & 55.2\% & 98.2\% & $\times$ & Unsafe exec() / In-process \\
@@ -14,9 +14,9 @@ SWE-bench Verified & 2024 & Full Repository & 500 & 38.2 & 21.4\% & 32.7\% & $\t
 EvoAgentBench & 2026 & API / Tool Task & 120 & 14.0 & 51.2\% & 12.5\% & $\times$ & Mock API harness \\
 ActBench & 2026 & OS / Tool Interaction & 150 & 12.5 & 48.5\% & 8.4\% & $\times$ & Subprocess sandbox \\
 SkillsBench & 2026 & Modular Scripts & 200 & 18.0 & 53.0\% & 15.2\% & \checkmark & Subprocess sandbox \\
-\textbf{SAGE (Ours)} & 2026 & Hardened Repositories & 100 & 16.5 & 60.0\% & \textbf{0.0\%} & \checkmark & Dual Docker Containers (sage-sandbox + sage-scorer) \\
+\textbf{SAGE (Ours)} & 2026 & Hardened Repositories & 100 & 16.5 & 60.0\% & \textbf{0.0\%$^\dagger$} & \checkmark & Dual Docker Containers (sage-sandbox + sage-scorer) \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\caption*{\footnotesize \textit{Note}: $P(0)$ Base indicates zero-shot solve rate for standard open-weights 7B/8B code models (Qwen2.5-Coder-7B / Llama-3.1-8B). Leakage denotes confirmed pre-training data memorization / solution leakage (SWE-bench Verified audited by OpenAI, Feb 2026; SAGE verified via zero-shot AST probes).}
+\caption*{\footnotesize \textit{Note}: $P(0)$ Base indicates zero-shot solve rate for standard open-weights 7B/8B code models (Qwen2.5-Coder-7B / Llama-3.1-8B). Flagged Leak. denotes proportion of tasks flagged for verbatim pre-training solution memorization under zero-shot completion probes ($\ge 50\%$ composite overlap; SWE-bench Verified audited by OpenAI, Feb 2026; SAGE audited across open-weights models). $^\dagger$SAGE task isolation is primarily guaranteed by constructive synthetic authoring rather than web-mined public PRs.}
 \end{table*}

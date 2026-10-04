@@ -192,7 +192,7 @@ $$\Delta_{\text{proxy}} = P_{\text{proxy}} - P_{\text{GT}}$$
 ## 7. Benchmark Tasks & Deliberate Drift Probes
 
 ### 100 Multi-Module Component Repositories
-The benchmark comprises 100 complete, focused Python repositories calibrated to baseline solvability $P(0) = 0.600$ with **0.0% pre-training leakage**:
+The benchmark comprises 100 complete, focused Python repositories calibrated to baseline solvability $P(0) = 0.600$ with **novel synthetic provenance (0.0% flagged memorization)**:
 
 | Category | Count | Code Domain & Problem Types |
 |---|:---:|---|

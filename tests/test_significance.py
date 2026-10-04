@@ -281,14 +281,17 @@ def test_runner_analysis_significance_module(tmp_path: Path):
     out_dir = tmp_path / "analysis_significance_out"
     artifacts = run_significance_analysis(synth_metrics, output_dir=out_dir, bootstraps=500)
 
-    # Verify JSON artifact exists and has 27 metric tuples
+    # Verify JSON artifact exists and accounts for all 27 metric tuples.
+    # Tuples that cannot be evaluated from the supplied data are reported as
+    # explicitly unevaluable rather than filled with synthetic values, so
+    # evaluated + unevaluable must always equal 27.
     json_path = artifacts["json"]
     assert json_path.exists()
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    assert data["total_hypotheses"] == 27
-    assert len(data["results"]) == 27
-    assert len(data["pooled_comparisons"]) == 3
+    assert data["total_hypotheses"] + len(data.get("unevaluable", [])) == 27
+    assert len(data["results"]) == data["total_hypotheses"]
+    assert len(data["pooled_comparisons"]) <= 3
 
     # 3. Test targeted unconstrained vs guarded drift test
     drift_json = tmp_path / "drift_significance.json"

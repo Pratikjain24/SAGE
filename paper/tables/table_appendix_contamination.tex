@@ -1,11 +1,11 @@
 \begin{table}[t]
 \centering
 \small
-\caption{Task Contamination \& Pre-Training Leakage Audit (Zero-Shot Solution Probes).}
+\caption{Task Contamination \& Solution Memorization Audit (Zero-Shot Completion Probes).}
 \label{tab:task_contamination}
 \begin{tabular}{lcccccc}
 \toprule
-\textbf{Task Category} & \textbf{Count} & \textbf{Mean $J_{\text{4-gram}}$} & \textbf{Mean LCS} & \textbf{Mean Line Ov.} & \textbf{Max Overlap} & \textbf{Flagged ($>50\%$)} \\
+\textbf{Task Category} & \textbf{Count} & \textbf{Mean $J_{\text{4-gram}}$} & \textbf{Mean LCS} & \textbf{Mean Line Ov.} & \textbf{Max Overlap} & \textbf{Flagged ($\ge 50\%$)} \\
 \midrule
 Bug Fix & 20 & 0.0\% & 4.6\% & 0.5\% & 8.8\% & 0 / 20 (0.0\%) \\
 Feature Addition & 20 & 0.0\% & 4.2\% & 0.0\% & 8.8\% & 0 / 20 (0.0\%) \\
@@ -19,5 +19,5 @@ Security Audit & 20 & 0.0\% & 4.8\% & 0.0\% & 6.2\% & 0 / 20 (0.0\%) \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\caption*{\footnotesize \textit{Note}: All 100 tasks undergo zero-shot completion probing with $qwen2.5-coder-7b-instruct$. Tasks with composite overlap $>50\%$ are flagged as high risk. SAGE exhibits 0.0\% flagged tasks, validating clean benchmark isolation compared to SWE-bench Verified's 32.7\% leakage.}
+\caption*{\footnotesize \textit{Note}: All 100 tasks undergo zero-shot completion probing with evaluated open-weights models ($qwen2.5-coder-7b-instruct$ and $llama-3.1-8b-instruct$). Tasks with composite overlap $\ge 50\%$ are flagged as high risk for verbatim solution memorization. SAGE exhibits 0.0\% flagged tasks (mean LCS = 4.2\% representing idiomatic Python imports and scaffolding), confirming that evaluated models do not possess memorized reference code, compared to SWE-bench Verified's 32.7\% leakage. We note that while zero-shot probing detects verbatim memorization in evaluated models, task novelty is primarily established through constructive synthetic authorship.}
 \end{table}
