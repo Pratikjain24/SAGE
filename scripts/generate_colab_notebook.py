@@ -1,150 +1,266 @@
+"""
+Generate SAGE_Colab_Benchmark.ipynb
+Fixed vs previous version:
+  1. STALE TABLE BUG: tables read directly from cycle_metrics.json — no canon fallback
+  2. CWD BUG: every cell starts with %cd /content/sage
+  3. ALL 7 ARCHETYPES: G1,G2,G3,G4,G5,G6,G7
+  4. PROVENANCE AUDIT: dedicated cell verifies zero synthetic contamination
+"""
 import json
 from pathlib import Path
 
+
+def nb_md(source_lines):
+    return {"cell_type": "markdown", "metadata": {}, "source": source_lines}
+
+
+def nb_code(source_lines):
+    return {
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": source_lines,
+    }
+
+
+# ────────────────────────────────────────────────────────────────────
+# CELL SOURCES  (plain lists of strings — no LaTeX inside Python quotes)
+# ────────────────────────────────────────────────────────────────────
+
+SETUP_SRC = [
+    "import os\n",
+    "!rm -rf /content/sage\n",
+    "!git clone https://github.com/Pratikjain24/SAGE.git /content/sage\n",
+    "%cd /content/sage\n",
+    "!pip install -q --upgrade pip\n",
+    "!pip install -q -e .\n",
+    'print("Setup complete. CWD:", os.getcwd())\n',
+]
+
+API_SRC = [
+    "import os\n",
+    "try:\n",
+    "    from google.colab import userdata\n",
+    "    _secret = userdata.get('GROQ_API_KEY')\n",
+    "except Exception:\n",
+    "    _secret = None\n",
+    "GROQ_API_KEY = 'your_groq_api_key_here'  #@param {type:'string'}\n",
+    "key = _secret or GROQ_API_KEY\n",
+    "if not key or key == 'your_groq_api_key_here':\n",
+    "    raise ValueError('No API key! Set GROQ_API_KEY in Colab Secrets or paste above.')\n",
+    "os.environ['GROQ_API_KEY'] = key\n",
+    "os.environ['OPENAI_API_BASE'] = 'https://api.groq.com/openai/v1'\n",
+    "os.environ['OPENAI_API_KEY'] = key\n",
+    "print('API key configured:', key[:8] + '...' + key[-4:])\n",
+]
+
+RUN_SRC = [
+    "%cd /content/sage\n",
+    "# All 7 archetypes x 5 cycles x seed 42 x 20 train + 10 test\n",
+    "# 429 rate-limit retries are handled automatically — do NOT interrupt.\n",
+    "!python scripts/run_real_experiment.py \\\n",
+    "    --config configs/experiments/real_groq_strict.yaml \\\n",
+    "    --run-id colab_empirical_study \\\n",
+    "    --groups G1,G2,G3,G4,G5,G6,G7 \\\n",
+    "    --cycles 5 \\\n",
+    "    --seeds 42 \\\n",
+    "    --train 20 \\\n",
+    "    --test 10\n",
+]
+
+AUDIT_SRC = [
+    "%cd /content/sage\n",
+    "import json, pathlib\n",
+    "RUN_ID = 'colab_empirical_study'\n",
+    "traj = pathlib.Path(f'experiments/runs/{RUN_ID}/trajectory.jsonl')\n",
+    "if not traj.exists():\n",
+    "    print(f'Trajectory not found: {traj}')\n",
+    "else:\n",
+    "    n_end=n_real=n_zero=n_fb=0; models=set(); groups=set()\n",
+    "    for line in open(traj):\n",
+    "        ev = json.loads(line.strip())\n",
+    "        if ev.get('event_type') != 'task_end': continue\n",
+    "        n_end += 1\n",
+    "        p=ev.get('payload',{}); c=ev.get('cost',{})\n",
+    "        tok=c.get('tokens_in',0)+c.get('tokens_out',0)\n",
+    "        if p.get('is_fallback'): n_fb+=1\n",
+    "        if tok==0: n_zero+=1\n",
+    "        else: n_real+=1\n",
+    "        if p.get('model_name'): models.add(p['model_name'])\n",
+    "        if ev.get('group'): groups.add(ev['group'])\n",
+    "    print('='*60)\n",
+    "    print(f'Total task_end : {n_end}')\n",
+    "    print(f'Real LLM calls : {n_real}')\n",
+    "    print(f'Zero-token     : {n_zero}')\n",
+    "    print(f'Fallback       : {n_fb}')\n",
+    "    print(f'Groups seen    : {sorted(groups)}')\n",
+    "    print(f'Models         : {sorted(models)}')\n",
+    "    print('='*60)\n",
+    "    if n_fb==0 and n_zero==0:\n",
+    "        print('PASS: 100% genuine LLM trajectory.')\n",
+    "    else:\n",
+    "        print('WARNING: contaminated episodes — do not publish.')\n",
+]
+
+# Table cell: builds LaTeX from live data without any fallback numbers
+TABLES_SRC = [
+    "# BUG-FIXED: reads cycle_metrics.json directly — no canon fallback dict\n",
+    "%cd /content/sage\n",
+    "import json, pathlib, numpy as np\n",
+    "RUN_ID = 'colab_empirical_study'\n",
+    "mf = pathlib.Path(f'experiments/runs/{RUN_ID}/results/cycle_metrics.json')\n",
+    "td = pathlib.Path('paper/tables'); td.mkdir(parents=True, exist_ok=True)\n",
+    "if not mf.exists():\n",
+    "    print(f'Not found: {mf}. Run Step 3 first.')\n",
+    "else:\n",
+    "    metrics = json.loads(mf.read_text())\n",
+    "    META = {'G1':'Frozen Control','G2':'Prompt Rewriter','G3':'Memory Accumulator',\n",
+    "            'G4':'Reflection Agent','G5':'Static Verifier','G6':'Regression Guard','G7':'Oracle Verifier'}\n",
+    "    groups = sorted(set(m['group'] for m in metrics))\n",
+    "    seeds = sorted(set(m.get('seed',42) for m in metrics))\n",
+    "    T_max = max(m.get('cycle',0) for m in metrics) if metrics else 0\n",
+    "    seed_str = ', '.join(str(s) for s in seeds)\n",
+    "    # Build table rows\n",
+    "    rows = []\n",
+    "    for grp in groups:\n",
+    "        gm = [m for m in metrics if m['group']==grp]\n",
+    "        cycs = sorted(set(m['cycle'] for m in gm))\n",
+    "        c0,cT = cycs[0],cycs[-1]\n",
+    "        p0 = float(np.mean([m['success_rate'] for m in gm if m['cycle']==c0]))\n",
+    "        pT = float(np.mean([m['success_rate'] for m in gm if m['cycle']==cT]))\n",
+    "        dr = float(np.mean([m['safety_drift']  for m in gm if m['cycle']==cT]))\n",
+    "        co = float(sum(m['cost_usd'] for m in gm))\n",
+    "        d = pT - p0\n",
+    "        d_s  = f'+{d:.3f}'  if d  >= 0 else f'{d:.3f}'\n",
+    "        dr_s = f'+{dr:.3f}' if dr > 0  else f'{dr:.3f}'\n",
+    "        rows.append(f'{grp} & {META.get(grp,grp)} & {p0:.3f} & {pT:.3f} & {d_s} & {dr_s} & \\\\${co:.4f} \\\\\\\\')\n",
+    "    # Write LaTeX\n",
+    "    header = [\n",
+    "        '\\\\begin{table*}[t]', '\\\\centering', '\\\\small',\n",
+    "        f'% Auto-generated from {mf} — no hardcoded numbers',\n",
+    "        '\\\\caption{\\\\textbf{Live Empirical Results} (Tier 2 Real LLM, Groq qwen/qwen3.8-27b). '\n",
+    "        f'Seeds: ({seed_str}), T={T_max} cycles. Only groups with data shown.}}',\n",
+    "        '\\\\label{tab:live}',\n",
+    "        '\\\\begin{tabular}{llccccc}', '\\\\toprule',\n",
+    "        'Group & Mechanism & $P(0)$ & $P(T)$ & $\\\\Delta P$ & SafetyDrift & Cost(\\\\$) \\\\\\\\',\n",
+    "        '\\\\midrule',\n",
+    "    ]\n",
+    "    footer = ['\\\\bottomrule','\\\\end{tabular}','\\\\end{table*}']\n",
+    "    out = td / 'table1_main_results_live.tex'\n",
+    "    out.write_text('\\n'.join(header + rows + footer), encoding='utf-8')\n",
+    "    print(f'Table 1 written: {out}')\n",
+    "    print(out.read_text())\n",
+    "    # Table 3: statistical significance\n",
+    "    try:\n",
+    "        from sage.metrics.significance import StatisticalSignificanceAnalyzer\n",
+    "        a = StatisticalSignificanceAnalyzer(metrics, run_id=RUN_ID)\n",
+    "        t3 = td / 'table3_statistical_significance_live.tex'\n",
+    "        t3.write_text(a._generate_latex_table(a.run_analysis()), encoding='utf-8')\n",
+    "        print(f'Table 3 written: {t3}')\n",
+    "    except Exception as e:\n",
+    "        print(f'Table 3 skipped (need >=2 groups): {e}')\n",
+]
+
+FIGURES_SRC = [
+    "%cd /content/sage\n",
+    "import json, pathlib, matplotlib; matplotlib.use('Agg')\n",
+    "import matplotlib.pyplot as plt\n",
+    "from IPython.display import Image, display\n",
+    "RUN_ID = 'colab_empirical_study'\n",
+    "mf = pathlib.Path(f'experiments/runs/{RUN_ID}/results/cycle_metrics.json')\n",
+    "if not mf.exists():\n",
+    "    print(f'Not found: {mf}')\n",
+    "else:\n",
+    "    metrics = json.loads(mf.read_text())\n",
+    "    figs = pathlib.Path('paper/figures'); figs.mkdir(parents=True, exist_ok=True)\n",
+    "    COLORS={'G1':'#64748b','G2':'#3b82f6','G3':'#10b981','G4':'#f59e0b',\n",
+    "            'G5':'#8b5cf6','G6':'#ec4899','G7':'#ef4444'}\n",
+    "    groups = sorted(set(m['group'] for m in metrics))\n",
+    "    for mkey, ylabel, title, fname in [\n",
+    "        ('safety_drift','Safety Drift','Safety Drift over Cycles','safety_drift_live.png'),\n",
+    "        ('success_rate','Success Rate P(T)','Capability over Cycles','capability_live.png'),\n",
+    "    ]:\n",
+    "        fig,ax = plt.subplots(figsize=(7,4),dpi=150)\n",
+    "        for grp in groups:\n",
+    "            gm = sorted([m for m in metrics if m['group']==grp], key=lambda x:x['cycle'])\n",
+    "            ax.plot([m['cycle'] for m in gm],[m[mkey] for m in gm],\n",
+    "                    marker='o',label=grp,color=COLORS.get(grp,'gray'),linewidth=2)\n",
+    "        ax.set_xlabel('Cycle'); ax.set_ylabel(ylabel)\n",
+    "        ax.set_title(f'{title} (Live Run)'); ax.legend(); ax.grid(True,linestyle='--',alpha=0.5)\n",
+    "        fig.tight_layout()\n",
+    "        p = figs/fname; fig.savefig(p); plt.close(fig)\n",
+    "        print(f'Figure: {p}'); display(Image(str(p)))\n",
+]
+
+DOWNLOAD_SRC = [
+    "import shutil, pathlib, os\n",
+    "from google.colab import files\n",
+    "RUN_ID = 'colab_empirical_study'\n",
+    "pkg = pathlib.Path('/content/sage_export'); pkg.mkdir(exist_ok=True)\n",
+    "shutil.copytree(f'/content/sage/experiments/runs/{RUN_ID}', str(pkg/'run'), dirs_exist_ok=True)\n",
+    "shutil.copytree('/content/sage/paper/tables',  str(pkg/'tables'),  dirs_exist_ok=True)\n",
+    "shutil.copytree('/content/sage/paper/figures', str(pkg/'figures'), dirs_exist_ok=True)\n",
+    "shutil.make_archive('/content/SAGE_Colab_Results', 'zip', pkg)\n",
+    "mb = os.path.getsize('/content/SAGE_Colab_Results.zip')/1e6\n",
+    "print(f'Packaged {mb:.1f} MB — downloading...')\n",
+    "files.download('/content/SAGE_Colab_Results.zip')\n",
+]
+
+# ────────────────────────────────────────────────────────────────────
 notebook = {
     "nbformat": 4,
-    "nbformat_minor": 0,
+    "nbformat_minor": 5,
     "metadata": {
         "colab": {"name": "SAGE_Colab_Benchmark.ipynb", "provenance": []},
         "kernelspec": {"name": "python3", "display_name": "Python 3"},
-        "language_info": {"name": "python"}
+        "language_info": {"name": "python"},
     },
     "cells": [
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "# SAGE: Autonomous Code Agent Evolution Benchmark\n",
-                "### Official 1-Click Interactive Cloud Benchmark Runner\n",
-                "\n",
-                "[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Colab_Benchmark.ipynb)\n",
-                "\n",
-                "This notebook executes SAGE live empirical evaluations on Google Colab (Free T4 GPU / High-RAM CPU), measuring Safety Drift, Specification Gaming, and Capability Retention across all 7 Agent Archetypes (G1-G7) over 5 evolutionary cycles."
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": ["## Step 1: Clone Repository & Setup Environment"]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# 1. Clone repository directly into Colab\n",
-                "!rm -rf /content/sage\n",
-                "!git clone https://github.com/Pratikjain24/SAGE.git /content/sage\n",
-                "\n",
-                "# 2. Navigate and install dependencies\n",
-                "%cd /content/sage\n",
-                "!pip install -q --upgrade pip\n",
-                "!pip install -q -e .\n",
-                "print(\"\\n✅ SAGE Framework Installed Successfully!\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": ["## Step 2: Configure API Key & Model (Groq / OpenRouter / OpenAI)"]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "import os\n",
-                "try:\n",
-                "    from google.colab import userdata\n",
-                "    api_key = userdata.get('GROQ_API_KEY')\n",
-                "except Exception:\n",
-                "    api_key = None\n",
-                "\n",
-                "# Paste your Groq API key below or set it in Colab Secrets\n",
-                "GROQ_API_KEY = \"your_groq_api_key_here\" #@param {type:\"string\"}\n",
-                "key_to_use = api_key or GROQ_API_KEY\n",
-                "\n",
-                "os.environ[\"GROQ_API_KEY\"] = key_to_use\n",
-                "os.environ[\"OPENAI_API_BASE\"] = \"https://api.groq.com/openai/v1\"\n",
-                "os.environ[\"OPENAI_API_KEY\"] = key_to_use\n",
-                "print(f\"✅ Configured API Endpoint with Key: {key_to_use[:8]}...{key_to_use[-4:] if len(key_to_use) > 12 else ''}\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": ["## Step 3: Run Full Live Empirical Benchmark (All 7 Archetypes, 5 Cycles)"]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# Run all 7 archetypes (G1-G7) across 5 cycles on live model (qwen3.8-27b)\n",
-                "!python scripts/run_real_experiment.py \\\n",
-                "    --config configs/experiments/real_groq_strict.yaml \\\n",
-                "    --run-id colab_empirical_study \\\n",
-                "    --groups G1,G2,G3,G4,G5,G6,G7 \\\n",
-                "    --cycles 5 \\\n",
-                "    --seeds 42 \\\n",
-                "    --train 20 \\\n",
-                "    --test 10"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": ["## Step 4: Generate Publication LaTeX Tables & Figures"]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# Recompute metrics, generate publication plots and export LaTeX tables\n",
-                "!python -m sage.runner.cli analyze --run-id colab_empirical_study --recompute\n",
-                "!python -m sage.runner.cli stats --run-id colab_empirical_study\n",
-                "\n",
-                "print(\"\\n======================================================\")\n",
-                "print(\"TABLE 1 (Main Evolutionary Results):\")\n",
-                "print(\"======================================================\")\n",
-                "!cat paper/tables/table1_main_results.tex\n",
-                "\n",
-                "print(\"\\n======================================================\")\n",
-                "print(\"TABLE 3 (Statistical Significance Matrix):\")\n",
-                "print(\"======================================================\")\n",
-                "!cat paper/tables/table3_top8_significance.tex"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": ["## Step 5: Download Trajectory & Publication Assets (.zip)"]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "import shutil\n",
-                "from google.colab import files\n",
-                "\n",
-                "# Package figures, tables, and trajectory into zip\n",
-                "shutil.make_archive(\"/content/SAGE_Colab_Results\", \"zip\", \"/content/sage/experiments/runs/colab_empirical_study\")\n",
-                "print(\"✅ Download starting for SAGE_Colab_Results.zip...\")\n",
-                "files.download(\"/content/SAGE_Colab_Results.zip\")"
-            ]
-        }
-    ]
+        nb_md([
+            "# SAGE: Autonomous Code-Agent Evolution Benchmark\n",
+            "### Official 1-Click Live Empirical Cloud Runner\n",
+            "\n",
+            "[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]"
+            "(https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Colab_Benchmark.ipynb)\n",
+            "\n",
+            "**Bugs fixed in this version:**\n",
+            "- **Stale-table bug**: tables now read directly from `cycle_metrics.json` — no hardcoded `canon` fallback dict.\n",
+            "- **CWD bug**: every shell cell starts with `%cd /content/sage`.\n",
+            "- **All 7 archetypes**: G1, G2, G3, G4, G5, G6, G7.\n",
+            "- **Provenance audit**: dedicated cell verifies zero synthetic contamination before download.\n",
+        ]),
+        nb_md(["## Step 1 — Clone Repo & Install"]),
+        nb_code(SETUP_SRC),
+        nb_md(["## Step 2 — Configure Groq API Key"]),
+        nb_code(API_SRC),
+        nb_md([
+            "## Step 3 — Run Full Live Benchmark (All 7 Archetypes, 5 Cycles)\n",
+            "> Expected runtime: **~1.5–2 hours** on Groq free tier.  \n",
+            "> `HTTP 429` rate-limit retries are handled automatically — **do not interrupt**.\n",
+        ]),
+        nb_code(RUN_SRC),
+        nb_md(["## Step 4 — Provenance Audit (Zero Synthetic Contamination)"]),
+        nb_code(AUDIT_SRC),
+        nb_md([
+            "## Step 5 — Generate Honest Tables (Bug-Fixed)\n",
+            "> **What was broken:** `analysis.py` fell back to a hardcoded `canon` dict when\n",
+            "> groups were missing, producing stale numbers from months ago.\n",
+            "> **What this cell does:** reads `cycle_metrics.json` directly and only writes\n",
+            "> rows for groups that actually ran — no fabricated numbers ever written.\n",
+        ]),
+        nb_code(TABLES_SRC),
+        nb_md(["## Step 6 — Render Publication Figures"]),
+        nb_code(FIGURES_SRC),
+        nb_md(["## Step 7 — Download Results ZIP"]),
+        nb_code(DOWNLOAD_SRC),
+    ],
 }
 
 root = Path(__file__).resolve().parent.parent
-with open(root / "SAGE_Colab_Benchmark.ipynb", "w", encoding="utf-8") as f:
-    json.dump(notebook, f, indent=2)
+out = root / "SAGE_Colab_Benchmark.ipynb"
+with open(out, "w", encoding="utf-8") as f:
+    json.dump(notebook, f, indent=2, ensure_ascii=False)
 
-print("Created sanitized SAGE_Colab_Benchmark.ipynb successfully!")
+print(f"Written: {out}")
+print(f"Cells:   {len(notebook['cells'])}")
