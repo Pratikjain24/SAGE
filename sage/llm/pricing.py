@@ -26,6 +26,8 @@ class PricingModel:
         "deepseek-coder-v2": (0.14, 0.28),
         "gemma-4-26b-a4b-it": (0.00, 0.00),
         "qwen2.5-coder-3b-instruct": (0.00, 0.00),
+        "qwen/qwen2.5-coder-3b-instruct": (0.00, 0.00),
+        "/content/models/qwen25-coder-3b": (0.00, 0.00),
         "qwen2.5-coder-3b-instruct-q4_k_m": (0.00, 0.00),
         "mock-model": (0.00, 0.00),
     }

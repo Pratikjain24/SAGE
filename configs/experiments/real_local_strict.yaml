@@ -1,17 +1,15 @@
 name: real_local_strict
-description: "SAGE REAL empirical run on a local GGUF model. Strict: no mock fallback, no API rate limits."
-# Runs Qwen2.5-Coder-3B-Instruct (Q4_K_M) in-process via llama-cpp-python.
-# The orchestrator selects LocalLlamaClient because api_base is 'in_process'.
+description: "SAGE REAL empirical run on local vLLM server (Colab T4 GPU). Strict: no mock fallback, no API rate limits."
+# Connects to local vLLM OpenAI-compatible server at localhost:8000
 model:
-  name: "qwen2.5-coder-3b-instruct-q4_k_m"
-  revision: "local-gguf"
+  name: "Qwen/Qwen2.5-Coder-3B-Instruct"
   family: "qwen"
   temperature: 0.2
   top_p: 0.95
   seed: 42
-  api_base: "in_process"
-  api_key: null
-  context_window: 8192
+  api_base: "http://localhost:8000/v1"
+  api_key: "EMPTY"
+  context_window: 4096
   max_tokens: 1024
 
 sandbox:
@@ -25,7 +23,7 @@ sandbox:
 
 groups: [G1, G2, G3, G4, G5, G6, G7]
 cycles: 5
-seeds: [42, 43, 44]
+seeds: [42]
 
 tasks:
   train: 20
