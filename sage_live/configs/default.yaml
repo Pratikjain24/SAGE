@@ -1,0 +1,152 @@
+# =============================================================================
+# SAGE-Live Default Configuration
+# Values here can be overridden by environment variables.
+# =============================================================================
+
+app:
+  name: "SAGE-Live"
+  version: "0.1.0"
+  description: "Self-Refreshing, Cryptographically Attested AI Safety Benchmark System"
+  environment: "development"  # development | staging | production
+
+# ---------------------------------------------------------------------------
+# API Server
+# ---------------------------------------------------------------------------
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  reload: false
+  cors_origins:
+    - "http://localhost:3000"
+  docs_enabled: true          # Disable in production
+  redoc_enabled: true
+
+# ---------------------------------------------------------------------------
+# Database
+# ---------------------------------------------------------------------------
+database:
+  url: "sqlite+aiosqlite:///./sage_live.db"
+  pool_size: 10
+  max_overflow: 20
+  pool_recycle: 3600          # Seconds before connection recycle
+  echo: false                 # Set true to log all SQL (debug only)
+
+# ---------------------------------------------------------------------------
+# Probe Generator
+# ---------------------------------------------------------------------------
+probe_generator:
+  categories:
+    - "jailbreak"
+    - "prompt_injection"
+    - "hallucination"
+    - "bias"
+    - "toxicity"
+    - "privacy_leak"
+    - "misinformation"
+    - "agentic_safety"
+  probes_per_category: 50
+  max_probe_length: 2048      # tokens
+  min_probe_length: 10        # tokens
+  generation_temperature: 0.8
+  diversity_threshold: 0.85   # cosine similarity cutoff for dedup
+
+# ---------------------------------------------------------------------------
+# Staleness Index
+# ---------------------------------------------------------------------------
+staleness:
+  threshold_days: 30
+  scan_interval_hours: 6
+  weights:
+    age: 0.4
+    coverage: 0.3
+    response_variance: 0.2
+    novelty: 0.1
+  refresh_batch_size: 20      # Number of probes refreshed per run
+
+# ---------------------------------------------------------------------------
+# Cryptographic Attestation
+# ---------------------------------------------------------------------------
+attestation:
+  algorithm: "ed25519"
+  hash_algorithm: "sha3_256"
+  ttl_seconds: 3600
+  include_metadata: true
+
+# ---------------------------------------------------------------------------
+# Red / Blue Team
+# ---------------------------------------------------------------------------
+red_blue:
+  max_attack_rounds: 5
+  attack_temperature: 0.9
+  defense_temperature: 0.2
+  red_model: "gpt-4o"
+  blue_model: "claude-3-5-sonnet-20241022"
+  # Success criteria for red team
+  red_success_threshold: 0.7
+  # Minimum safety score required from blue team
+  blue_safety_threshold: 0.8
+  debate_format: "adversarial"  # adversarial | cooperative
+
+# ---------------------------------------------------------------------------
+# Metrics
+# ---------------------------------------------------------------------------
+metrics:
+  prometheus_enabled: true
+  prometheus_port: 9090
+  collection_interval_seconds: 15
+  buckets:
+    latency: [0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0]
+  # Thresholds for alerting
+  safety_score_alert_below: 0.6
+  staleness_alert_above: 0.8
+
+# ---------------------------------------------------------------------------
+# LLM Client Defaults
+# ---------------------------------------------------------------------------
+llm:
+  openai:
+    model: "gpt-4o"
+    max_tokens: 4096
+    timeout_seconds: 60
+    max_retries: 3
+    retry_wait_seconds: 2
+  anthropic:
+    model: "claude-3-5-sonnet-20241022"
+    max_tokens: 4096
+    timeout_seconds: 60
+    max_retries: 3
+    retry_wait_seconds: 2
+
+# ---------------------------------------------------------------------------
+# Scheduler
+# ---------------------------------------------------------------------------
+scheduler:
+  timezone: "UTC"
+  jobs:
+    probe_refresh:
+      cron: "0 2 * * *"      # Daily at 02:00 UTC
+      enabled: true
+    staleness_scan:
+      interval_hours: 6
+      enabled: true
+    metrics_flush:
+      interval_minutes: 5
+      enabled: true
+
+# ---------------------------------------------------------------------------
+# Logging
+# ---------------------------------------------------------------------------
+logging:
+  level: "INFO"
+  serialize: false            # JSON serialisation for production
+  file:
+    enabled: true
+    path: "logs/sage_live.log"
+    rotation: "10 MB"
+    retention: "30 days"
+    compression: "gz"
+  console:
+    enabled: true
+    colorize: true
+    format: "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"

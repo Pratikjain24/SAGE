@@ -1,0 +1,112 @@
+name: SAGE-Live Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r sage_live/requirements.txt
+        pip install pytest pytest-asyncio pytest-cov httpx
+    
+    - name: Run unit tests
+      run: |
+        cd sage_live
+        pytest tests/ -v -m "not slow" --cov=sage_live --cov-report=xml --cov-report=term
+    
+    - name: Run slow tests
+      if: github.event_name == 'push'
+      run: |
+        cd sage_live
+        pytest tests/ -v -m "slow"
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./sage_live/coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+    
+    - name: Check coverage threshold
+      run: |
+        cd sage_live
+        pytest --cov=sage_live --cov-fail-under=90
+
+  lint:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install ruff mypy
+    
+    - name: Run ruff
+      run: |
+        cd sage_live
+        ruff check .
+    
+    - name: Run mypy
+      run: |
+        cd sage_live
+        mypy sage_live/ --ignore-missing-imports
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety bandit
+    
+    - name: Run safety check
+      run: |
+        cd sage_live
+        safety check --json || true
+    
+    - name: Run bandit
+      run: |
+        cd sage_live
+        bandit -r sage_live/ -f json || true

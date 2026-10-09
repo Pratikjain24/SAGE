@@ -1,0 +1,112 @@
+[tool.poetry]
+name = "sage-live"
+version = "0.1.0"
+description = "Self-Refreshing, Cryptographically Attested AI Safety Benchmark System"
+authors = ["SAGE-Live Team <sage@example.com>"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/sage-live/sage-live"
+repository = "https://github.com/sage-live/sage-live"
+documentation = "https://sage-live.readthedocs.io"
+keywords = ["ai-safety", "benchmarking", "attestation", "red-team"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+packages = [{ include = "sage_live" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+# Web framework
+fastapi = "^0.115.0"
+uvicorn = { version = "^0.30.6", extras = ["standard"] }
+httpx = "^0.27.2"
+
+# Data validation
+pydantic = "^2.9.2"
+pydantic-settings = "^2.5.2"
+
+# Database
+sqlmodel = "^0.0.21"
+sqlalchemy = "^2.0.35"
+alembic = "^1.13.3"
+asyncpg = "^0.29.0"
+aiosqlite = "^0.20.0"
+
+# Cryptography & attestation
+cryptography = "^43.0.1"
+PyNaCl = "^1.5.0"
+
+# AI / ML
+openai = "^1.51.0"
+anthropic = "^0.36.1"
+tiktoken = "^0.8.0"
+
+# Logging
+loguru = "^0.7.2"
+
+# Config & env
+python-dotenv = "^1.0.1"
+pyyaml = "^6.0.2"
+
+# Async utilities
+anyio = "^4.6.2"
+tenacity = "^9.0.0"
+
+# Serialisation
+orjson = "^3.10.7"
+
+# Monitoring
+prometheus-client = "^0.21.0"
+
+# Scheduling
+apscheduler = "^3.10.4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+pytest-asyncio = "^0.24.0"
+pytest-cov = "^5.0.0"
+pytest-mock = "^3.14.0"
+httpx = "^0.27.2"
+ruff = "^0.6.9"
+mypy = "^1.11.2"
+pre-commit = "^3.8.0"
+factory-boy = "^3.3.1"
+
+[tool.poetry.scripts]
+sage-live = "sage_live.__main__:main"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+select = ["E", "F", "W", "I", "N", "UP", "ANN", "S", "B", "A", "C4", "PT", "SIM", "TCH"]
+ignore = ["ANN101", "ANN102", "ANN401", "S101"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-v --cov=sage_live --cov-report=term-missing --cov-report=html"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["sage_live"]
+omit = ["*/tests/*", "*/__main__.py"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
