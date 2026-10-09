@@ -1,11 +1,13 @@
-# SAGE-Live
-
-> **Self-Refreshing, Cryptographically Attested AI Safety Benchmark System**
+# SAGE-Live: Safety & Agent Growth Evaluator (Live Engine)
+### Self-Refreshing, Cryptographically Attested AI Safety Benchmark System
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Coverage: 80%+](https://img.shields.io/badge/coverage-80%25+-brightgreen.svg)]()
+
+> [!NOTE]
+> **Part of the SAGE Benchmark Family**: SAGE-Live is the live, dynamic extension of **SAGE: Safety & Agent Growth Evaluator** (Jain et al., IEEE 2026). It is not affiliated with *SAGE* (EMNLP 2025, Microsoft/MBZUAI), *SAGE-Eval* (NeurIPS 2025 Spotlight, NYU), *SAGE Lifecycle Control* (ArXiv 2025), *SAGE PecanProject*, or *SAGE dp-web4*.
 
 SAGE-Live is a production-grade AI safety benchmarking platform that automatically refreshes its probe pool, detects benchmark staleness and contamination, and provides cryptographic proof-of-integrity for every evaluation window via an Ed25519 hash chain.
 

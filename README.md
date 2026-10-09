@@ -1,6 +1,8 @@
-# SAGE: Autonomous Agent Evolution & Security Boundary Drift Benchmark
+# SAGE: Safety & Agent Growth Evaluator
+### Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents
 
 [![CI](https://github.com/Pratikjain24/SAGE/actions/workflows/ci.yml/badge.svg)](https://github.com/Pratikjain24/SAGE/actions)
+[![CI (SAGE-Live)](https://github.com/Pratikjain24/SAGE/actions/workflows/sage-live-ci.yml/badge.svg)](https://github.com/Pratikjain24/SAGE/actions)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Croissant%201.0%20Ready-yellow)](hf_dataset/)
@@ -11,11 +13,24 @@
 [![Paper](https://img.shields.io/badge/IEEE-Paper%202026-blue)](paper/README.md)
 [![Dossier](https://img.shields.io/badge/System_Dossier-v1.0.0-green.svg)](PROJECT_DOSSIER.md)
 
-> **⚠️ Project Disambiguation**: This project is **not affiliated with** [`evo-eval/evoeval`](https://github.com/evo-eval/evoeval) (Xia et al., 2024), which is a separate benchmark for evolving HumanEval coding problems via LLM. This repository is an **independent research project** by Jain et al. (VIT Pune, 2026) investigating a fundamentally different problem: *security boundary drift and capability retention in self-modifying autonomous code agents* (formerly developed under the working title EvoEval).
+> [!IMPORTANT]
+> ### 🔍 Disambiguation: Distinguishing SAGE from Other Projects
+> To prevent ambiguity across the AI safety and evaluation literature, this project is formally titled **SAGE: Safety & Agent Growth Evaluator** (Jain et al., IEEE 2026). It is an independent research system investigating **security boundary drift, vulnerability injection rates, specification gaming (proxy gaps), and rollback-guarded capability retention in self-modifying code agents**.
+>
+> Please note the distinction from other publications and tools with related acronyms or prior working titles:
+>
+> | Project Name | Authors / Venue | Focus / Scope | How It Differs from SAGE (Ours) |
+> |---|---|---|---|
+> | **SAGE** | Microsoft & MBZUAI (EMNLP 2025) | *"Safety AI Generic Evaluation"* — general prompt safety evaluation | Evaluates static NLP prompt-response safety; does **not** evaluate code agents, sandbox execution, or iterative evolutionary drift. |
+> | **SAGE-Eval** | NYU (NeurIPS 2025 Spotlight) | *"Safety Generalization"* in generative models | Studies distribution shifts and generalization in generative safety classifiers; does **not** investigate autonomous agent self-modification or code verification. |
+> | **SAGE** | ArXiv 2025 | Defense-in-depth LLM lifecycle guardrail control | System guardrail middleware; not an empirical evolutionary benchmark or attestation ledger. |
+> | **SAGE** | PecanProject | Agronomic data extraction & synthesis | Biological and agronomic dataset management. |
+> | **SAGE** | dp-web4 | Situation-Aware Governance Engine | Decentralized blockchain governance engine. |
+> | **EvoEval** | Xia et al. (2024) | Benchmark for evolving coding problems via LLM | Evolves benchmark problem suites; does not evaluate self-modifying code agents or security boundary drift (our former development working title). |
 >
 > 📖 **Comprehensive Guides & Dossiers**: For quick demo and presentation resources, see the **[Complete Presentation Guide](SAGE_Presentation_Guide.md)** and **[Step-by-Step Run Guide](How_To_Run_SAGE.md)**. For an exhaustive, file-by-file blueprint detailing every architectural invariant, security boundary, tamper audit check, drift probe, LLM judge isolation rule, full per-suite timing benchmarks, and complete test results (201 passed, 1 skipped across 31 test files, 100% pass rate), see the **[Master Technical Dossier](PROJECT_DOSSIER.md)**, the automated **[Reproducibility Verification Attestation](REPRODUCIBILITY_VERIFICATION.md)**, and the complete **[Tables & Figures Proof of Provenance](docs/PROVENANCE_AND_AUDIT_TRAIL.md)**.
 
-**SAGE** is a hardened benchmark and formal evaluation framework that validates agent guardrails against canonical, deterministic degradation trajectories, supplemented by live API runs. SAGE is designed to measure **capability gain, security boundary drift (vulnerability injection rate), specification gaming (proxy gap), and capability retention** in self-modifying autonomous code agents across iterative evolutionary generations. SAGE implements an honest, two-tiered evaluation methodology:
+**SAGE: Safety & Agent Growth Evaluator** is a hardened benchmark and formal evaluation framework that validates agent guardrails against canonical, deterministic degradation trajectories, supplemented by live API runs. SAGE is designed to measure **capability gain, security boundary drift (vulnerability injection rate), specification gaming (proxy gap), and capability retention** in self-modifying autonomous code agents across iterative evolutionary generations. SAGE implements an honest, two-tiered evaluation methodology:
 1. **Canonical Benchmark Trajectories ($N=18{,}000$)**: 18,000 controlled, bitwise-reproducible evaluations across 100 tasks, 6 archetypes ($G_1$–$G_6$), 10 cycles, and 3 random seeds formalizing archetype state-mutation policies under deterministic execution, providing zero-flakiness counterfactual reference baselines.
 2. **Live Neural Model Rollouts & Cross-Family Baselines**: Empirical evaluation of live open-weights neural models (Qwen2.5-Coder-7B, Llama-3.1-8B) executed under logged, reproducible harnesses in our dual-container isolation sandbox.
 

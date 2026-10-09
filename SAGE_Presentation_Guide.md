@@ -1,4 +1,4 @@
-# 🎓 SAGE — Complete Presentation & Defense Guide
+# 🎓 SAGE: Safety & Agent Growth Evaluator — Complete Presentation & Defense Guide
 
 > **Core Research Thesis**: Unconstrained self-evolution in autonomous code agents inevitably leads to catastrophic failure: specification gaming, security boundary drift, and catastrophic forgetting. Verification guardrails (static AST tripwires and behavioral rollback canaries) implemented on open-weights foundation models reliably halt these failure modes, enabling safe, lifelong agent adaptation.
 
@@ -362,6 +362,15 @@ To defend our statistical methodology against inquiries regarding sample size ($
 >   In longitudinal agent studies, cycles within a single seed are cumulative, autocorrelated, and dependent. Treating 10 cycles as independent draws would constitute invalid pseudo-replication that falsely deflates standard errors. Instead, our independent unit of analysis is strictly the random seed ($N=3$ runs: seeds 42, 43, 44), computing terminal performance summaries per seed.
 > - **Concede**: *"With $N=3$ ($df=2$), power is constrained; 26 of 27 comparisons reject due to very large effect sizes ($|d| > 2.5$), while $G_3$ vs. $G_5$ correctly fails to reject ($p = 0.294$)."*
 >   When effect sizes are massive (as between guarded archetypes and unconstrained degrading archetypes, where Cohen's $|d|$ frequently exceeds $5.0$ and reaches $19.8$), statistical significance is attained even under severe step-down Holm-Bonferroni control ($p_{\text{Holm}} \le 0.003$). Crucially, where the capability difference is modest—specifically $G_3$ (memory accumulator) vs. $G_5$ (static verifier) on $\Delta P(T)$ (diff $-0.05$, Cohen's $d = -1.02$)—the test correctly and honestly fails to reject ($p = 0.294$). This proves that our inferential setup is conservative, well-calibrated, and does not yield spurious rejections.
+
+### ❓ Q11: "There are multiple other projects named 'SAGE' in the AI literature (e.g., EMNLP 2025, NeurIPS 2025). How does your project differ?"
+> **Answer**: We always use the full formal title **"SAGE: Safety & Agent Growth Evaluator"** (Jain et al., IEEE 2026) to avoid confusion. Our work addresses a fundamentally distinct scientific question from other projects sharing the acronym:
+> 1. **SAGE (EMNLP 2025, Microsoft & MBZUAI)**: *"Safety AI Generic Evaluation"* benchmarks static text safety and prompt red-teaming. It does **not** evaluate code agents, containerized sandbox execution, or iterative evolutionary drift over time.
+> 2. **SAGE-Eval (NeurIPS 2025 Spotlight, NYU)**: Focuses on *"Safety Generalization"* in generative model classifiers under distribution shifts. It does **not** model autonomous agent state mutation, few-shot memory buffers, or rollback gates.
+> 3. **SAGE (ArXiv 2025)**: Proposes defense-in-depth guardrail lifecycle control as system middleware; it is not an empirical benchmark suite.
+> 4. **Other Projects**: SAGE (PecanProject, agronomic extraction) and SAGE (dp-web4, decentralized governance) operate in completely unrelated domains.
+>
+> In contrast, our **SAGE: Safety & Agent Growth Evaluator** is the first benchmark specifically designed for **longitudinal evolutionary dynamics in autonomous code agents**—measuring security boundary erosion (vulnerability injection rates), proxy gaming gaps, and rollback-guarded capability retention across iterative self-modification cycles.
 
 ---
 

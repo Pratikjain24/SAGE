@@ -320,7 +320,7 @@ def make_zip_cell(run_id: str, filename_base: str):
 # ==============================================================================
 def build_claude_notebook():
     title = [
-        "# SAGE: Autonomous Code-Agent Evolution Benchmark\n",
+        "# SAGE: Safety & Agent Growth Evaluator\n",
         "### Empirical Benchmark Runner for Claude Models (Anthropic API & Distilled Sonnet GGUF)\n",
         "\n",
         "**Key Highlights:**\n",
@@ -487,7 +487,7 @@ def build_claude_notebook():
 # ==============================================================================
 def build_openai_notebook():
     title = [
-        "# SAGE: Autonomous Code-Agent Evolution Benchmark\n",
+        "# SAGE: Safety & Agent Growth Evaluator\n",
         "### Empirical Benchmark Runner for OpenAI Models (GPT-4o / GPT-4o-mini)\n",
         "\n",
         "**Key Highlights:**\n",
@@ -574,7 +574,7 @@ def build_openai_notebook():
 # ==============================================================================
 def build_deepseek_notebook():
     title = [
-        "# SAGE: Autonomous Code-Agent Evolution Benchmark\n",
+        "# SAGE: Safety & Agent Growth Evaluator\n",
         "### Empirical Benchmark Runner for DeepSeek Models (DeepSeek-Chat V3 / DeepSeek-Reasoner R1)\n",
         "\n",
         "**Key Highlights:**\n",

@@ -1,6 +1,6 @@
-# 🚀 How to Run the SAGE Project (Step-by-Step)
+# 🚀 How to Run SAGE: Safety & Agent Growth Evaluator (Step-by-Step)
 
-> Your project is already set up! The virtual environment (`.venv`) exists, dependencies are installed, and past experiment runs are available. Below are the exact commands to run everything.
+> **SAGE: Safety & Agent Growth Evaluator** — Your project is already set up! The virtual environment (`.venv`) exists, dependencies are installed, and past experiment runs are available. Below are the exact commands to run everything.
 
 ---
 
