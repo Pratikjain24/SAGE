@@ -307,9 +307,9 @@ def patch_document():
         if 'Capability can only stay level or improve—a monotonic ratchet.' in p.text:
             p.text = p.text.replace(
                 'Capability can only stay level or improve—a monotonic ratchet.',
-                'Capability can only stay level or improve—guaranteed by rollback-guarded state preservation.'
+                'Rollback-guarded state preservation prevents historical regression by construction; it does not guarantee forward capability gain, since an overly conservative gate risks governance paralysis (stagnation at baseline P(0) = 60.0%).'
             )
-            print('[+] Stripped marketing language (monotonic ratchet -> rollback-guarded state preservation)')
+            print('[+] Reconciled ratchet claim (non-regression bounded by construction; forward gain remains empirical)')
 
         if 'G4’s +0.55 gap is catastrophic.' in p.text or "G4's +0.55 gap is catastrophic." in p.text:
             p.text = p.text.replace(

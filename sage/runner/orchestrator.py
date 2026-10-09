@@ -41,6 +41,17 @@ from sage.trajectory.writer import TrajectoryWriter
 
 
 
+ARCHETYPE_DESCRIPTIONS: Dict[str, str] = {
+    "G1": "Frozen Control (Baseline)",
+    "G2": "Prompt Rewriter (Evolutionary Prompt)",
+    "G3": "Memory Accumulator (Context/Experience)",
+    "G4": "Reflection Agent (Self-Reflection Loop)",
+    "G5": "Static Verifier (AST / Lint Verification)",
+    "G6": "Regression Guard (Rollback & Defense)",
+    "G7": "Oracle Verifier (Ground-Truth Verification)",
+}
+
+
 class ExperimentOrchestrator:
     """Orchestrates experiment matrix: Groups x Seeds x Cycles x Tasks with hardening controls."""
 
@@ -53,6 +64,7 @@ class ExperimentOrchestrator:
         retry_backoff: float = 0.2,
         llm_client: Optional[BaseLLMClient] = None,
         max_workers: int = 8,
+        verbose: bool = True,
     ):
         self.config = config
         self.task_loader = task_loader
@@ -60,8 +72,12 @@ class ExperimentOrchestrator:
         self.runs_dir.mkdir(parents=True, exist_ok=True)
         self.max_retries = max_retries
         self.retry_backoff = retry_backoff
+        self.verbose = verbose
         if llm_client is not None:
             self.llm_client = llm_client
+        elif config.model.family == "anthropic" or "anthropic.com" in (config.model.api_base or ""):
+            from sage.llm.client import AnthropicClient
+            self.llm_client = AnthropicClient(config.model)
         elif config.model.api_base in ("local", "in_process", "direct") or config.model.name.endswith(".gguf"):
             from sage.llm.client import LocalLlamaClient
             model_p = config.model.name if config.model.name.endswith(".gguf") else "models/qwen2.5-coder-3b-instruct-q4_k_m.gguf"
@@ -269,10 +285,15 @@ class ExperimentOrchestrator:
         run_dir: Path,
         writer: TrajectoryWriter,
         scorer: HiddenScorer,
+        task_idx: Optional[int] = None,
+        total_tasks: Optional[int] = None,
     ) -> Tuple[Dict[str, Any], List[Dict[str, Any]], Tuple[int, str, int, str]]:
         """Execute and score a single task inside its isolated workspace with telemetry logging."""
         self.budget_guard.check_wall_clock()
         task_key = (seed, group, cycle, task.id)
+        if self.verbose:
+            idx_str = f"[{task_idx + 1}/{total_tasks}] " if task_idx is not None and total_tasks else ""
+            print(f"  ▶ {idx_str}Task {task.id:<18} ({task.type:<9}) running...", end="", flush=True)
         safety_mon = SafetyMonitor(protected_files=task.protected_files)
         task_ws = run_dir / "scratch" / f"seed_{seed}" / f"{group}_c{cycle}_{task.id}"
         self.task_loader.setup_task_workspace(task, task_ws)
@@ -497,6 +518,19 @@ class ExperimentOrchestrator:
                 )
             )
 
+            if self.verbose:
+                idx_str = f"[{task_idx + 1}/{total_tasks}] " if task_idx is not None and total_tasks else ""
+                status_tag = "✓ PASS" if is_success else "✗ FAIL"
+                dur_s = res.wall_time_ms / 1000.0
+                tot_tok = real_tokens_in + real_tokens_out
+                viol_info = f" | ⚠️ Violations: {len(task_safety_violations)}" if task_safety_violations else ""
+                print(
+                    f"\r  ▶ {idx_str}Task {task.id:<18} ({task.type:<9}) -> {status_tag} "
+                    f"[gt={eval_score.ground_truth_score:.2f}, gap={eval_score.proxy_gap:+.2f}] "
+                    f"in {dur_s:.1f}s | {tot_tok:,} tok | ${res.cost_usd:.4f}{viol_info}",
+                    flush=True,
+                )
+
             return task_result_entry, task_safety_violations, task_key
 
     def run_experiment(self, run_id: Optional[str] = None) -> Path:
@@ -579,6 +613,16 @@ class ExperimentOrchestrator:
                         )
                         active_cycle_tasks = tasks_to_run[:max_t]
 
+                        arch_name = ARCHETYPE_DESCRIPTIONS.get(group, group)
+                        if self.verbose:
+                            print(
+                                f"\n{'='*70}\n"
+                                f"🚀 Archetype Layer: {group} — {arch_name}\n"
+                                f"🔄 Cycle {cycle + 1}/{self.config.cycles} (Seed {seed}) | Agent: {agent.version} | Tasks: {len(active_cycle_tasks)}\n"
+                                f"{'='*70}",
+                                flush=True,
+                            )
+
                         # Check if all tasks and evolution for this cycle were already completed
                         all_tasks_cached = all(
                             (seed, group, cycle, t.id) in completed_tasks for t in active_cycle_tasks
@@ -586,6 +630,11 @@ class ExperimentOrchestrator:
                         cycle_already_evolved = (seed, group, cycle) in completed_evolution_cycles
 
                         if all_tasks_cached and cycle_already_evolved:
+                            if self.verbose:
+                                print(
+                                    f"  ⚡ Cycle {cycle + 1} already completed in previous run. Replaying cached metrics.",
+                                    flush=True,
+                                )
                             # Replay cached task results for metrics calculation
                             for t in active_cycle_tasks:
                                 cached_res = task_end_results.get((seed, group, cycle, t.id))
@@ -651,9 +700,10 @@ class ExperimentOrchestrator:
                                         completed_tasks.add(t_key)
                                         task_end_results[t_key] = t_entry
                             else:
-                                for t in tasks_to_run_now:
+                                for idx, t in enumerate(tasks_to_run_now):
                                     t_entry, t_violations, t_key = self._execute_single_task(
-                                        t, seed, group, cycle, agent, run_name, run_dir, writer, scorer
+                                        t, seed, group, cycle, agent, run_name, run_dir, writer, scorer,
+                                        task_idx=idx, total_tasks=len(tasks_to_run_now),
                                     )
                                     cycle_task_results.append(t_entry)
                                     cycle_safety_violations.extend(t_violations)
@@ -667,7 +717,7 @@ class ExperimentOrchestrator:
                             if cur_snap:
                                 agent.restore_state(cur_snap)
                         else:
-                            controller.step_evolution(
+                            evo_outcome = controller.step_evolution(
                                 cycle=cycle,
                                 agent=agent,
                                 task_results=cycle_task_results,
@@ -677,6 +727,13 @@ class ExperimentOrchestrator:
                                 seed=seed,
                             )
                             completed_evolution_cycles.add((seed, group, cycle))
+                            if self.verbose and evo_outcome:
+                                status_str = evo_outcome.status.upper()
+                                rat = f" | Rationale: {evo_outcome.rationale[:80]}" if evo_outcome.rationale else ""
+                                print(
+                                    f"  🧬 [Evolution Decision] Status: {status_str} -> Version: {agent.version}{rat}",
+                                    flush=True,
+                                )
 
                         # Summarize cycle metrics
                         pass_count = sum(1 for t in cycle_task_results if t["success"])
@@ -699,20 +756,43 @@ class ExperimentOrchestrator:
                         }
                         all_cycle_metrics.append(metric_entry)
 
+                        if self.verbose:
+                            print(
+                                f"  📊 [Cycle {cycle + 1} Summary] Pass Rate: {c_success_rate:.1%} "
+                                f"({pass_count}/{len(cycle_task_results)}) | "
+                                f"Safety Drift: {drift:.3f} | Cost: ${sum(t['cost_usd'] for t in cycle_task_results):.4f}\n",
+                                flush=True,
+                            )
+
         finally:
             writer.close()
 
-        # Save metrics JSON
+        # Save metrics JSON (merging with existing records if present across multi-cell runs)
         results_dir = run_dir / "results"
         results_dir.mkdir(parents=True, exist_ok=True)
         metrics_file = results_dir / "cycle_metrics.json"
+
+        final_metrics = []
+        if metrics_file.exists():
+            try:
+                existing_metrics = json.loads(metrics_file.read_text(encoding="utf-8"))
+                current_keys = {(m.get("seed"), m.get("group"), m.get("cycle")) for m in all_cycle_metrics}
+                final_metrics = [
+                    m for m in existing_metrics
+                    if (m.get("seed"), m.get("group"), m.get("cycle")) not in current_keys
+                ]
+            except Exception:
+                final_metrics = []
+        final_metrics.extend(all_cycle_metrics)
+        final_metrics.sort(key=lambda m: (str(m.get("group", "")), int(m.get("seed", 0)), int(m.get("cycle", 0))))
+
         with open(metrics_file, "w", encoding="utf-8") as f:
-            json.dump(all_cycle_metrics, f, indent=2)
+            json.dump(final_metrics, f, indent=2)
 
         # Compute and record inductive generalization gap reports across groups
         gen_reports: Dict[str, Any] = {}
         by_group: Dict[str, List[Dict[str, Any]]] = {}
-        for m in all_cycle_metrics:
+        for m in final_metrics:
             by_group.setdefault(m["group"], []).append(m)
 
         for grp, c_list in by_group.items():
@@ -733,8 +813,15 @@ class ExperimentOrchestrator:
 
         if gen_reports:
             gen_file = results_dir / "generalization_gap.json"
+            final_gen = {}
+            if gen_file.exists():
+                try:
+                    final_gen = json.loads(gen_file.read_text(encoding="utf-8"))
+                except Exception:
+                    final_gen = {}
+            final_gen.update(gen_reports)
             with open(gen_file, "w", encoding="utf-8") as f:
-                json.dump(gen_reports, f, indent=2)
+                json.dump(final_gen, f, indent=2)
 
         # Generate cryptographic SHA-256 trajectory manifest for reviewer verification
         generate_trajectory_manifest(run_dir, self.config)

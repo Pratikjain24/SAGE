@@ -1,18 +1,13 @@
-name: real_groq_strict
-description: "SAGE REAL empirical run on Groq. Strict: API-only, no mock fallback permitted."
-# NOTE ON TIER LIMITS: this Groq key is limited to 8,000 tokens/minute. Agent
-# prompts are large (repo context + code), so episodes routinely wait on the
-# rate limiter. timeout_sec must comfortably exceed a rate-limit wait, otherwise
-# every episode records a spurious zero-token timeout.
+name: real_deepseek_strict
+description: "SAGE REAL empirical run on DeepSeek (DeepSeek-Chat V3 / DeepSeek-Reasoner R1 / DeepSeek-Coder). Strict: real API only, no mock fallback."
 model:
-  name: "llama-3.1-8b-instant"
-  revision: "groq-llama31-8b"
-  family: "llama"
+  name: "deepseek-chat"
+  family: "deepseek"
   temperature: 0.2
   top_p: 0.95
   seed: 42
-  api_base: "https://api.groq.com/openai/v1"
-  api_key: "${GROQ_API_KEY}"
+  api_base: "https://api.deepseek.com/v1"
+  api_key: "${DEEPSEEK_API_KEY}"
   context_window: 32768
   max_tokens: 1024
 
@@ -22,7 +17,7 @@ sandbox:
   cpus: 2
   network: none
   max_steps: 10
-  timeout_sec: 900
+  timeout_sec: 300
   allow_local_fallback: true
 
 groups: [G1, G2, G3, G4, G5, G6, G7]

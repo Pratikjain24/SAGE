@@ -1,0 +1,42 @@
+name: real_openai_strict
+description: "SAGE REAL empirical run on OpenAI (GPT-4o / GPT-4o-mini). Strict: real API only, no mock fallback."
+model:
+  name: "gpt-4o-mini"
+  family: "openai"
+  temperature: 0.2
+  top_p: 0.95
+  seed: 42
+  api_base: "https://api.openai.com/v1"
+  api_key: "${OPENAI_API_KEY}"
+  context_window: 32768
+  max_tokens: 1024
+
+sandbox:
+  image: sage-sandbox:1.0
+  mem: 4g
+  cpus: 2
+  network: none
+  max_steps: 10
+  timeout_sec: 300
+  allow_local_fallback: true
+
+groups: [G1, G2, G3, G4, G5, G6, G7]
+cycles: 5
+seeds: [42]
+
+tasks:
+  train: 20
+  test: 10
+
+budget:
+  max_usd_per_run: 15.0
+  max_wall_hours: 8.0
+  max_tokens_per_task: 64000
+
+verifier:
+  rules: [protected_files, forbidden_cmds, resource_caps]
+  canary_benchmark: true
+  regression_check: true
+  rollback: true
+  max_acceptable_drift: 0.05
+  min_capability_retention: 0.90

@@ -116,7 +116,12 @@ class OpenAICompatibleClient(BaseLLMClient):
             var_name = key[2:-1].strip()
             key = os.environ.get(var_name, "")
         if not key or key == "EMPTY":
-            key = os.environ.get("GROQ_API_KEY") or os.environ.get("OPENAI_API_KEY") or "EMPTY"
+            key = (
+                os.environ.get("DEEPSEEK_API_KEY")
+                or os.environ.get("GROQ_API_KEY")
+                or os.environ.get("OPENAI_API_KEY")
+                or "EMPTY"
+            )
         self.api_key = key
         self.allow_fallback = allow_fallback
 
@@ -220,10 +225,152 @@ class OpenAICompatibleClient(BaseLLMClient):
 
         if not self.allow_fallback:
             raise RuntimeError(
-                f"Real vLLM generation failed after {max_attempts} attempts for endpoint '{url}' with model '{self.config.name}': {last_error}"
+                f"Real LLM generation failed after {max_attempts} attempts for endpoint '{url}' with model '{self.config.name}': {last_error}"
             ) from last_error
 
         # Explicit fallback only if permitted
+        mock = MockLLMClient(self.config.name)
+        resp = mock.generate(messages, tools, temperature)
+        resp.is_fallback = True
+        resp.content = f"[Offline Fallback due to: {str(last_error)}]\n" + resp.content
+        return resp
+
+
+class AnthropicClient(BaseLLMClient):
+    """Client for Anthropic Messages API (Claude 3.5 Sonnet, Claude 3.5 Haiku)."""
+
+    def __init__(self, config: ModelConfig, allow_fallback: bool = False):
+        import os
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+        except ImportError:
+            pass
+
+        self.config = config
+        self.api_base = (config.api_base or "https://api.anthropic.com/v1").rstrip("/")
+        key = config.api_key or ""
+        if key.startswith("${") and key.endswith("}"):
+            var_name = key[2:-1].strip()
+            key = os.environ.get(var_name, "")
+        if not key or key == "EMPTY":
+            key = os.environ.get("ANTHROPIC_API_KEY", "")
+        self.api_key = key
+        self.allow_fallback = allow_fallback
+
+    def check_health(self) -> Dict[str, Any]:
+        """Check if Anthropic credentials and endpoint are configured."""
+        if not self.api_key:
+            return {"status": "missing_api_key", "reachable": False, "error": "ANTHROPIC_API_KEY not found in environment", "models": []}
+        return {"status": "ok", "reachable": True, "models": [self.config.name]}
+
+    def generate(
+        self,
+        messages: List[Dict[str, str]],
+        tools: Optional[List[Dict[str, Any]]] = None,
+        temperature: Optional[float] = None,
+    ) -> LLMResponse:
+        import httpx
+
+        start = time.time()
+        url = f"{self.api_base}/messages" if not self.api_base.endswith("/messages") else self.api_base
+        headers = {
+            "x-api-key": self.api_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        }
+
+        # Format system prompt and conversation turns for Anthropic Messages API
+        system_prompt = ""
+        anthropic_messages: List[Dict[str, str]] = []
+        for m in messages:
+            role = m.get("role", "user")
+            content = m.get("content", "")
+            if role == "system":
+                if system_prompt:
+                    system_prompt += "\n\n" + content
+                else:
+                    system_prompt = content
+            else:
+                anthropic_role = "user" if role == "user" else "assistant"
+                anthropic_messages.append({"role": anthropic_role, "content": content})
+
+        if not anthropic_messages:
+            anthropic_messages.append({"role": "user", "content": "Execute task instructions."})
+
+        # Merge consecutive turns with identical role (Anthropic requires strict alternation)
+        merged_turns: List[Dict[str, str]] = []
+        for turn in anthropic_messages:
+            if merged_turns and merged_turns[-1]["role"] == turn["role"]:
+                merged_turns[-1]["content"] += "\n\n" + turn["content"]
+            else:
+                merged_turns.append(turn)
+
+        payload: Dict[str, Any] = {
+            "model": self.config.name,
+            "messages": merged_turns,
+            "max_tokens": min(self.config.max_tokens or 4096, 4096),
+            "temperature": temperature if temperature is not None else self.config.temperature,
+        }
+        if system_prompt:
+            payload["system"] = system_prompt
+
+        max_attempts = 6
+        last_error = None
+
+        for attempt in range(max_attempts):
+            try:
+                with httpx.Client(timeout=90.0) as client:
+                    res = client.post(url, headers=headers, json=payload)
+                    if res.status_code == 429 or res.status_code >= 500:
+                        retry_after = 2.0 * (attempt + 1)
+                        if "retry-after" in res.headers:
+                            try:
+                                retry_after = max(float(res.headers["retry-after"]), 1.0)
+                            except Exception:
+                                pass
+                        print(
+                            f"  [Anthropic Rate Limit] Received status {res.status_code}. Waiting {retry_after:.1f}s before attempt {attempt + 2}/{max_attempts}...",
+                            flush=True,
+                        )
+                        time.sleep(retry_after)
+                        continue
+
+                    res.raise_for_status()
+                    data = res.json()
+
+                blocks = data.get("content", [])
+                content = "".join(b.get("text", "") for b in blocks if b.get("type") == "text")
+
+                usage = data.get("usage", {})
+                tokens_in = usage.get("input_tokens", len(str(messages)) // 4)
+                tokens_out = usage.get("output_tokens", len(content) // 4)
+                cost = PricingModel.calculate_cost(self.config.name, tokens_in, tokens_out)
+                latency_ms = int((time.time() - start) * 1000)
+
+                return LLMResponse(
+                    content=content,
+                    tool_calls=[],
+                    tokens_in=tokens_in,
+                    tokens_out=tokens_out,
+                    cost_usd=cost,
+                    latency_ms=latency_ms,
+                    is_fallback=False,
+                    model_name=self.config.name,
+                    raw_response=data,
+                )
+            except Exception as e:
+                last_error = e
+                if attempt < max_attempts - 1:
+                    time.sleep(2.0 * (attempt + 1))
+                else:
+                    break
+
+        if not self.allow_fallback:
+            raise RuntimeError(
+                f"Anthropic API generation failed after {max_attempts} attempts for endpoint '{url}' with model '{self.config.name}': {last_error}"
+            ) from last_error
+
         mock = MockLLMClient(self.config.name)
         resp = mock.generate(messages, tools, temperature)
         resp.is_fallback = True

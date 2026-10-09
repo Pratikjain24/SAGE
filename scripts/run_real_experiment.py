@@ -47,6 +47,7 @@ def main() -> int:
     ap.add_argument("--run-id", required=True, help="Unique identifier for experiment run")
     ap.add_argument("--max-usd", type=float, default=50.0, help="Budget cap in USD")
     ap.add_argument("--max-workers", type=int, default=1, help="Parallel execution workers")
+    ap.add_argument("--verbose", action=argparse.BooleanOptionalAction, default=True, help="Stream live progress")
     args = ap.parse_args()
 
     load_env()
@@ -72,12 +73,12 @@ def main() -> int:
 
     loader = TaskLoader(ROOT / "tasks/tasks_index.json")
     orch = ExperimentOrchestrator(
-        cfg, loader, runs_dir=ROOT / "experiments/runs", max_workers=args.max_workers
+        cfg, loader, runs_dir=ROOT / "experiments/runs", max_workers=args.max_workers, verbose=args.verbose
     )
 
     client_name = type(orch.llm_client).__name__
     print(f"[client] {client_name} (allow_fallback={getattr(orch.llm_client, 'allow_fallback', None)})")
-    REAL_CLIENTS = ("OpenAICompatibleClient", "LocalLlamaClient")
+    REAL_CLIENTS = ("OpenAICompatibleClient", "LocalLlamaClient", "AnthropicClient")
     if client_name not in REAL_CLIENTS:
         print(
             f"REFUSING TO RUN: client is {client_name}, not a real inference client. "

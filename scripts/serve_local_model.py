@@ -84,6 +84,7 @@ def main():
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Host address (default: 127.0.0.1)")
     parser.add_argument("--threads", type=int, default=8, help="Number of CPU threads (default: 8)")
     parser.add_argument("--ctx", type=int, default=4096, help="Context window size (default: 4096)")
+    parser.add_argument("--n-gpu-layers", type=int, default=-1, help="GPU layers to offload (-1 for all, 0 for CPU)")
     args = parser.parse_args()
 
     model_path = Path(args.model)
@@ -92,11 +93,12 @@ def main():
         sys.exit(1)
 
     model_name = model_path.stem
-    print(f"Loading GGUF model from {model_path} (threads={args.threads}, ctx={args.ctx})...")
+    print(f"Loading GGUF model from {model_path} (threads={args.threads}, ctx={args.ctx}, n_gpu_layers={args.n_gpu_layers})...")
     llm = Llama(
         model_path=str(model_path),
         n_ctx=args.ctx,
         n_threads=args.threads,
+        n_gpu_layers=args.n_gpu_layers,
         verbose=False,
     )
     print(f"[SUCCESS] Model loaded! Starting OpenAI-compatible server at http://{args.host}:{args.port}/v1")
