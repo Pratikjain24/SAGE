@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { fetchAuditQueue, submitAuditLabel, AuditQueueItem } from "@/lib/api";
-import { ClipboardCheck, ShieldAlert, AlertTriangle, Check, RefreshCw } from "lucide-react";
+import { ClipboardCheck, ShieldAlert, AlertTriangle, Check, RefreshCw, UserCheck } from "lucide-react";
 
 export default function AuditPage() {
   const [queue, setQueue] = useState<AuditQueueItem[]>([]);
@@ -49,7 +49,6 @@ export default function AuditPage() {
 
       setSubmittedIds((prev) => new Set(prev).add(currentItem.audit_id));
 
-      // Advance to next item
       if (selectedIdx < queue.length - 1) {
         setSelectedIdx(selectedIdx + 1);
         setIsViolation(false);
@@ -65,40 +64,52 @@ export default function AuditPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-surface-border">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-800/80 gap-3">
         <div>
-          <h2 className="text-2xl font-black text-white tracking-tight flex items-center gap-2">
-            <ClipboardCheck className="text-indigo-400" /> Human Audit Workbench
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+              Double-Blind Audit
+            </span>
+            <span className="font-mono text-xs text-slate-400">Stratified Sample (5–10%)</span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-2">
+            <ClipboardCheck className="text-cyan-400" /> Human Evaluation Workbench
           </h2>
-          <p className="text-sm text-slate-400 mt-1">
-            Stratified 5–10% sample of agent trajectories for double-blind human validation.
+          <p className="text-xs md:text-sm text-slate-300 mt-1 max-w-xl leading-relaxed">
+            Independent human annotator verification of agent tool calls, execution transcripts, and reward hacking behavior.
           </p>
         </div>
+
         <button
           onClick={loadQueue}
-          className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-surface-card hover:bg-slate-800 text-slate-300 border border-surface-border flex items-center gap-2 transition-all"
+          className="btn-secondary"
         >
-          <RefreshCw size={13} /> Refresh Queue
+          <RefreshCw size={13} className={loading ? "animate-spin text-cyan-400" : ""} />
+          <span>Refresh Queue</span>
         </button>
       </div>
 
       {loading ? (
-        <div className="text-center py-16 text-slate-500 text-sm">Loading audit queue...</div>
+        <div className="text-center py-16 text-slate-500 text-sm font-mono">
+          Loading audit queue...
+        </div>
       ) : queue.length === 0 ? (
-        <div className="glass-panel p-12 text-center rounded-2xl border border-surface-border text-slate-400">
-          No audit queue items available. Run an experiment or export an audit sample with{" "}
-          <code className="text-indigo-400 bg-surface px-2 py-1 rounded">sage audit</code>.
+        <div className="hud-card p-12 text-center text-slate-400 space-y-2">
+          <p className="text-sm">No audit queue items currently available.</p>
+          <p className="text-xs text-slate-500 font-mono">
+            Execute benchmark cycles or export an audit sample via <code className="text-cyan-400 px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800">sage audit</code>.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column: Queue List */}
           <div className="lg:col-span-4 space-y-2">
-            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            <div className="section-label mb-2">
               Sampled Trajectories ({queue.length})
             </div>
-            <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[620px] overflow-y-auto pr-1">
               {queue.map((item, idx) => {
                 const isSelected = selectedIdx === idx;
                 const isDone = submittedIds.has(item.audit_id);
@@ -106,37 +117,37 @@ export default function AuditPage() {
                   <button
                     key={item.audit_id}
                     onClick={() => setSelectedIdx(idx)}
-                    className={`w-full text-left p-3.5 rounded-xl border transition-all flex flex-col gap-1.5 ${
+                    className={`w-full text-left p-3.5 rounded-xl transition-all flex flex-col gap-1.5 border ${
                       isSelected
-                        ? "bg-indigo-600/20 border-indigo-500/50 text-white"
-                        : "bg-surface-card border-surface-border text-slate-300 hover:bg-slate-800/60"
+                        ? "bg-slate-900/90 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.1)]"
+                        : "bg-slate-900/50 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/70"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-indigo-400">
+                      <span className="font-mono text-xs font-bold text-cyan-400">
                         {item.task_id}
                       </span>
                       {isDone && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center gap-1">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
                           <Check size={10} /> Labeled
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
                       <span>Cycle {item.cycle}</span>
-                      <span>·</span>
-                      <span>{item.group}</span>
-                      <span>·</span>
+                      <span>&bull;</span>
+                      <span className="text-slate-300 font-bold">{item.group}</span>
+                      <span>&bull;</span>
                       <span>Seed {item.seed}</span>
                     </div>
                     <div className="flex gap-1.5 mt-1">
                       {item.flagged_for_safety && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 font-semibold flex items-center gap-1">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold flex items-center gap-1">
                           <ShieldAlert size={10} /> Safety Flag
                         </span>
                       )}
                       {item.flagged_for_reward_hack && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-semibold flex items-center gap-1">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold flex items-center gap-1">
                           <AlertTriangle size={10} /> Hack Flag
                         </span>
                       )}
@@ -147,28 +158,35 @@ export default function AuditPage() {
             </div>
           </div>
 
-          {/* Right Column: Inspector & Label Form */}
+          {/* Right Column: Inspector & Judgment Form */}
           <div className="lg:col-span-8 space-y-6">
             {currentItem && (
               <>
                 {/* Event Trace Details */}
-                <div className="glass-panel p-6 rounded-2xl border border-surface-border">
-                  <div className="flex items-center justify-between pb-3 border-b border-surface-border">
-                    <h3 className="font-bold text-white text-sm">
-                      Trajectory Trace: <span className="font-mono text-indigo-400">{currentItem.task_id}</span>
+                <div className="hud-card p-6 border border-slate-800/80 bg-slate-950/80 space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                    <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                      <span>Trajectory Trace:</span>
+                      <span className="font-mono text-cyan-400">{currentItem.task_id}</span>
                     </h3>
                     <span className="text-xs font-mono text-slate-400">
-                      Group {currentItem.group} | Cycle {currentItem.cycle}
+                      Group {currentItem.group} &bull; Cycle {currentItem.cycle}
                     </span>
                   </div>
 
-                  <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto pr-2 font-mono text-xs">
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 font-mono text-xs">
                     {currentItem.events_summary.map((ev, i) => (
-                      <div key={i} className="p-2.5 bg-slate-950/80 rounded-lg border border-slate-900">
-                        <div className="text-slate-400 font-semibold text-[11px] uppercase mb-1">
-                          [{ev.event_type}] ({ev.agent_version})
+                      <div
+                        key={i}
+                        className="p-3 rounded-lg bg-black/60 border border-slate-800/80 space-y-1"
+                      >
+                        <div className="font-bold text-[11px] uppercase text-cyan-400 flex items-center justify-between">
+                          <span>[{ev.event_type}]</span>
+                          <span className="text-slate-500 text-[10px]">{ev.agent_version}</span>
                         </div>
-                        <pre className="text-slate-300 whitespace-pre-wrap">{JSON.stringify(ev.payload, null, 2)}</pre>
+                        <pre className="text-slate-300 whitespace-pre-wrap leading-relaxed text-[11px]">
+                          {JSON.stringify(ev.payload, null, 2)}
+                        </pre>
                       </div>
                     ))}
                   </div>
@@ -177,34 +195,40 @@ export default function AuditPage() {
                 {/* Double-Blind Human Labeling Form */}
                 <form
                   onSubmit={handleSubmit}
-                  className="glass-panel p-6 rounded-2xl border border-surface-border space-y-4"
+                  className="hud-card p-6 border border-slate-800/80 bg-slate-950/80 space-y-4"
                 >
-                  <h3 className="font-bold text-white text-sm pb-2 border-b border-surface-border">
-                    Double-Blind Judgment Form
-                  </h3>
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                    <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                      <UserCheck size={16} className="text-cyan-400" />
+                      Double-Blind Human Judgment
+                    </h3>
+                    <span className="text-xs font-mono text-slate-500">
+                      Annotator: {annotatorId}
+                    </span>
+                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      <label className="text-xs font-semibold block mb-1 text-slate-300">
                         Annotator Identifier
                       </label>
                       <input
                         type="text"
                         value={annotatorId}
                         onChange={(e) => setAnnotatorId(e.target.value)}
-                        className="w-full bg-surface text-xs font-mono px-3 py-2 rounded-lg border border-surface-border text-slate-200 focus:outline-none"
+                        className="w-full text-xs font-mono px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-cyan-500/50"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      <label className="text-xs font-semibold block mb-1 text-slate-300">
                         Failure Severity Taxonomy
                       </label>
                       <select
                         value={severity}
                         onChange={(e) => setSeverity(e.target.value)}
-                        className="w-full bg-surface text-xs px-3 py-2 rounded-lg border border-surface-border text-slate-200 focus:outline-none"
+                        className="w-full text-xs font-mono px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-cyan-500/50"
                       >
                         <option value="none">None (Clean Execution)</option>
                         <option value="benign">Benign Failure (Syntax / Timeout)</option>
@@ -215,13 +239,13 @@ export default function AuditPage() {
                     </div>
                   </div>
 
-                  <div className="flex gap-6 pt-2">
+                  <div className="flex flex-wrap gap-6 pt-2">
                     <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-300">
                       <input
                         type="checkbox"
                         checked={isViolation}
                         onChange={(e) => setIsViolation(e.target.checked)}
-                        className="w-4 h-4 rounded bg-surface border-surface-border text-indigo-600 focus:ring-0"
+                        className="w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0 accent-cyan-400"
                       />
                       Confirms Safety Boundary Violation
                     </label>
@@ -231,22 +255,22 @@ export default function AuditPage() {
                         type="checkbox"
                         checked={isRewardHacked}
                         onChange={(e) => setIsRewardHacked(e.target.checked)}
-                        className="w-4 h-4 rounded bg-surface border-surface-border text-indigo-600 focus:ring-0"
+                        className="w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0 accent-cyan-400"
                       />
                       Confirms Reward Hacking / Specification Gaming
                     </label>
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">
-                      Auditor Notes & Observations
+                    <label className="text-xs font-semibold block mb-1 text-slate-300">
+                      Auditor Notes &amp; Observations
                     </label>
                     <textarea
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       rows={3}
                       placeholder="Describe specific behavioral anomalies or code discrepancies..."
-                      className="w-full bg-surface text-xs px-3 py-2 rounded-lg border border-surface-border text-slate-200 focus:outline-none placeholder-slate-600"
+                      className="w-full text-xs font-mono px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-cyan-500/50"
                     />
                   </div>
 
@@ -254,7 +278,7 @@ export default function AuditPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+                      className="btn-primary"
                     >
                       {submitting ? "Saving Judgment..." : "Submit Judgment & Next"}
                     </button>

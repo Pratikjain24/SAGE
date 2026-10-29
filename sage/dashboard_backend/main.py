@@ -14,6 +14,14 @@ from sage.dashboard_backend.api.runs import router as runs_router
 from sage.dashboard_backend.api.trajectories import router as trajectories_router
 from sage.dashboard_backend.db.models import init_db
 from sage.dashboard_backend.ingest.watcher import RunWatcher
+from sage_live.api.routes import (
+    probe_router,
+    eval_router,
+    metrics_router,
+    staleness_router,
+    attestation_router,
+    agent_router,
+)
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -46,27 +54,35 @@ app = FastAPI(
 )
 
 # Hardened CORS policy: restrict to explicit origins in production
-raw_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+raw_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001,*")
 allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=["*"] if "*" in allowed_origins else allowed_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "X-API-Key"],
+    allow_methods=["*"],
+    allow_headers=["*"],
     max_age=86400,
 )
 
 # Add security headers
 app.add_middleware(SecurityHeadersMiddleware)
 
-# Mount API routers
+# Mount API routers (Static Benchmark + SAGE-Live Real-Time Dynamic Evaluation)
 app.include_router(runs_router)
 app.include_router(cycles_router)
 app.include_router(trajectories_router)
 app.include_router(audit_router)
 app.include_router(leaderboard_router)
+
+# Mount SAGE-Live Dynamic Evaluation Endpoints
+app.include_router(probe_router)
+app.include_router(eval_router)
+app.include_router(metrics_router)
+app.include_router(staleness_router)
+app.include_router(attestation_router)
+app.include_router(agent_router)
 
 
 @app.get("/health")

@@ -196,7 +196,7 @@ Alt-Svc: h3=":443"; ma=2592000
 
 ## 3. Quantitative Drift Analysis: Mock vs. Real LLM Inference
 
-The difference between mock responses and real neural foundation model generation was empirically quantified via our automated drift prober ([`vllm_smoke_test_report.json`](file:///c:/Users/kruti/SAGE/experiments/runs/vllm_smoke_canonical/vllm_smoke_test_report.json)):
+The difference between mock responses and real neural foundation model generation was empirically quantified via our automated drift prober ([`vllm_smoke_test_report.json`](../experiments/runs/vllm_smoke_canonical/vllm_smoke_test_report.json)):
 
 | Metric Dimension | Mock Deterministic Harness | Real Neural Foundation Model (`vLLM`) | Empirical Drift Ratio |
 |---|:---:|:---:|:---:|

@@ -112,12 +112,16 @@ class OpenAICompatibleClient(BaseLLMClient):
         self.config = config
         self.api_base = config.api_base or "http://localhost:8000/v1"
         key = config.api_key or ""
+        # Resolve environment variable references in API key if configured as ${VAR_NAME}
         if key.startswith("${") and key.endswith("}"):
             var_name = key[2:-1].strip()
             key = os.environ.get(var_name, "")
+        # Fallback hierarchy for provider API keys if not explicitly supplied
         if not key or key == "EMPTY":
             key = (
-                os.environ.get("DEEPSEEK_API_KEY")
+                os.environ.get("GEMINI_API_KEY")
+                or os.environ.get("GOOGLE_API_KEY")
+                or os.environ.get("DEEPSEEK_API_KEY")
                 or os.environ.get("GROQ_API_KEY")
                 or os.environ.get("OPENAI_API_KEY")
                 or "EMPTY"
@@ -131,6 +135,9 @@ class OpenAICompatibleClient(BaseLLMClient):
 
         url = f"{self.api_base.rstrip('/')}/models"
         headers = {"Authorization": f"Bearer {self.api_key}"}
+        # Google Generative Language API expects x-goog-api-key header alongside or in place of Bearer token
+        if "googleapis.com" in self.api_base:
+            headers["x-goog-api-key"] = self.api_key
         try:
             with httpx.Client(timeout=5.0) as client:
                 res = client.get(url, headers=headers)
@@ -152,6 +159,9 @@ class OpenAICompatibleClient(BaseLLMClient):
         start = time.time()
         url = f"{self.api_base.rstrip('/')}/chat/completions"
         headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+        # Google AI Studio OpenAI-compatible endpoint (/v1beta/openai/chat/completions) requires x-goog-api-key
+        if "googleapis.com" in self.api_base:
+            headers["x-goog-api-key"] = self.api_key
         payload: Dict[str, Any] = {
             "model": self.config.name,
             "messages": messages,

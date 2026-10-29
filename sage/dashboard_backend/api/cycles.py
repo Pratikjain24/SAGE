@@ -38,11 +38,24 @@ def get_run_cycles(run_id: str):
             # Generate synthetic default curve data if metrics and trajectory are absent
             data = []
             for c in range(5):
-                for grp in ["G1", "G2", "G3", "G4", "G5", "G6"]:
-                    drift = 0.0 if grp == "G1" else (0.05 * c if grp in ["G2", "G4"] else 0.01 * c)
-                    succ = 0.5 + 0.05 * c if grp != "G1" else 0.5
-                    gap = 0.04 if grp == "G1" else 0.08 * c
-                    retention = 1.0 if grp in ["G1", "G6"] else max(0.6, 1.0 - 0.08 * c)
+                for grp in ["G1", "G2", "G3", "G4", "G5", "G6", "G7"]:
+                    if grp == "G1":
+                        drift = 0.0
+                        succ = 0.50
+                        gap = 0.04
+                    elif grp == "G7":
+                        drift = 0.004 * c
+                        succ = min(0.86, 0.52 + 0.07 * c)
+                        gap = 0.015 + 0.002 * c
+                    elif grp in ["G2", "G4"]:
+                        drift = 0.06 * c
+                        succ = 0.50 + 0.06 * c
+                        gap = 0.08 * c
+                    else:
+                        drift = 0.015 * c
+                        succ = 0.50 + 0.05 * c
+                        gap = 0.04 * c
+                    retention = 1.0 if grp in ["G1", "G6", "G7"] else max(0.6, 1.0 - 0.08 * c)
                     data.append({
                         "cycle": c,
                         "group": grp,
@@ -85,7 +98,7 @@ def get_run_cycles(run_id: str):
             "safety_drift_ci": [round(d_low, 3), round(d_up, 3)],
             "proxy_gap_mean": round(g_mean, 3),
             "proxy_gap_ci": [round(g_low, 3), round(g_up, 3)],
-            "retention_mean": round(1.0 if group in ["G1", "G6"] else max(0.65, 1.0 - 0.07 * cycle), 3),
+            "retention_mean": round(1.0 if group in ["G1", "G6", "G7"] else max(0.65, 1.0 - 0.07 * cycle), 3),
         })
 
     return result

@@ -398,3 +398,95 @@ def test_strict_integer_rank_holm_multipliers_27_tuples():
     # The step value is 4 * 0.0028 = 0.0112, so adj_p >= 0.0112, never 0.0040
     assert adj_test[idx_0028] >= 0.0112
 
+
+
+def test_statistical_significance_n5_seeds(tmp_path: Path):
+    """Verify analyzer evaluates full 27 canonical tuples with N=5 seeds minimum."""
+    groups = ["G1", "G2", "G3", "G4", "G5", "G6"]
+    seeds = [42, 43, 44, 45, 46]  # N=5 seeds minimum
+    synthetic_metrics = []
+
+    for seed in seeds:
+        for grp in groups:
+            for cycle in range(5):
+                drift = 0.05 * cycle if grp in ["G2", "G3", "G4"] else 0.01 * cycle
+                gap = 0.06 * cycle if grp in ["G2", "G3", "G4"] else 0.01
+                succ = 0.60 + 0.06 * cycle if grp in ["G2", "G4", "G6"] else 0.60 + 0.03 * cycle
+                synthetic_metrics.append({
+                    "run_id": "test_n5_run",
+                    "seed": seed,
+                    "group": grp,
+                    "cycle": cycle,
+                    "success_rate": succ,
+                    "safety_drift": drift,
+                    "proxy_gap": gap,
+                    "cost_usd": 0.01,
+                })
+
+    analyzer = StatisticalSignificanceAnalyzer(
+        metrics=synthetic_metrics,
+        run_id="test_n5_run",
+        n_bootstraps=500,
+        alpha=0.05,
+    )
+    report = analyzer.run_analysis()
+    assert report.total_hypotheses == 27
+    assert len(report.results) == 27
+    for r in report.results:
+        assert r.n_samples == 5
+
+    latex_table = analyzer._generate_latex_table(report)
+    assert "$N = 5$ independent runs: seeds 42, 43, 44, 45, 46" in latex_table
+    assert r"\label{tab:significance_testing}" in latex_table
+
+
+def test_statistical_significance_n10_seeds(tmp_path: Path):
+    """Verify analyzer evaluates full 27 canonical tuples with N=10 seeds ideal."""
+    groups = ["G1", "G2", "G3", "G4", "G5", "G6"]
+    seeds = list(range(42, 52))  # N=10 seeds: 42..51
+    synthetic_metrics = []
+
+    for seed in seeds:
+        for grp in groups:
+            for cycle in range(5):
+                drift = 0.05 * cycle if grp in ["G2", "G3", "G4"] else 0.01 * cycle
+                gap = 0.06 * cycle if grp in ["G2", "G3", "G4"] else 0.01
+                succ = 0.60 + 0.06 * cycle if grp in ["G2", "G4", "G6"] else 0.60 + 0.03 * cycle
+                synthetic_metrics.append({
+                    "run_id": "test_n10_run",
+                    "seed": seed,
+                    "group": grp,
+                    "cycle": cycle,
+                    "success_rate": succ,
+                    "safety_drift": drift,
+                    "proxy_gap": gap,
+                    "cost_usd": 0.01,
+                })
+
+    analyzer = StatisticalSignificanceAnalyzer(
+        metrics=synthetic_metrics,
+        run_id="test_n10_run",
+        n_bootstraps=500,
+        alpha=0.05,
+    )
+    report = analyzer.run_analysis()
+    assert report.total_hypotheses == 27
+    assert len(report.results) == 27
+    for r in report.results:
+        assert r.n_samples == 10
+
+    latex_table = analyzer._generate_latex_table(report)
+    assert "$N = 10$ independent runs: seeds 42, 43, 44, 45, 46, 47, 48, 49, 50, 51" in latex_table
+
+
+def test_seed_scaling_standard_error():
+    """Verify standard error decreases as 1/sqrt(N) across N=3, 5, 10 seeds."""
+    sigma = 0.040
+    se_3 = sigma / np.sqrt(3)
+    se_5 = sigma / np.sqrt(5)
+    se_10 = sigma / np.sqrt(10)
+
+    assert se_3 > se_5 > se_10
+    assert pytest.approx(se_3, rel=1e-2) == 0.0231
+    assert pytest.approx(se_5, rel=1e-2) == 0.0179
+    assert pytest.approx(se_10, rel=1e-2) == 0.0126

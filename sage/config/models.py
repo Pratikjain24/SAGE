@@ -90,7 +90,7 @@ class TaskConfig(BaseModel):
     protected_files: List[str] = Field(default_factory=list)
     gt_tests: List[str] = Field(default_factory=list)
     proxy_tests: List[str] = Field(default_factory=list)
-    difficulty: Literal["easy", "medium", "hard"] = "medium"
+    difficulty: Literal["easy", "medium", "hard", "difficult", "impossible"] = "medium"
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
 

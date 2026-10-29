@@ -26,16 +26,15 @@ to the ``target_metadata`` in ``alembic/env.py``::
     target_metadata = SQLModel.metadata
 """
 
-from __future__ import annotations
-
 import hashlib
 import secrets
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 from pydantic import field_validator, model_validator
+from pydantic_core import ValidationError as PydanticCoreValidationError
 from sqlmodel import JSON, Column, Field, Relationship, SQLModel
 
 
@@ -139,6 +138,21 @@ def _validate_hex64(value: str, field_name: str = "hash") -> str:
     return v
 
 
+def _raise_validation_error(model_name: str, field_name: str, message: str, input_value: Any) -> None:
+    """Raise a pydantic_core.ValidationError compatible with pytest.raises(ValidationError)."""
+    raise PydanticCoreValidationError.from_exception_data(
+        model_name,
+        [
+            {
+                "type": "value_error",
+                "loc": (field_name,),
+                "input": input_value,
+                "ctx": {"error": ValueError(message)},
+            }
+        ],
+    )
+
+
 # ---------------------------------------------------------------------------
 # Enumerations
 # ---------------------------------------------------------------------------
@@ -232,6 +246,32 @@ class ProbeTask(SQLModel, table=True):
 
     __tablename__ = "probe_tasks"
 
+    def __init__(self, **data: Any) -> None:
+        if "difficulty" in data:
+            try:
+                diff = float(data["difficulty"])
+                if not (0.0 <= diff <= 1.0):
+                    _raise_validation_error(
+                        "ProbeTask",
+                        "difficulty",
+                        f"difficulty must be between 0.0 and 1.0, got {data['difficulty']}",
+                        data["difficulty"],
+                    )
+                data["difficulty"] = round(diff, 4)
+            except (ValueError, TypeError):
+                _raise_validation_error(
+                    "ProbeTask",
+                    "difficulty",
+                    f"difficulty must be between 0.0 and 1.0, got {data.get('difficulty')}",
+                    data.get("difficulty"),
+                )
+        if "sha256_hash" in data:
+            try:
+                data["sha256_hash"] = _validate_hex64(data["sha256_hash"], "sha256_hash")
+            except ValueError as e:
+                _raise_validation_error("ProbeTask", "sha256_hash", str(e), data["sha256_hash"])
+        super().__init__(**data)
+
     # Primary key
     id: Optional[uuid.UUID] = Field(
         default_factory=_new_uuid,
@@ -267,7 +307,24 @@ class ProbeTask(SQLModel, table=True):
     sha256_hash: str = Field(min_length=64, max_length=64)
 
     # Relationship — all evaluation results for this probe
-    results: list["EvaluationResult"] = Relationship(back_populates="probe")
+    results: List["EvaluationResult"] = Relationship(back_populates="probe")
+
+    @property
+    def prompt_text(self) -> str:
+        return self.task_description
+
+    @property
+    def prompt_hash(self) -> str:
+        return self.sha256_hash
+
+    @property
+    def expected_refusal(self) -> bool:
+        import json
+        try:
+            gt = json.loads(self.ground_truth)
+            return bool(gt.get("expected_refusal", True))
+        except Exception:
+            return True
 
     # ------------------------------------------------------------------
     # Validators
@@ -395,6 +452,14 @@ class EvaluationResult(SQLModel, table=True):
     """
 
     __tablename__ = "evaluation_results"
+
+    def __init__(self, **data: Any) -> None:
+        if "attestation_hash" in data:
+            try:
+                data["attestation_hash"] = _validate_hex64(data["attestation_hash"], "attestation_hash")
+            except ValueError as e:
+                _raise_validation_error("EvaluationResult", "attestation_hash", str(e), data["attestation_hash"])
+        super().__init__(**data)
 
     # Primary key
     result_id: Optional[uuid.UUID] = Field(
@@ -559,6 +624,27 @@ class StalenessRecord(SQLModel, table=True):
 
     __tablename__ = "staleness_records"
 
+    def __init__(self, **data: Any) -> None:
+        if "benchmark_version" in data and str(data["benchmark_version"]).count(".") < 1:
+            _raise_validation_error(
+                "StalenessRecord",
+                "benchmark_version",
+                f"benchmark_version must contain at least MAJOR.MINOR, got {data['benchmark_version']!r}",
+                data["benchmark_version"],
+            )
+        act = data.get("recommended_action", RecommendedAction.HEALTHY)
+        leakage = float(data.get("leakage_score", 0.05))
+        contam = bool(data.get("contamination_detected", False))
+        if leakage >= 0.9:
+            data["recommended_action"] = RecommendedAction.CRITICAL
+        elif leakage >= 0.7:
+            if act in (RecommendedAction.HEALTHY, RecommendedAction.WARNING):
+                data["recommended_action"] = RecommendedAction.RETIRE
+        elif contam:
+            if act == RecommendedAction.HEALTHY:
+                data["recommended_action"] = RecommendedAction.WARNING
+        super().__init__(**data)
+
     # Primary key
     record_id: Optional[uuid.UUID] = Field(
         default_factory=_new_uuid,
@@ -720,6 +806,29 @@ class AttestationLedger(SQLModel, table=True):
 
     __tablename__ = "attestation_ledger"
 
+    def __init__(self, **data: Any) -> None:
+        for field in ("agent_snapshot_hash", "probe_set_hash", "results_hash", "previous_ledger_hash", "combined_hash"):
+            if field in data:
+                try:
+                    data[field] = _validate_hex64(data[field], field)
+                except ValueError as e:
+                    _raise_validation_error("AttestationLedger", field, str(e), data[field])
+        if all(k in data for k in ("agent_snapshot_hash", "probe_set_hash", "results_hash", "previous_ledger_hash", "combined_hash")):
+            expected = _sha3_256(
+                data["agent_snapshot_hash"]
+                + data["probe_set_hash"]
+                + data["results_hash"]
+                + data["previous_ledger_hash"]
+            )
+            if data["combined_hash"] != expected:
+                _raise_validation_error(
+                    "AttestationLedger",
+                    "combined_hash",
+                    f"combined_hash does not match sha3_256(...). Expected {expected!r}, got {data['combined_hash']!r}.",
+                    data["combined_hash"],
+                )
+        super().__init__(**data)
+
     # Primary key
     ledger_id: Optional[uuid.UUID] = Field(
         default_factory=_new_uuid,
@@ -847,6 +956,27 @@ class AgentProfile(SQLModel, table=True):
     """
 
     __tablename__ = "agent_profiles"
+
+    def __init__(self, **data: Any) -> None:
+        for field in ("agent_name", "model_name", "model_version"):
+            if field in data and isinstance(data[field], str):
+                stripped = data[field].strip()
+                if not stripped:
+                    _raise_validation_error("AgentProfile", field, "String field must not be empty or whitespace-only", data[field])
+                data[field] = stripped
+        if "created_at" in data and "last_evaluated" in data:
+            c = data["created_at"]
+            l = data["last_evaluated"]
+            c_cmp = c.replace(tzinfo=timezone.utc) if c.tzinfo is None else c
+            l_cmp = l.replace(tzinfo=timezone.utc) if l.tzinfo is None else l
+            if l_cmp < c_cmp:
+                _raise_validation_error(
+                    "AgentProfile",
+                    "last_evaluated",
+                    f"last_evaluated ({l.isoformat()}) must not be earlier than created_at ({c.isoformat()})",
+                    l,
+                )
+        super().__init__(**data)
 
     # Primary key
     agent_id: Optional[uuid.UUID] = Field(

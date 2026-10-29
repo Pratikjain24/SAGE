@@ -62,7 +62,7 @@ In addition to generating code for individual tasks, an evolutionary benchmark e
 4. **$G_5$ (Static Verifier)**: Executes heuristic rule verification analysis.
 5. **$G_6$ (Regression Guard)**: Evaluates 10-task canary regression test passes before accepting candidate mutations.
 
-In [`experiments/runs/pilot_canonical_3seeds/results/cycle_metrics.json`](file:///c:/Users/kruti/SAGE/experiments/runs/pilot_canonical_3seeds/results/cycle_metrics.json), each cycle metric records the total end-to-end compute footprint:
+In [`experiments/runs/pilot_canonical_3seeds/results/cycle_metrics.json`](../experiments/runs/pilot_canonical_3seeds/results/cycle_metrics.json), each cycle metric records the total end-to-end compute footprint:
 - $G_1$ (Frozen): ~$0.003 / cycle
 - $G_2$ (Rewriter): ~$0.005 / cycle
 - $G_3$ (Memory): ~$0.006 / cycle

@@ -898,11 +898,34 @@ class StatisticalSignificanceAnalyzer:
         return "\n".join(lines)
 
     def _generate_latex_table(self, report: StatisticalAuditReport) -> str:
+        # Determine active seeds dynamically from metrics or sample size
+        seeds_present = sorted(list(set(m.get("seed", 0) for m in self.metrics if "seed" in m)))
+        if seeds_present:
+            n_seeds = len(seeds_present)
+            seeds_desc = f"$N = {n_seeds}$ independent runs: seeds {', '.join(str(s) for s in seeds_present)}"
+        elif report.results:
+            n_seeds = report.results[0].n_samples
+            seeds_desc = f"$N = {n_seeds}$ independent seed runs"
+        else:
+            n_seeds = 3
+            seeds_desc = "$N = 3$ independent runs: seeds 42, 43, 44"
+
+        caption_text = (
+            rf"\caption{{\textbf{{Inferential Statistical Significance & Effect Size Matrix (27 Canonical Metric Tuples)}}. "
+            rf"Independent unit of analysis is the random seed ({seeds_desc}; empirical seed standard deviation "
+            r"$\sigma \in [0.03, 0.06]$ without task-cycle pseudo-replication). "
+            rf"Paired bootstrap hypothesis tests ($B = {report.n_bootstraps:,}$, empirical resolution floor "
+            r"$p = 1.0 \times 10^{-4}$ reported as $p < 0.001$) with step-down Holm-Bonferroni Family-Wise Error Rate (FWER) "
+            rf"control ($\alpha = {report.alpha}$) across verified integer step-down multipliers $k \in \{{1 \dots 27\}}$ "
+            r"($k = 28 - j$) comparing unconstrained self-evolving agents ($G_2, G_3, G_4$) against static controls ($G_1$) "
+            r"and guarded mechanisms ($G_5, G_6$).}"
+        )
+
         lines = [
             r"\begin{table*}[t]",
             r"\centering",
             r"\small",
-            r"\caption{\textbf{Inferential Statistical Significance & Effect Size Matrix (27 Canonical Metric Tuples)}. Independent unit of analysis is the random seed ($N = 3$ independent runs: seeds 42, 43, 44; empirical seed standard deviation $\sigma \in [0.03, 0.06]$ without task-cycle pseudo-replication). Paired bootstrap hypothesis tests ($B = 10{,}000$, empirical resolution floor $p = 1.0 \times 10^{-4}$ reported as $p < 0.001$) with step-down Holm-Bonferroni Family-Wise Error Rate (FWER) control ($\alpha = 0.05$) across verified integer step-down multipliers $k \in \{1 \dots 27\}$ ($k = 28 - j$) comparing unconstrained self-evolving agents ($G_2, G_3, G_4$) against static controls ($G_1$) and guarded mechanisms ($G_5, G_6$).}",
+            caption_text,
             r"\label{tab:significance_testing}",
             r"\begin{tabular}{llccccccc}",
             r"\toprule",

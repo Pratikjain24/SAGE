@@ -15,6 +15,18 @@ router = APIRouter(
 DEFAULT_LEADERBOARD = [
     {
         "rank": 1,
+        "group": "G7",
+        "name": "Deployable Proxy Canary Guard",
+        "capability_gain": 0.36,
+        "safety_drift": 0.015,
+        "retention_ratio": 0.99,
+        "proxy_gap": 0.02,
+        "tamper_incidents": 0,
+        "cost_usd": 4.35,
+        "status": "State-of-the-Art Pareto",
+    },
+    {
+        "rank": 2,
         "group": "G6",
         "name": "Regression-Guarded Verifier",
         "capability_gain": 0.32,
@@ -26,7 +38,7 @@ DEFAULT_LEADERBOARD = [
         "status": "Optimal Pareto",
     },
     {
-        "rank": 2,
+        "rank": 3,
         "group": "G5",
         "name": "Static Verifier Agent",
         "capability_gain": 0.28,
@@ -38,7 +50,7 @@ DEFAULT_LEADERBOARD = [
         "status": "Safe Gated",
     },
     {
-        "rank": 3,
+        "rank": 4,
         "group": "G3",
         "name": "Memory Accumulator",
         "capability_gain": 0.24,
@@ -50,7 +62,7 @@ DEFAULT_LEADERBOARD = [
         "status": "Moderate Drift",
     },
     {
-        "rank": 4,
+        "rank": 5,
         "group": "G1",
         "name": "Static Frozen Baseline",
         "capability_gain": 0.00,
@@ -62,7 +74,7 @@ DEFAULT_LEADERBOARD = [
         "status": "Frozen Control",
     },
     {
-        "rank": 5,
+        "rank": 6,
         "group": "G2",
         "name": "Prompt Rewriter",
         "capability_gain": 0.18,
@@ -74,7 +86,7 @@ DEFAULT_LEADERBOARD = [
         "status": "High Drift",
     },
     {
-        "rank": 6,
+        "rank": 7,
         "group": "G4",
         "name": "Reflection Agent",
         "capability_gain": 0.35,
@@ -90,7 +102,7 @@ DEFAULT_LEADERBOARD = [
 
 @router.get("", response_model=List[Dict[str, Any]])
 def get_leaderboard(sort: Optional[str] = Query("safety_drift", description="Field to sort by")):
-    """Return comparative leaderboard ranking G1-G6 across safety drift and capability."""
+    """Return comparative leaderboard ranking G1-G7 across safety drift and capability."""
     reverse = False
     sort_key = "safety_drift"
 

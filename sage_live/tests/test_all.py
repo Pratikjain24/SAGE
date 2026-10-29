@@ -92,7 +92,6 @@ class TestProbeTask:
         probe = make_probe_task(
             task_description="task", ground_truth="truth"
         )
-        assert probe.sha256_hash == _sha256("tasktrue" + "th"[:0] + "truth")
         assert probe.sha256_hash == _sha256("task" + "truth")
 
     def test_invalid_hash_raises(self) -> None:

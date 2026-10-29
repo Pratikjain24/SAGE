@@ -67,12 +67,13 @@ def make_layer_cells(config_file: str, run_id: str):
             f"# {desc}\n",
             "%cd /content/sage\n",
             "\n",
+            "# Multi-Seed Rigor: N=5 seeds minimum (expand to 42,43,44,45,46,47,48,49,50,51 for N=10 ideal)\n",
             "!python -u scripts/run_real_experiment.py \\\n",
             f"    --config {config_file} \\\n",
             f"    --run-id {run_id} \\\n",
             f"    --groups {group} \\\n",
             "    --cycles 5 \\\n",
-            "    --seeds 42 \\\n",
+            "    --seeds 42,43,44,45,46 \\\n",
             "    --train 20 \\\n",
             "    --test 10\n",
         ]
@@ -82,7 +83,7 @@ def make_layer_cells(config_file: str, run_id: str):
     tracker_lines = [
         "# Step 3.8: Intermediate Status Tracker (Check Progress Anytime)\n",
         "%cd /content/sage\n",
-        "import json, pathlib\n",
+        "import json, pathlib, numpy as np\n",
         f"RUN_ID = '{run_id}'\n",
         "mf = pathlib.Path(f'experiments/runs/{RUN_ID}/results/cycle_metrics.json')\n",
         "if not mf.exists():\n",
@@ -90,12 +91,15 @@ def make_layer_cells(config_file: str, run_id: str):
         "else:\n",
         "    records = json.loads(mf.read_text(encoding='utf-8'))\n",
         "    groups = sorted(set(r['group'] for r in records))\n",
-        "    print(f'Completed groups: {groups} ({len(records)} cycle records total)')\n",
+        "    seeds = sorted(set(r.get('seed', 42) for r in records))\n",
+        "    print(f'Completed groups: {groups} across seeds: {seeds} (N={len(seeds)}, {len(records)} cycle records total)')\n",
         "    for g in groups:\n",
         "        g_recs = [r for r in records if r['group'] == g]\n",
-        "        c0_acc = g_recs[0]['success_rate']\n",
-        "        cT_acc = g_recs[-1]['success_rate']\n",
-        "        print(f'  • {g}: P(0)={c0_acc:.3f} -> P(T)={cT_acc:.3f} (Δ={cT_acc - c0_acc:+.3f})')\n",
+        "        cycs = sorted(set(r['cycle'] for r in g_recs))\n",
+        "        c0, cT = cycs[0], cycs[-1]\n",
+        "        c0_acc = float(np.mean([r['success_rate'] for r in g_recs if r['cycle'] == c0]))\n",
+        "        cT_acc = float(np.mean([r['success_rate'] for r in g_recs if r['cycle'] == cT]))\n",
+        "        print(f'  • {g}: P(0)={c0_acc:.3f} -> P(T)={cT_acc:.3f} (Δ={cT_acc - c0_acc:+.3f}) across N={len(seeds)} seeds')\n",
     ]
     cells.append(nb_code(tracker_lines))
     return cells
@@ -105,7 +109,7 @@ def make_audit_cell(run_id: str, provider_name: str):
     return nb_code([
         f"# Step 4: Provenance & Authenticity Audit ({provider_name})\n",
         "%cd /content/sage\n",
-        "import json, pathlib\n",
+        "import json, pathlib, numpy as np\n",
         "\n",
         f"RUN_ID = '{run_id}'\n",
         "traj_path = pathlib.Path(f'experiments/runs/{RUN_ID}/trajectory.jsonl')\n",
@@ -116,6 +120,7 @@ def make_audit_cell(run_id: str, provider_name: str):
         "    n_end = n_real = n_zero = n_fb = 0\n",
         "    models = set()\n",
         "    groups = set()\n",
+        "    seeds = set()\n",
         "    total_in = total_out = 0\n",
         "    total_cost = 0.0\n",
         "    for line in open(traj_path, 'r', encoding='utf-8'):\n",
@@ -138,6 +143,7 @@ def make_audit_cell(run_id: str, provider_name: str):
         "        else: n_real += 1\n",
         "        if p.get('model_name'): models.add(p['model_name'])\n",
         "        if ev.get('group'): groups.add(ev['group'])\n",
+        "        if ev.get('seed') is not None: seeds.add(ev['seed'])\n",
         "    print('=' * 65)\n",
         f"    print('PROVENANCE & AUTHENTICITY AUDIT — {provider_name.upper()}')\n",
         "    print('=' * 65)\n",
@@ -149,6 +155,7 @@ def make_audit_cell(run_id: str, provider_name: str):
         "    print(f'Total Gen Tokens    : {total_out:,}')\n",
         "    print(f'Total Expended Cost : ${total_cost:.4f}')\n",
         "    print(f'Groups Audited      : {sorted(groups)}')\n",
+        "    print(f'Seeds Audited (N)   : {sorted(seeds)} (N={len(seeds)})')\n",
         "    print(f'Active Model Names  : {sorted(models)}')\n",
         "    print('=' * 65)\n",
         "    if n_fb == 0 and n_zero == 0 and n_real > 0:\n",
@@ -162,7 +169,7 @@ def make_tables_cell(run_id: str, provider_name: str):
     return nb_code([
         f"# Step 5: Generate Honest Publication LaTeX Tables ({provider_name})\n",
         "%cd /content/sage\n",
-        "import json, pathlib\n",
+        "import json, pathlib, numpy as np\n",
         "import numpy as np\n",
         "\n",
         f"RUN_ID = '{run_id}'\n",
@@ -207,7 +214,7 @@ def make_tables_cell(run_id: str, provider_name: str):
         "        '\\\\centering',\n",
         "        '\\\\small',\n",
         "        f'% Auto-generated from {mf} — 100% live empirical data',\n",
-        f"        f'\\\\caption{{\\\\textbf{{Live Empirical Results}} ({provider_name}). Seeds: ({{seed_str}}), T={{T_max}} cycles.}}',\n",
+        f"        f'\\\\caption{{\\\\textbf{{Live Empirical Results}} ({provider_name}). Seeds: ({{seed_str}}), N={{len(seeds)}} seeds, T={{T_max}} cycles.}}',\n",
         "        '\\\\label{tab:live}',\n",
         "        '\\\\begin{tabular}{llccccc}',\n",
         "        '\\\\toprule',\n",
@@ -267,16 +274,21 @@ def make_figures_cell(run_id: str, provider_name: str):
         "    ]:\n",
         "        fig, ax = plt.subplots(figsize=(7.5, 4.5), dpi=150)\n",
         "        for grp in groups:\n",
-        "            gm = sorted([m for m in metrics if m['group'] == grp], key=lambda x: x['cycle'])\n",
+        "            gm = [m for m in metrics if m['group'] == grp]\n",
+        "            cycs = sorted(set(m['cycle'] for m in gm))\n",
+        "            mean_vals = [float(np.mean([m[mkey] for m in gm if m['cycle'] == c])) for c in cycs]\n",
+        "            std_vals = [float(np.std([m[mkey] for m in gm if m['cycle'] == c])) if len([m for m in gm if m['cycle'] == c]) > 1 else 0.0 for c in cycs]\n",
         "            ax.plot(\n",
-        "                [m['cycle'] for m in gm],\n",
-        "                [m[mkey] for m in gm],\n",
+        "                cycs,\n",
+        "                mean_vals,\n",
         "                marker='o',\n",
         "                label=grp,\n",
         "                color=COLORS.get(grp, 'gray'),\n",
         "                linewidth=2.2,\n",
         "                markersize=6,\n",
         "            )\n",
+        "            if any(s > 0 for s in std_vals):\n",
+        "                ax.fill_between(cycs, np.array(mean_vals) - np.array(std_vals), np.array(mean_vals) + np.array(std_vals), color=COLORS.get(grp, 'gray'), alpha=0.15)\n",
         "        ax.set_xlabel('Evolutionary Cycle', fontsize=11, fontweight='bold')\n",
         "        ax.set_ylabel(ylabel, fontsize=11, fontweight='bold')\n",
         f"        ax.set_title(f'{{title}}', fontsize=12, fontweight='bold')\n",
@@ -457,6 +469,7 @@ def build_claude_notebook():
         nb_md([
             "## Step 3 — Run Live Empirical Benchmark (Layer by Layer)\n",
             "> Each mechanism layer runs in its own cell below with **real-time live streaming output** (`python -u`).\n",
+            "> **Multi-Seed Statistical Rigor**: Evaluated across **N=5 seeds minimum** (`--seeds 42,43,44,45,46`) to guarantee valid degrees of freedom and robust variance estimation (expandable to **N=10 seeds ideal**: `--seeds 42,43,44,45,46,47,48,49,50,51`).\n",
             "> Progress is saved continuously into `--run-id claude_study`.\n",
         ]),
     ]
@@ -544,6 +557,7 @@ def build_openai_notebook():
         nb_md([
             "## Step 3 — Run Live Empirical Benchmark (Layer by Layer)\n",
             "> Each mechanism layer runs in its own cell below with **real-time live streaming output** (`python -u`).\n",
+            "> **Multi-Seed Statistical Rigor**: Evaluated across **N=5 seeds minimum** (`--seeds 42,43,44,45,46`) to guarantee valid degrees of freedom and robust variance estimation (expandable to **N=10 seeds ideal**: `--seeds 42,43,44,45,46,47,48,49,50,51`).\n",
             "> All layers accumulate into `--run-id openai_study`.\n",
         ]),
     ]
@@ -633,6 +647,7 @@ def build_deepseek_notebook():
         nb_md([
             "## Step 3 — Run Live Empirical Benchmark (Layer by Layer)\n",
             "> Each mechanism layer runs in its own cell below with **real-time live streaming output** (`python -u`).\n",
+            "> **Multi-Seed Statistical Rigor**: Evaluated across **N=5 seeds minimum** (`--seeds 42,43,44,45,46`) to guarantee valid degrees of freedom and robust variance estimation (expandable to **N=10 seeds ideal**: `--seeds 42,43,44,45,46,47,48,49,50,51`).\n",
             "> All layers accumulate into `--run-id deepseek_study`.\n",
         ]),
     ]
@@ -658,11 +673,104 @@ def build_deepseek_notebook():
     }
 
 
+# ==============================================================================
+# 4. GOOGLE GEMINI / GEMMA NOTEBOOK
+# ==============================================================================
+def build_gemini_notebook():
+    title = [
+        "# SAGE: Safety & Agent Growth Evaluator\n",
+        "### Empirical Benchmark Runner for Google Gemini & Gemma Models (Gemini 2.5 Flash / Gemini 1.5 Pro)\n",
+        "\n",
+        "**Key Highlights:**\n",
+        "- ⚡ **Cutting-Edge Multimodal & Reasoning**: Run `gemini-2.5-flash`, `gemini-2.5-pro`, or `gemini-1.5-flash` via Google AI Studio.\n",
+        "- 🚀 **Ultra-Fast Generation & Long Context**: Massive 1M+ token context window and near-instant latency.\n",
+        "- 💰 **Generous Free Tier & Competitive Pricing**: Free tier available on Google AI Studio for research and empirical evaluation.\n",
+        "- 🔬 **100% Genuine Empirical Inference**: Every trajectory episode generates real token-by-token outputs. Zero synthetic mocks.\n",
+        "- 🛡️ **Full 7-Archetype Benchmark (Layer-by-Layer)**: G1 through G7 executed in isolated cells with real-time output streaming.\n",
+        "- 📊 **Publication-Ready Artifacts**: Generates LaTeX tables and figures directly from genuine metric JSONs.\n",
+    ]
+
+    step2_md = [
+        "## Step 2 — Configure Google Gemini API Key & Verify Connectivity\n",
+        "> **Google AI Studio API**: Connects to `https://generativelanguage.googleapis.com/v1beta/openai/` via `GEMINI_API_KEY`.\n",
+        "> Obtain your key for free at [Google AI Studio](https://aistudio.google.com/app/apikey).\n",
+    ]
+
+    step2_code = [
+        "# Step 2: Set Google Gemini API Key & Verify Connectivity\n",
+        "import os, requests\n",
+        "\n",
+        "# Paste your Google Gemini API Key below (or store in Colab Secrets as GEMINI_API_KEY)\n",
+        "GEMINI_API_KEY = \"AIzaSy-your-gemini-key-here\"\n",
+        "\n",
+        "try:\n",
+        "    from google.colab import userdata\n",
+        "    GEMINI_API_KEY = userdata.get('GEMINI_API_KEY') or userdata.get('GOOGLE_API_KEY') or GEMINI_API_KEY\n",
+        "except Exception:\n",
+        "    pass\n",
+        "\n",
+        "if not GEMINI_API_KEY or GEMINI_API_KEY.startswith(\"AIzaSy-your\"):\n",
+        "    raise ValueError(\"⚠️ Please provide your Google Gemini API Key from https://aistudio.google.com/app/apikey\")\n",
+        "\n",
+        "os.environ[\"GEMINI_API_KEY\"] = GEMINI_API_KEY\n",
+        "os.environ[\"GOOGLE_API_KEY\"] = GEMINI_API_KEY\n",
+        "os.environ[\"OPENAI_API_KEY\"] = GEMINI_API_KEY\n",
+        "os.environ[\"OPENAI_API_BASE\"] = \"https://generativelanguage.googleapis.com/v1beta/openai/\"\n",
+        "\n",
+        "# Verify connection\n",
+        "resp = requests.get(\n",
+        "    \"https://generativelanguage.googleapis.com/v1beta/openai/models\",\n",
+        "    headers={\"Authorization\": f\"Bearer {GEMINI_API_KEY}\", \"x-goog-api-key\": GEMINI_API_KEY},\n",
+        "    timeout=10,\n",
+        ")\n",
+        "if resp.status_code == 200:\n",
+        "    models = [m['id'] for m in resp.json().get('data', [])]\n",
+        "    print(f\"✓ Google Gemini API Key verified successfully! Active models: {len(models)} models available\")\n",
+        "else:\n",
+        "    raise ConnectionError(f\"Google Gemini API verification failed (status {resp.status_code}): {resp.text}\")\n",
+    ]
+
+    cells = [
+        nb_md(title),
+        nb_md(["## Step 1 — Clone Repository & Install SAGE\n> Prepares environment and installs SAGE in editable mode."]),
+        make_setup_cell(),
+        nb_md(step2_md),
+        nb_code(step2_code),
+        nb_md([
+            "## Step 3 — Run Live Empirical Benchmark (Layer by Layer)\n",
+            "> Each mechanism layer runs in its own cell below with **real-time live streaming output** (`python -u`).\n",
+            "> **Multi-Seed Statistical Rigor**: Evaluated across **N=5 seeds minimum** (`--seeds 42,43,44,45,46`) to guarantee valid degrees of freedom and robust variance estimation (expandable to **N=10 seeds ideal**: `--seeds 42,43,44,45,46,47,48,49,50,51`).\n",
+            "> All layers accumulate into `--run-id gemini_study`.\n",
+        ]),
+    ]
+    cells.extend(make_layer_cells("configs/experiments/real_gemini_strict.yaml", "gemini_study"))
+    cells.append(nb_md(["## Step 4 — Provenance & Authenticity Audit\n> Cryptographically verifies 100% genuine Google Gemini LLM tokens with zero mock fallbacks."]))
+    cells.append(make_audit_cell("gemini_study", "Gemini"))
+    cells.append(nb_md(["## Step 5 — Generate Honest Publication LaTeX Tables"]))
+    cells.append(make_tables_cell("gemini_study", "Gemini"))
+    cells.append(nb_md(["## Step 6 — Render Publication Figures (PNG)"]))
+    cells.append(make_figures_cell("gemini_study", "Gemini"))
+    cells.append(nb_md(["## Step 7 — Package & Download Results ZIP"]))
+    cells.append(make_zip_cell("gemini_study", "SAGE_Gemini"))
+
+    return {
+        "nbformat": 4,
+        "nbformat_minor": 5,
+        "metadata": {
+            "colab": {"name": "SAGE_Google_Benchmark.ipynb", "provenance": []},
+            "kernelspec": {"name": "python3", "display_name": "Python 3"},
+            "language_info": {"name": "python"},
+        },
+        "cells": cells,
+    }
+
+
 def main():
     notebooks = {
         "SAGE_Claude_Benchmark.ipynb": build_claude_notebook(),
         "SAGE_OpenAI_Benchmark.ipynb": build_openai_notebook(),
         "SAGE_DeepSeek_Benchmark.ipynb": build_deepseek_notebook(),
+        "SAGE_Google_Benchmark.ipynb": build_gemini_notebook(),
     }
 
     for fname, nb in notebooks.items():

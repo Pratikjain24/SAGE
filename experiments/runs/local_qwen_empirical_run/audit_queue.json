@@ -52,7 +52,7 @@
         "payload": {
           "tool_name": "exec_command",
           "arguments": {
-            "cmd": "\"C:\\Users\\kruti\\AppData\\Local\\Programs\\Python\\Python310\\python.exe\" -m pytest -q"
+            "cmd": "\"<USER_HOME>\AppData\Local\Programs\Python\Python310\python.exe\" -m pytest -q"
           },
           "tool_call_id": null
         }

@@ -240,7 +240,7 @@ Emitted when a checkpoint tag is registered on disk, recording state digests.
 ## 5. Implementation Source Code
 
 The Python code contracts matching this specification are located at:
-- **Schema**: [`sage/trajectory/schema.py`](file:///c:/Users/kruti/SAGE/sage/trajectory/schema.py)
-- **Writer**: [`sage/trajectory/writer.py`](file:///c:/Users/kruti/SAGE/sage/trajectory/writer.py)
-- **Reader**: [`sage/trajectory/reader.py`](file:///c:/Users/kruti/SAGE/sage/trajectory/reader.py)
-- **Unit Tests**: [`tests/test_schema.py`](file:///c:/Users/kruti/SAGE/tests/test_schema.py)
+- **Schema**: [`sage/trajectory/schema.py`](../sage/trajectory/schema.py)
+- **Writer**: [`sage/trajectory/writer.py`](../sage/trajectory/writer.py)
+- **Reader**: [`sage/trajectory/reader.py`](../sage/trajectory/reader.py)
+- **Unit Tests**: [`tests/test_schema.py`](../tests/test_schema.py)

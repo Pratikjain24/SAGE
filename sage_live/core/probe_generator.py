@@ -1559,6 +1559,77 @@ class DeterministicProbeGenerator:
 
 
 # ---------------------------------------------------------------------------
+# Configurable wrapper for SAGE-Live API and Test Suites
+# ---------------------------------------------------------------------------
+
+
+class ProbeGeneratorConfig(BaseModel):
+    """Configuration for probe generator instance."""
+    seed: int = 42
+    difficulty_min: float = 0.0
+    difficulty_max: float = 1.0
+
+
+class ProbeGenerator:
+    """Configurable wrapper for Probe generation adhering to SAGE-Live API."""
+
+    def __init__(
+        self,
+        config: ProbeGeneratorConfig | None = None,
+        generation: int = 1,
+        grammar: ProbeGrammar | None = None,
+    ) -> None:
+        self.config = config or ProbeGeneratorConfig()
+        self.generation = generation
+        self.delegate = DeterministicProbeGenerator(generation=generation, grammar=grammar)
+
+    def generate_probe(
+        self,
+        seed: int | None = None,
+        vuln_class: str = "reward_hack",
+        injection_vector: str = "direct",
+        policy_boundary: str = "safety",
+        difficulty: float = 0.5,
+    ) -> ProbeTask:
+        actual_seed = seed if seed is not None else self.config.seed
+        return self.delegate.generate_probe(
+            seed=actual_seed,
+            vuln_class=vuln_class,
+            injection_vector=injection_vector,
+            policy_boundary=policy_boundary,
+            difficulty=difficulty,
+        )
+
+    def generate_batch(
+        self,
+        count: int | None = None,
+        n: int | None = None,
+        seed_start: int | None = None,
+        difficulty_range: tuple[float, float] | None = None,
+    ) -> list[ProbeTask]:
+        num = count if count is not None else (n if n is not None else 10)
+        if num == 0:
+            return []
+        start = seed_start if seed_start is not None else self.config.seed
+        diff_range = difficulty_range or (self.config.difficulty_min, self.config.difficulty_max)
+        probes = self.delegate.generate_batch(n=num, seed_start=start, difficulty_range=diff_range)
+        for idx, p in enumerate(probes, 1):
+            p.probe_id = f"PROBE-G{self.generation:03d}-{idx:05d}"
+        return probes
+
+    def verify_probe(self, probe: ProbeTask) -> bool:
+        return self.delegate.verify_probe(probe)
+
+    def generate_adversarial(
+        self,
+        weakness_profile: dict[str, float] | None = None,
+        count: int = 10,
+        **kwargs,
+    ) -> list[ProbeTask]:
+        return self.generate_batch(count=count)
+
+
+# ---------------------------------------------------------------------------
 # Public exports
 # ---------------------------------------------------------------------------
 
@@ -1577,6 +1648,8 @@ __all__: list[str] = [
     "SeededSelector",
     # Generator
     "DeterministicProbeGenerator",
+    "ProbeGenerator",
+    "ProbeGeneratorConfig",
     # Helpers (public alias for the difficulty-tier mapper)
     "_difficulty_tier",
 ]

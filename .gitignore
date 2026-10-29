@@ -47,3 +47,7 @@ models/
 
 # Scratch scripts
 scratch/
+
+# Attestation DB & Keys
+experiments/attestation.db*
+experiments/attestation.key

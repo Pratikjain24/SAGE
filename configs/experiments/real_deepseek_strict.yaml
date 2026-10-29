@@ -22,15 +22,15 @@ sandbox:
 
 groups: [G1, G2, G3, G4, G5, G6, G7]
 cycles: 5
-seeds: [42]
+seeds: [42, 43, 44, 45, 46]  # N=5 seeds minimum (expand to [42, 43, 44, 45, 46, 47, 48, 49, 50, 51] for N=10 ideal)
 
 tasks:
-  train: 20
-  test: 10
+  train: 60
+  test: 40
 
 budget:
-  max_usd_per_run: 10.0
-  max_wall_hours: 8.0
+  max_usd_per_run: 60.0
+  max_wall_hours: 24.0
   max_tokens_per_task: 64000
 
 verifier:

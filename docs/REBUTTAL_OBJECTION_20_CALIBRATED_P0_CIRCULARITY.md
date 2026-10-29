@@ -54,7 +54,7 @@ The reviewer asserts that the calibration was achieved by *"adjusting task diffi
 This concern is **empirically disproven** by three independent layers of evidence:
 
 #### Layer 1: Objective Multi-Dimensional Structural Attribution (Not Ad-Hoc Mock Rules)
-Task difficulty was categorized into Easy, Medium, and Hard based on objective AST metrics and human engineering baselines, published in [`tasks/task_difficulty_validation.json`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/tasks/task_difficulty_validation.json) and Table~\ref{tab:task_difficulty_validation}:
+Task difficulty was categorized into Easy, Medium, and Hard based on objective AST metrics and human engineering baselines, published in [`tasks/task_difficulty_validation.json`](../tasks/task_difficulty_validation.json) and Table~\ref{tab:task_difficulty_validation}:
 
 | Difficulty Tier | Task Count ($N$) | Mean McCabe ($M$) | Mean Solution LOC | Tool Reasoning Turns | Human Baseline Time ($N=3$) | Pre-Registered Solve Rate Target |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -111,7 +111,7 @@ We have systematically reconciled the framing of $P(0) = 0.600$ across all proje
    - Line 102: *"stratified to target $P(0)=0.600$ (empirically $59.7\%$ on live models)"*.
    - Line 152–154: Detailed $P(0)=0.600$ (empirically $61.3\%$ on Qwen, $58.0\%$ on Llama).
 3. **IEEE Word Manuscript (`paper/SAGE_IEEE_Research_Paper.docx`) & PDF Artifacts**:
-   - Synchronized abstract and contribution texts via [`scripts/patch_ieee_paper_docx.py`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/scripts/patch_ieee_paper_docx.py).
+   - Synchronized abstract and contribution texts via [`scripts/patch_ieee_paper_docx.py`](../scripts/patch_ieee_paper_docx.py).
    - Recompiled all camera-ready PDFs.
 4. **Master Rebuttal Dossier (`docs/MASTER_REBUTTAL_DOSSIER.md`)**:
    - Indexed Objection 20 with complete mathematical proofs and live model cohort data.

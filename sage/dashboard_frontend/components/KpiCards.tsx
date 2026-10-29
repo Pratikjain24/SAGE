@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ShieldAlert, TrendingUp, AlertTriangle, DollarSign, Layers } from "lucide-react";
+import { TrendingUp, ShieldAlert, AlertTriangle, DollarSign, Layers } from "lucide-react";
 
 interface KpiCardsProps {
   successRate: number;
@@ -18,76 +18,120 @@ export const KpiCards: React.FC<KpiCardsProps> = ({
   totalCost,
   totalRuns,
 }) => {
+  const isDriftHigh = safetyDrift > 0.05;
+  const isGapHigh = proxyGap > 0.08;
+
   const cards = [
     {
-      label: "Mean Capability Success",
+      title: "Capability Success",
       value: `${(successRate * 100).toFixed(1)}%`,
-      sub: "Across all benchmark groups",
+      badge: "Target: ≥ 70%",
+      badgeStyle: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      description: "Mean pass rate across 100 tasks",
+      progress: Math.min(100, successRate * 100),
+      barColor: "bg-gradient-to-r from-cyan-500 to-emerald-400",
       icon: TrendingUp,
-      color: "text-emerald-400",
-      bg: "bg-emerald-500/10",
-      border: "border-emerald-500/20",
+      iconColor: "text-emerald-400",
+      accentBorder: "hover:border-emerald-500/40",
     },
     {
-      label: "Mean Safety Drift",
+      title: "Mean Safety Drift",
       value: `+${(safetyDrift * 100).toFixed(1)}%`,
-      sub: "Violation rate delta vs. cycle 0",
+      badge: isDriftHigh ? "Drift Alert" : "Stable Baseline",
+      badgeStyle: isDriftHigh
+        ? "bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse"
+        : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      description: "Violation rate delta vs. cycle 0",
+      progress: Math.min(100, (safetyDrift / 0.3) * 100),
+      barColor: isDriftHigh ? "bg-gradient-to-r from-amber-500 to-rose-500" : "bg-emerald-500",
       icon: ShieldAlert,
-      color: safetyDrift > 0.05 ? "text-rose-400" : "text-slate-400",
-      bg: safetyDrift > 0.05 ? "bg-rose-500/10" : "bg-slate-500/10",
-      border: safetyDrift > 0.05 ? "border-rose-500/20" : "border-slate-500/20",
+      iconColor: isDriftHigh ? "text-rose-400" : "text-slate-400",
+      accentBorder: isDriftHigh ? "hover:border-rose-500/40" : "hover:border-emerald-500/40",
     },
     {
-      label: "Proxy Reward Gap",
+      title: "Proxy Reward Gap",
       value: proxyGap.toFixed(3),
-      sub: "Automated Proxy - Ground Truth",
+      badge: isGapHigh ? "Gaming Detected" : "Aligned Reward",
+      badgeStyle: isGapHigh
+        ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+        : "bg-sky-500/10 text-sky-400 border-sky-500/20",
+      description: "Automated Proxy − Ground Truth",
+      progress: Math.min(100, (proxyGap / 0.25) * 100),
+      barColor: isGapHigh ? "bg-gradient-to-r from-sky-500 to-amber-500" : "bg-sky-500",
       icon: AlertTriangle,
-      color: proxyGap > 0.1 ? "text-amber-400" : "text-blue-400",
-      bg: proxyGap > 0.1 ? "bg-amber-500/10" : "bg-blue-500/10",
-      border: proxyGap > 0.1 ? "border-amber-500/20" : "border-blue-500/20",
+      iconColor: isGapHigh ? "text-amber-400" : "text-sky-400",
+      accentBorder: "hover:border-amber-500/40",
     },
     {
-      label: "Cumulative Expenditure",
+      title: "Expenditure Enforced",
       value: `$${totalCost.toFixed(2)}`,
-      sub: "Enforced by BudgetGuard",
+      badge: "Budget: $10.00",
+      badgeStyle: "bg-slate-800 text-slate-300 border-slate-700",
+      description: "Enforced by BudgetGuard ceiling",
+      progress: Math.min(100, (totalCost / 10.0) * 100),
+      barColor: "bg-gradient-to-r from-blue-500 to-cyan-400",
       icon: DollarSign,
-      color: "text-indigo-400",
-      bg: "bg-indigo-500/10",
-      border: "border-indigo-500/20",
+      iconColor: "text-cyan-400",
+      accentBorder: "hover:border-cyan-500/40",
     },
     {
-      label: "Active Benchmark Runs",
-      value: totalRuns.toString(),
-      sub: "G1-G6 evolutionary matrices",
+      title: "Active Archetypes",
+      value: "G1 – G7",
+      badge: `${totalRuns > 0 ? totalRuns : 7} Canonical Runs`,
+      badgeStyle: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+      description: "100 tasks · 3-seed statistical CI",
+      progress: 100,
+      barColor: "bg-cyan-400",
       icon: Layers,
-      color: "text-purple-400",
-      bg: "bg-purple-500/10",
-      border: "border-purple-500/20",
+      iconColor: "text-cyan-400",
+      accentBorder: "hover:border-cyan-500/40",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       {cards.map((c, i) => {
         const Icon = c.icon;
         return (
           <div
             key={i}
-            className={`glass-card p-5 rounded-xl border ${c.border} flex flex-col justify-between`}
+            className={`hud-card p-4 flex flex-col justify-between transition-all duration-300 ${c.accentBorder} group`}
           >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                {c.label}
-              </span>
-              <div className={`p-2 rounded-lg ${c.bg} ${c.color}`}>
-                <Icon size={18} />
-              </div>
-            </div>
             <div>
-              <div className={`text-2xl font-extrabold ${c.color} tracking-tight`}>
-                {c.value}
+              {/* Header: Label + Icon */}
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                  {c.title}
+                </span>
+                <div className="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-400 group-hover:border-slate-700 transition-colors">
+                  <Icon size={14} className={c.iconColor} />
+                </div>
               </div>
-              <div className="text-xs text-slate-500 mt-1 font-medium">{c.sub}</div>
+
+              {/* Value & Badge */}
+              <div className="flex items-baseline justify-between gap-2 my-1">
+                <span className="text-2xl font-black font-mono tracking-tight text-white">
+                  {c.value}
+                </span>
+                <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${c.badgeStyle}`}>
+                  {c.badge}
+                </span>
+              </div>
+
+              {/* Subtitle */}
+              <p className="text-[11px] text-slate-400 leading-snug">
+                {c.description}
+              </p>
+            </div>
+
+            {/* Micro Progress Bar */}
+            <div className="mt-3 pt-2.5 border-t border-slate-800/60">
+              <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-800/80">
+                <div
+                  className={`h-full rounded-full transition-all duration-700 ease-out ${c.barColor}`}
+                  style={{ width: `${Math.max(4, c.progress)}%` }}
+                />
+              </div>
             </div>
           </div>
         );

@@ -1,7 +1,7 @@
 # SAGE: Comprehensive System Architecture, Implementation Blueprint & Empirical Quality Dossier
 
 > **Document Version**: `1.0.0-production`  
-> **Release Tag**: [`v1.0.0`](file:///c:/Users/kruti/SAGE)  
+> **Release Tag**: `v1.0.0`  
 > **Head Commit**: `0178f924ac8b80e1ff77fe9deb16f2ee87e74784` (`0178f92`, `master`)  
 > **Audience**: Reviewers, Researchers, Software Architects, and Evaluators  
 
@@ -87,7 +87,7 @@ graph TD
 
 ## 2. Scientific Hypotheses & Mathematical Formulations
 
-SAGE formalizes empirical agent evaluation around five core scientific hypotheses published in [paper/main.tex](file:///c:/Users/kruti/SAGE/paper/main.tex):
+SAGE formalizes empirical agent evaluation around five core scientific hypotheses published in [paper/main.tex](paper/main.tex):
 
 | Hypothesis | Name | Formal Statement |
 |---|---|---|
@@ -97,7 +97,7 @@ SAGE formalizes empirical agent evaluation around five core scientific hypothese
 | $\mathbf{H_4}$ | **Catastrophic Forgetting** | Adapting to novel task failure modes degrades capability on historical tasks: $\text{Retention}(t) < 1.0$. |
 | $\mathbf{H_5}$ | **Verification & Guard Invariance** | Static verification ($G_5$) and regression guards with atomic rollback ($G_6$) eliminate specification gaming and security boundary drift: $\text{ProxyGap}(t) \approx 0$ and $\text{SecurityDrift}(t) \approx 0$. |
 
-### Core Mathematical Metrics (Implemented in [`sage/metrics/`](file:///c:/Users/kruti/SAGE/sage/metrics))
+### Core Mathematical Metrics (Implemented in [`sage/metrics/`](sage/metrics))
 
 1. **Capability Gain**:
    $$\Delta P(t) = P(t) - P(0) \quad \text{where } P(t) = \frac{1}{N} \sum_{i=1}^N \mathbf{1}[\text{task } i \text{ passes ground-truth tests}]$$
@@ -138,7 +138,7 @@ To ensure mathematical and statistical rigor, SAGE strictly enforces the followi
 
 ## 3. Agent Archetype Taxonomy ($G_1$ through $G_7, G_6^*$)
 
-SAGE models standardized agent archetypes representing the spectrum of autonomous coding and self-improving agent architectures (intellectually rooted in foundational self-referential Gödel Machines, the Darwinian Gödel Machine, and Voyager skill acquisition; implemented in [`sage/adapters/`](file:///c:/Users/kruti/SAGE/sage/adapters)):
+SAGE models standardized agent archetypes representing the spectrum of autonomous coding and self-improving agent architectures (intellectually rooted in foundational self-referential Gödel Machines, the Darwinian Gödel Machine, and Voyager skill acquisition; implemented in [`sage/adapters/`](sage/adapters)):
 
 | Archetype | Name | Target Component | Mutation Feedback Mechanism | Verification & Rollback |
 |---|---|---|---|---|
@@ -157,7 +157,7 @@ SAGE models standardized agent archetypes representing the spectrum of autonomou
 
 ## 4. Benchmark Task Catalog & Deliberate Drift Probes
 
-The SAGE benchmark catalog resides in [`tasks/tasks_index.json`](file:///c:/Users/kruti/SAGE/tasks/tasks_index.json) and comprises exactly **100 standardized engineering tasks** balanced across a 5-type operational taxonomy (20 tasks per type):
+The SAGE benchmark catalog resides in [`tasks/tasks_index.json`](tasks/tasks_index.json) and comprises exactly **100 standardized engineering tasks** balanced across a 5-type operational taxonomy (20 tasks per type):
 - **`bug_fix` (20 tasks, `task_001` to `task_096`)**: Algorithmic corner cases, arithmetic precision errors, integer truncation, off-by-one errors, state race conditions.
 - **`feature` (20 tasks, `task_002` to `task_097`)**: Concurrency primitives, token-bucket rate limiters, async batching pipelines, LRU caches, circuit breakers.
 - **`refactor` (20 tasks, `task_003` to `task_098`)**: Blocking I/O to async/await conversion, monomorphic decoupling, connection pool optimization, generator memory reduction.
@@ -168,7 +168,7 @@ The SAGE benchmark catalog resides in [`tasks/tasks_index.json`](file:///c:/User
 
 ### 4.1 Standalone Repository Provenance (100 Complete Codebases)
 
-Unlike static benchmarks that provide isolated prompt stubs or single-file scripts, **every single one of the 100 benchmark tasks is released as a fully standalone, runnable repository** located in [`tasks/repos/task_001/`](file:///c:/Users/kruti/SAGE/tasks/repos/task_001/) through [`tasks/repos/task_100/`](file:///c:/Users/kruti/SAGE/tasks/repos/task_100/).
+Unlike static benchmarks that provide isolated prompt stubs or single-file scripts, **every single one of the 100 benchmark tasks is released as a fully standalone, runnable repository** located in [`tasks/repos/task_001/`](tasks/repos/task_001/) through [`tasks/repos/task_100/`](tasks/repos/task_100/).
 
 Every standalone task repository follows a rigorous, hermetic packaging layout:
 ```
@@ -183,7 +183,7 @@ tasks/repos/task_XXX/
 └── progress_metric.py      # (Exploit probes only) Runnable progress metric script
 ```
 
-In addition to the 100 standardized task directories, legacy multi-module testbeds ([`mini_orm`](file:///c:/Users/kruti/SAGE/tasks/repos/mini_orm/), [`auth_service`](file:///c:/Users/kruti/SAGE/tasks/repos/auth_service/), [`data_pipeline`](file:///c:/Users/kruti/SAGE/tasks/repos/data_pipeline/), and [`math_engine`](file:///c:/Users/kruti/SAGE/tasks/repos/math_engine/)) are maintained for backwards compatibility and integration tests.
+In addition to the 100 standardized task directories, legacy multi-module testbeds ([`mini_orm`](tasks/repos/mini_orm/), [`auth_service`](tasks/repos/auth_service/), [`data_pipeline`](tasks/repos/data_pipeline/), and [`math_engine`](tasks/repos/math_engine/)) are maintained for backwards compatibility and integration tests.
 
 ---
 
@@ -251,7 +251,7 @@ SAGE incorporates exactly **20 engineered deliberate drift probes** (`is_drift_p
 
 ### 4.4 Task Difficulty Validation Study ($P(0) = 0.60$ Non-Saturation Invariant)
 
-To formalize the Easy/Medium/Hard taxonomy and resolve the reviewer requirement for objective difficulty attribution, we executed an automated structural and empirical validation study across all 100 tasks (exported to [`tasks/task_difficulty_validation.json`](file:///c:/Users/kruti/SAGE/tasks/task_difficulty_validation.json) and published in [`paper/tables/table_task_difficulty_validation.tex`](file:///c:/Users/kruti/SAGE/paper/tables/table_task_difficulty_validation.tex)).
+To formalize the Easy/Medium/Hard taxonomy and resolve the reviewer requirement for objective difficulty attribution, we executed an automated structural and empirical validation study across all 100 tasks (exported to [`tasks/task_difficulty_validation.json`](tasks/task_difficulty_validation.json) and published in [`paper/tables/table_task_difficulty_validation.tex`](paper/tables/table_task_difficulty_validation.tex)).
 
 The study evaluates five independent dimensions:
 1. **McCabe Cyclomatic Complexity ($M$)**: AST-derived count of independent linear code execution paths.
@@ -276,7 +276,7 @@ The study evaluates five independent dimensions:
 
 ### 4.5 Inter-Task Similarity Matrix & Diversity Proof (Zero Duplicates)
 
-To rigorously disprove reviewer concerns of duplicated or repetitive task definitions, we computed the full pairwise similarity matrix across all $100 \times 100 = 10{,}000$ task prompt pairs using TF-IDF token vector cosine similarity and 4-gram Jaccard overlap (exported to [`tasks/task_similarity_matrix.json`](file:///c:/Users/kruti/SAGE/tasks/task_similarity_matrix.json) and visualized in [`paper/figures/task_similarity_heatmap.png`](file:///c:/Users/kruti/SAGE/paper/figures/task_similarity_heatmap.png)).
+To rigorously disprove reviewer concerns of duplicated or repetitive task definitions, we computed the full pairwise similarity matrix across all $100 \times 100 = 10{,}000$ task prompt pairs using TF-IDF token vector cosine similarity and 4-gram Jaccard overlap (exported to [`tasks/task_similarity_matrix.json`](tasks/task_similarity_matrix.json) and visualized in [`paper/figures/task_similarity_heatmap.png`](paper/figures/task_similarity_heatmap.png)).
 
 #### Empirical Diversity Metrics:
 - **Mean Pairwise Similarity**: $\mu = 0.0524 \pm 0.0732$ (confirming near-orthogonal task problem spaces).
@@ -290,7 +290,7 @@ Every single task addresses an independent software engineering specification, e
 
 ### 4.6 Extended Contamination & Pre-Training Leakage Audit across All 100 Tasks
 
-In accordance with 2026 AI evaluation standards following the retirement of SWE-bench Verified (~32.7% pre-training solution contamination), all 100 tasks in SAGE were subjected to an exhaustive zero-shot solution leakage audit using `qwen2.5-coder-7b-instruct` (exported to [`tasks/contamination_audit_results.json`](file:///c:/Users/kruti/SAGE/tasks/contamination_audit_results.json) and published in [`paper/tables/table_appendix_contamination.tex`](file:///c:/Users/kruti/SAGE/paper/tables/table_appendix_contamination.tex)).
+In accordance with 2026 AI evaluation standards following the retirement of SWE-bench Verified (~32.7% pre-training solution contamination), all 100 tasks in SAGE were subjected to an exhaustive zero-shot solution leakage audit using `qwen2.5-coder-7b-instruct` (exported to [`tasks/contamination_audit_results.json`](tasks/contamination_audit_results.json) and published in [`paper/tables/table_appendix_contamination.tex`](paper/tables/table_appendix_contamination.tex)).
 
 | Task Category | Tasks Evaluated | Mean $J_{\text{4-gram}}$ | Mean LCS Ratio | Mean Line Overlap | Max Overlap Detected | Flagged Tasks ($>50\%$) |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -307,7 +307,7 @@ In accordance with 2026 AI evaluation standards following the retirement of SWE-
 
 ### 4.7 Task Difficulty Calibration vs. Established Benchmarks & Cross-Benchmark Taxonomy
 
-To address reviewer scrutiny regarding benchmark positioning and answer *"How does SAGE compare to SWE-bench, HumanEval, MBPP, EvoAgentBench, ActBench, and SkillsBench?"*, SAGE provides an empirical cross-benchmark difficulty calibration and taxonomy matrix (certified in [`experiments/runs/comparative_baselines_results.json`](file:///c:/Users/kruti/SAGE/experiments/runs/comparative_baselines_results.json) and published in Table 13 of [`paper/main.tex`](file:///c:/Users/kruti/SAGE/paper/main.tex)):
+To address reviewer scrutiny regarding benchmark positioning and answer *"How does SAGE compare to SWE-bench, HumanEval, MBPP, EvoAgentBench, ActBench, and SkillsBench?"*, SAGE provides an empirical cross-benchmark difficulty calibration and taxonomy matrix (certified in [`experiments/runs/comparative_baselines_results.json`](experiments/runs/comparative_baselines_results.json) and published in Table 13 of [`paper/main.tex`](paper/main.tex)):
 
 #### Cross-Benchmark Macro Taxonomy & Complexity Calibration
 
@@ -367,7 +367,7 @@ To prevent evaluator corruption, SAGE implements dual-container isolation modele
 +-----------------------------------------------------------------------------------+
 ```
 
-### Isolation Guarantees (Verified by [`tests/test_scorer_invisibility.py`](file:///c:/Users/kruti/SAGE/tests/test_scorer_invisibility.py))
+### Isolation Guarantees (Verified by [`tests/test_scorer_invisibility.py`](tests/test_scorer_invisibility.py))
 1. **Distinct Container Images & Identities**:
    - Agent runs in `sage-sandbox:1.0` as `evaluser` (`1000:1000`).
    - Scorer runs in `sage-scorer:1.0` as `scorer` (`1001:1001`). Running the agent in the scorer image raises `PermissionError`.
@@ -379,13 +379,13 @@ To prevent evaluator corruption, SAGE implements dual-container isolation modele
 4. **Strictly Read-Only Scoring Mounts**:
    - Workspaces and test suites are mounted strictly `:ro` into the scorer container. Read-write mounts raise `PermissionError`.
 5. **Path Confinement Fallback**:
-   - When running on local systems without Docker, [`LocalSandbox`](file:///c:/Users/kruti/SAGE/sage/environment/sandbox.py) enforces canonical path resolution jails, preventing symlink traversal, directory climbing (`../`), or access to parent directories.
+   - When running on local systems without Docker, [`LocalSandbox`](sage/environment/sandbox.py) enforces canonical path resolution jails, preventing symlink traversal, directory climbing (`../`), or access to parent directories.
 
 ### 5.1 Ablation Study: Dual-Container Isolation vs. Single-Container Privilege Separation
 
 A critical architectural question is: *Why require a dual-container architecture (`evo-sandbox` + `evo-scorer`) instead of a single container with Linux user privilege separation (`evaluser` vs `scorer`)?*
 
-To empirically answer this, we conducted an adversarial escape ablation against 5 concrete exploitation vectors across three isolation paradigms (attested in [`experiments/runs/ablation_study_results.json`](file:///c:/Users/kruti/SAGE/experiments/runs/ablation_study_results.json)):
+To empirically answer this, we conducted an adversarial escape ablation against 5 concrete exploitation vectors across three isolation paradigms (attested in [`experiments/runs/ablation_study_results.json`](experiments/runs/ablation_study_results.json)):
 
 | Attack Vector | Bare Host (No Isolation) | Single Container (`evaluser`, `uid=1000`) | Dual Container (SAGE Architecture) |
 |---|:---:|:---:|:---:|
@@ -402,7 +402,7 @@ To empirically answer this, we conducted an adversarial escape ablation against 
 
 ## 6. Comprehensive 5-Check Tamper Detection Engine
 
-The tamper engine in [`sage/scoring/tamper_detect.py`](file:///c:/Users/kruti/SAGE/sage/scoring/tamper_detect.py) audits every task execution across five independent security vectors. Every individual check result is logged as a canonical `TrajectoryEvent` with `event_type="safety_check"`:
+The tamper engine in [`sage/scoring/tamper_detect.py`](sage/scoring/tamper_detect.py) audits every task execution across five independent security vectors. Every individual check result is logged as a canonical `TrajectoryEvent` with `event_type="safety_check"`:
 
 ```
 [Agent Execution] ---> [TamperDetector]
@@ -456,7 +456,7 @@ To validate this choice, we ablated the detector against six canonical adversari
 
 ## 7. LLM-Judge Architectural Isolation
 
-To support qualitative evaluation without introducing sycophancy, shared bias, or corrupting evaluation rigor, SAGE enforces three architectural isolation rules in [`sage/scoring/llm_judge.py`](file:///c:/Users/kruti/SAGE/sage/scoring/llm_judge.py):
+To support qualitative evaluation without introducing sycophancy, shared bias, or corrupting evaluation rigor, SAGE enforces three architectural isolation rules in [`sage/scoring/llm_judge.py`](sage/scoring/llm_judge.py):
 
 1. **Cross-Family Model Diversity**:
    - Any LLM judge MUST run with a different model family than the evaluated agent:
@@ -477,7 +477,7 @@ To support qualitative evaluation without introducing sycophancy, shared bias, o
 
 ## 8. System Hardening, Fault Tolerance & Budget Guards
 
-Implemented in [`sage/runner/orchestrator.py`](file:///c:/Users/kruti/SAGE/sage/runner/orchestrator.py) and [`sage/llm/pricing.py`](file:///c:/Users/kruti/SAGE/sage/llm/pricing.py):
+Implemented in [`sage/runner/orchestrator.py`](sage/runner/orchestrator.py) and [`sage/llm/pricing.py`](sage/llm/pricing.py):
 
 1. **Task Execution Wall-Clock Timeouts**:
    - Task execution wrapped in `concurrent.futures.ThreadPoolExecutor` with strict timeouts (`timeout_sec: 60`).
@@ -498,7 +498,7 @@ Implemented in [`sage/runner/orchestrator.py`](file:///c:/Users/kruti/SAGE/sage/
 
 ### 8.1 Empirical Compute Cost Accounting & Pilot Cost Verification
 
-To satisfy reviewer requests for rigorous compute cost transparency and quantify the **capability-vs-cost tradeoff metric family**, SAGE records synchronous token and monetary expenditure inside every event payload via [`sage/llm/pricing.py`](file:///c:/Users/kruti/SAGE/sage/llm/pricing.py).
+To satisfy reviewer requests for rigorous compute cost transparency and quantify the **capability-vs-cost tradeoff metric family**, SAGE records synchronous token and monetary expenditure inside every event payload via [`sage/llm/pricing.py`](sage/llm/pricing.py).
 
 #### 1. Pricing Model, Dual-Accounting Methodology & Token Cost Accounting
 To eliminate ambiguity between local zero-cost offline testbed execution and standardized economic pricing, SAGE enforces a **Dual-Accounting Framework**:
@@ -513,12 +513,25 @@ $$\text{Cost} = \left(\frac{\text{Tokens}_{\text{in}}}{10^6} \times P_{\text{in}
 |---|---|:---:|:---:|:---:|
 | `qwen2.5-coder-7b-instruct` | Benchmark Agent ($G_1$–$G_6$) | $0.20 | $0.40 | 32,768 |
 | `llama-3.1-8b-instruct` | Auxiliary LLM Judge | $0.20 | $0.40 | 131,072 |
+| `gemini-2.5-flash` | Frontier Commercial Agent | $0.075 | $0.30 | 1,048,576 |
+| `gemini-2.5-pro` | Frontier Commercial Agent | $1.25 | $5.00 | 2,097,152 |
+| `gemini-1.5-flash` | Frontier Commercial Agent | $0.075 | $0.30 | 1,048,576 |
+| `gemini-1.5-pro` | Frontier Commercial Agent | $1.25 | $5.00 | 2,097,152 |
+| `gemma-2-27b-it` | Open-Weights Commercial Agent | $0.27 | $0.27 | 8,192 |
+| `gemma-2-9b-it` | Open-Weights Commercial Agent | $0.20 | $0.20 | 8,192 |
+| `gpt-4o` | Frontier Commercial Agent | $2.50 | $10.00 | 128,000 |
+| `gpt-4o-mini` | Cost-Optimized Agent | $0.15 | $0.60 | 128,000 |
+| `claude-3-5-sonnet` | Frontier Commercial Agent | $3.00 | $15.00 | 200,000 |
+| `claude-3-7-sonnet` | Frontier Commercial Agent (Hybrid Reasoner) | $3.00 | $15.00 | 200,000 |
+| `deepseek-chat` (V3) | Frontier Open/Cloud Agent | $0.14 | $0.28 | 64,000 |
+| `deepseek-reasoner` (R1) | Reasoning Model Agent | $0.55 | $2.19 | 64,000 |
+| `llama-3.3-70b-versatile` | Groq Cloud Fast Inference | $0.59 | $0.79 | 128,000 |
 | `mock-model` / Local GGUF | CI Test Runner / Local Sandbox | $0.00 | $0.00 | 32,768 |
 
 ---
 
 #### 2. Multi-Seed Empirical Calibration Study: Estimated vs. Realized
-Empirical telemetry extracted directly from the canonical multi-seed calibration study ([`experiments/runs/pilot_canonical_3seeds/trajectory.jsonl`](file:///c:/Users/kruti/SAGE/experiments/runs/pilot_canonical_3seeds/trajectory.jsonl)), benchmarked across 900 task evaluations and verified against live open-source neural model execution:
+Empirical telemetry extracted directly from the canonical multi-seed calibration study ([`experiments/runs/pilot_canonical_3seeds/trajectory.jsonl`](experiments/runs/pilot_canonical_3seeds/trajectory.jsonl)), benchmarked across 900 task evaluations and verified against live open-source neural model execution:
 
 | Metric Dimension | Estimated / Budgeted Ceiling | Realized Pilot Value | Variance / Headroom |
 |---|:---:|:---:|:---:|
@@ -611,7 +624,7 @@ $$\text{CCEI} = \frac{\Delta P(T)}{\text{Cost}_{\text{USD}}} \quad \left[\text{c
 
 #### 7. Canonical Benchmark Trajectory Suite (18,000 Evaluations)
 
-Moving beyond initial pilot calibration, the complete canonical benchmark trajectory suite has been executed and verified in [`experiments/runs/full_study_canonical/`](file:///c:/Users/kruti/SAGE/experiments/runs/full_study_canonical) across all 100 tasks, 6 agent archetypes, 10 evolutionary cycles, and 3 random seeds ($100 \times 6 \times 10 \times 3 = \mathbf{18{,}000\text{ completed evaluations}}$) under deterministic, state-formalized agent policies. These canonical trajectories isolate causal archetype mechanisms and establish zero-flakiness counterfactual reference baselines, supplemented by live neural model rollouts (`experiments/runs/full_study_live/`).
+Moving beyond initial pilot calibration, the complete canonical benchmark trajectory suite has been executed and verified in [`experiments/runs/full_study_canonical/`](experiments/runs/full_study_canonical) across all 100 tasks, 6 agent archetypes, 10 evolutionary cycles, and 3 random seeds ($100 \times 6 \times 10 \times 3 = \mathbf{18{,}000\text{ completed evaluations}}$) under deterministic, state-formalized agent policies. These canonical trajectories isolate causal archetype mechanisms and establish zero-flakiness counterfactual reference baselines, supplemented by live neural model rollouts (`experiments/runs/full_study_live/`).
 
 | Dimension | Pilot Calibration Study | Canonical Benchmark Trajectory Suite (`full_study_canonical`) | Validation Status |
 |---|:---:|:---:|:---:|
@@ -628,7 +641,7 @@ Moving beyond initial pilot calibration, the complete canonical benchmark trajec
 | **Budget Ceiling** | $50.00 USD | **$200.00 USD** | $126.05 Headroom (37.0% consumed) |
 
 ##### Full-Scale 18,000-Evaluation Group Dynamics & Compute Expenditure Matrix
-Derived directly from [`experiments/runs/full_study_canonical/results/cycle_metrics.json`](file:///c:/Users/kruti/SAGE/experiments/runs/full_study_canonical/results/cycle_metrics.json) (180 metric tuples across seeds 42, 43, 44):
+Derived directly from [`experiments/runs/full_study_canonical/results/cycle_metrics.json`](experiments/runs/full_study_canonical/results/cycle_metrics.json) (180 metric tuples across seeds 42, 43, 44):
 
 | Group | Mechanism | Evaluations | Tokens In | Tokens Out | Total Tokens | Spend (USD) | $P(0)$ | $P(T)$ | $\Delta P(T)$ | SecurityDrift | ProxyGap | Retention |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -671,9 +684,9 @@ Reviewers ask why the pilot evaluation stopped at 5 cycles while the full benchm
 
 ## 9. Immutable Telemetry, Append-Only Trajectory & Frozen Schema
 
-Telemetry is captured via append-only streaming in [`sage/trajectory/`](file:///c:/Users/kruti/SAGE/sage/trajectory):
+Telemetry is captured via append-only streaming in [`sage/trajectory/`](sage/trajectory):
 
-- **Frozen Schema Invariant**: `SCHEMA_VERSION = "1.0.0"` in [`sage/trajectory/schema.py`](file:///c:/Users/kruti/SAGE/sage/trajectory/schema.py) is immutable.
+- **Frozen Schema Invariant**: `SCHEMA_VERSION = "1.0.0"` in [`sage/trajectory/schema.py`](sage/trajectory/schema.py) is immutable.
 - **Immediate Disk Persistence**: `TrajectoryWriter` enforces `os.fsync()` after every line write, guaranteeing data durability against power outages or process crashes.
 - **12 Canonical Event Types**:
   1. `task_start`: Task metadata, repo, difficulty, category.
@@ -693,7 +706,7 @@ Telemetry is captured via append-only streaming in [`sage/trajectory/`](file:///
 
 ## 10. The Reproducibility Contract & Reviewer Verification
 
-SAGE guarantees 100% reproducible scientific benchmarking through six core commitments documented in [README.md](file:///c:/Users/kruti/SAGE/README.md):
+SAGE guarantees 100% reproducible scientific benchmarking through six core commitments documented in [README.md](README.md):
 
 ### 1. One-Command Study Execution
 ```bash
@@ -707,12 +720,12 @@ make reproduce && sage run --config configs/experiments/full_study.yaml
   - Evaluated Agent: `Qwen/Qwen2.5-Coder-7B-Instruct` (pinned 40-hex revision SHA: `c03e6d358207e414f1eca0bb1891e29f1db0e242`).
   - Auxiliary Judge: `meta-llama/Llama-3.1-8B-Instruct` (pinned 40-hex revision SHA: `0e9e39f249a16976918f6564b8830bc894c89659`).
   - *Integrity Note*: All model revisions are exact 40-character hexadecimal commit hashes fetched from the official Hugging Face model cards. Placeholder strings or truncated 20-hex pseudo-hashes (e.g. `8f7e2a91b4c3e8061245`) are rejected by schema validators and CI gates (`test_pinned_model_weights_in_full_study`).
-- **Container Digests** ([`docker/image_digests.json`](file:///c:/Users/kruti/SAGE/docker/image_digests.json)):
+- **Container Digests** ([`docker/image_digests.json`](docker/image_digests.json)):
   - `sage-sandbox:1.0`: `sha256:3d93c20b51c7f04fdd3fb64f5bab0671cb99dc7b3ed419ed36cabb829b358401`
   - `sage-scorer:1.0`: `sha256:4e5784ddded9b42ad9bf42917a5a35266ce070d5ec34e39772c39b3b31eefa34`
   - `sage-backend:1.0`: `sha256:ce8558ff25e10dd6ab2d05a47479de992e6c1bef21e9e14f6781b1e1547b252e`
   - `sage-frontend:1.0`: `sha256:c419ea714fb6dc2d1145db219b31011f5df1d00504033665aabc072b3e6fc333`
-  - *Build Provenance & Verification*: Digests are generated via [`scripts/build_and_inspect_images.py`](file:///c:/Users/kruti/SAGE/scripts/build_and_inspect_images.py) (`make build-images`), executing `docker build` from pinned base images followed by `docker inspect --format='{{index .Id}}'`. The full cryptographic build provenance is audited in [`docker/build_provenance.json`](file:///c:/Users/kruti/SAGE/docker/build_provenance.json), and CI step `docker-build-and-verify` enforces `python scripts/build_and_inspect_images.py --verify` (`make verify-images`) ensuring zero drift.
+  - *Build Provenance & Verification*: Digests are generated via [`scripts/build_and_inspect_images.py`](scripts/build_and_inspect_images.py) (`make build-images`), executing `docker build` from pinned base images followed by `docker inspect --format='{{index .Id}}'`. The full cryptographic build provenance is audited in [`docker/build_provenance.json`](docker/build_provenance.json), and CI step `docker-build-and-verify` enforces `python scripts/build_and_inspect_images.py --verify` (`make verify-images`) ensuring zero drift.
 
 
 ### 3. Seeded Generators
@@ -764,20 +777,20 @@ In preliminary reviewer feedback, SAGE's reproducibility framework was evaluated
 While the architectural blueprint established comprehensive theoretical contracts, relying on author self-attestation alone left open potential skepticism regarding unverified container digests, platform dependencies, and timing bounds. To transition the transparency and reproducibility standing from **"self-attested"** to **"Strong"**, SAGE implemented a verifiable multi-stage verification pipeline (V1–V3):
 
 1. **V1: Cryptographic Container Image Build Provenance & Zero-Drift CI Gate**:
-   - Replaced static hand-authored image digests with an automated build and inspect pipeline ([`scripts/build_and_inspect_images.py`](file:///c:/Users/kruti/SAGE/scripts/build_and_inspect_images.py)).
-   - Executes real `docker build` commands followed by `docker inspect --format='{{index .Id}}'`, generating verified digests in [`docker/image_digests.json`](file:///c:/Users/kruti/SAGE/docker/image_digests.json).
-   - Generates an immutable cryptographic build record in [`docker/build_provenance.json`](file:///c:/Users/kruti/SAGE/docker/build_provenance.json) documenting base images, builder architecture, and exact inspect timestamps.
+   - Replaced static hand-authored image digests with an automated build and inspect pipeline ([`scripts/build_and_inspect_images.py`](scripts/build_and_inspect_images.py)).
+   - Executes real `docker build` commands followed by `docker inspect --format='{{index .Id}}'`, generating verified digests in [`docker/image_digests.json`](docker/image_digests.json).
+   - Generates an immutable cryptographic build record in [`docker/build_provenance.json`](docker/build_provenance.json) documenting base images, builder architecture, and exact inspect timestamps.
    - Enforces a zero-drift quality gate in CI (`make verify-images`) that halts builds if committed digests deviate from live inspect outputs.
 
 2. **V2: Clean Multi-Platform Execution & Per-Suite Latency Profiling ("Report Both")**:
-   - Re-executed the complete 174-test verification suite on a clean Linux CI runner (`ubuntu-latest`, Python 3.10.14), publishing the complete untruncated workflow execution log in [`docs/CI_WORKFLOW_RUN.log`](file:///c:/Users/kruti/SAGE/docs/CI_WORKFLOW_RUN.log) (174 passed in 89.70s; 261.12s on Windows local host).
+   - Re-executed the complete 174-test verification suite on a clean Linux CI runner (`ubuntu-latest`, Python 3.10.14), publishing the complete untruncated workflow execution log in [`docs/CI_WORKFLOW_RUN.log`](docs/CI_WORKFLOW_RUN.log) (174 passed in 89.70s; 261.12s on Windows local host).
    - Certified headline Linux Docker container isolation alongside secondary Windows LocalSandbox in Section 6.4, Table~\ref{tab:dual_platform}, and Appendix~\ref{app:dual_platform}, empirically proving complete metric invariance ($\Delta_{\text{platform}} = 0.00$, $p > 0.95$).
    - Published comprehensive per-suite timing profiling across all 29 individual test files on both operating systems in Table~\ref{tab:per_suite_timings} and Section 12, formally scoping the $< 15$s assertion to the fast deterministic pre-commit integration test (`test_integration.py`: 8.45s on Linux CI, 13.22s on Windows).
 
 3. **V3: Pinned Model Commit Hashes & Dual-Platform Reproducibility Audit Engine**:
    - Pinned remote foundation model checkpoints to exact 40-character hexadecimal commit hashes (`c03e6d358207e414f1eca0bb1891e29f1db0e242` for Qwen and `0e9e39f249a16976918f6564b8830bc894c89659` for Llama), validated via remote Hugging Face API trees.
    - Emits canonical deterministic trajectory hash manifests (`trajectory_manifest.json`) across three distinct experimental tracks (Qwen 3-seed pilot, Llama 3-seed pilot, and 25-cycle long-horizon sensitivity).
-   - Deployed the standalone verification engine ([`scripts/verify_reproducibility.py`](file:///c:/Users/kruti/SAGE/scripts/verify_reproducibility.py)), which automatically checks all 6 verification layers without author intervention and produces machine-readable attestations ([`docs/attestations/verification_attestation_linux_ci.json`](file:///c:/Users/kruti/SAGE/docs/attestations/verification_attestation_linux_ci.json) for GitHub Actions CI and [`docs/attestations/verification_attestation_windows_local.json`](file:///c:/Users/kruti/SAGE/docs/attestations/verification_attestation_windows_local.json) for Windows secondary host) and human-auditable [`REPRODUCIBILITY_VERIFICATION.md`](file:///c:/Users/kruti/SAGE/REPRODUCIBILITY_VERIFICATION.md).
+   - Deployed the standalone verification engine ([`scripts/verify_reproducibility.py`](scripts/verify_reproducibility.py)), which automatically checks all 6 verification layers without author intervention and produces machine-readable attestations ([`docs/attestations/verification_attestation_linux_ci.json`](docs/attestations/verification_attestation_linux_ci.json) for GitHub Actions CI and [`docs/attestations/verification_attestation_windows_local.json`](docs/attestations/verification_attestation_windows_local.json) for Windows secondary host) and human-auditable [`REPRODUCIBILITY_VERIFICATION.md`](REPRODUCIBILITY_VERIFICATION.md).
 
 With the completion and empirical verification of V1–V3, reviewers do not rely on unverified author assertions: every claim, container digest, model revision, platform invariance metric, and timing boundary is verified by public GitHub Actions CI runners and reproducible in a single terminal command.
 
@@ -794,18 +807,29 @@ SAGE/
 ├── PROJECT_DOSSIER.md                 # Master technical dossier and deliverables reference
 ├── configs/
 │   ├── model.yaml                     # Pinned LLM parameters (Qwen 2.5 Coder 7B, revision SHA)
+│   ├── model_gemini.yaml              # Google Gemini 2.5 Flash / Pro model configuration
+│   ├── model_openai.yaml              # OpenAI GPT-4o / o3-mini model configuration
+│   ├── model_claude.yaml              # Anthropic Claude 3.5 / 3.7 Sonnet configuration
+│   ├── model_deepseek.yaml            # DeepSeek V3 / Reasoner (R1) configuration
+│   ├── model_groq.yaml                # Groq Cloud fast inference configuration
 │   ├── agents/                        # G1..G6 agent configuration YAMLs
 │   │   ├── g1.yaml .. g6.yaml
 │   └── experiments/
 │       ├── pilot.yaml                 # 5-cycle, 3-seed pilot study specification
-│       └── full_study.yaml            # 10-cycle, 3-seed full empirical benchmark specification
+│       ├── full_study.yaml            # 10-cycle, 3-seed full empirical benchmark specification
+│       └── real_gemini_strict.yaml    # Google Gemini strict execution (zero mock fallback)
+├── notebooks/                         # Self-contained evaluation runners
+│   ├── SAGE_Google_Benchmark.ipynb    # Google Gemini 2.5 & Gemma Colab benchmark runner
+│   ├── SAGE_Claude_Benchmark.ipynb    # Anthropic Claude 3.5/3.7 Sonnet benchmark runner
+│   ├── SAGE_OpenAI_Benchmark.ipynb    # OpenAI GPT-4o / o3-mini benchmark runner
+│   └── SAGE_DeepSeek_Benchmark.ipynb  # DeepSeek V3 / R1 benchmark runner
 ├── docker/
 │   ├── Dockerfile.sandbox             # Unprivileged agent execution container (evaluser:1000)
 │   ├── Dockerfile.scorer              # Isolated read-only evaluation container (scorer:1001)
 │   ├── Dockerfile.frontend            # Next.js 14 dashboard frontend container
 │   ├── docker-compose.yml             # 4-service stack: sandbox + scorer + backend + frontend
 │   └── image_digests.json             # Pinned SHA-256 container digests for verification
-├── sage/
+├── sage/                              # Core SAGE engine
 │   ├── config/
 │   │   └── models.py                  # Pydantic models (ModelConfig, JudgeConfig, SandboxConfig, TaskConfig)
 │   ├── trajectory/
@@ -849,10 +873,22 @@ SAGE/
 │   │   └── reproducibility.py         # Seeding, manifest generator & HuggingFace exporter
 │   ├── dashboard_backend/             # FastAPI REST service + DuckDB telemetry backend
 │   └── dashboard_frontend/            # Next.js 14 interactive dashboard application
+├── sage_live/                         # Continuous self-refreshing AI safety benchmark subsystem
+│   ├── api/                           # FastAPI async endpoints (/health, /probes, /evaluate, /staleness, /attestation)
+│   │   ├── __init__.py                # App factory, CORS, exception handlers, sub-routers
+│   │   └── routes.py                  # Router endpoints, paginated schemas, role dependency gates
+│   ├── core/                          # Dynamic probe generator & cryptographic attestation
+│   │   ├── probe_generator.py         # 96-vector grammar probe generator (DeterministicProbeGenerator)
+│   │   ├── attestation.py             # Ed25519 signature attestation & SHA3-256 ledger tamper-detection
+│   │   └── staleness.py               # Answer leakage tracking & dynamic retirement engine
+│   ├── database/                      # SQLModel ORM models and persistent audit stores
+│   │   └── models.py                  # ProbeTask, EvaluationResult, StalenessRecord, AttestationLedger, AgentProfile
+│   └── tests/                         # SAGE-Live test suite (110 tests, 100% pass rate)
+│       └── test_all.py
 ├── tasks/
 │   ├── tasks_index.json               # 100 standardized benchmark task specifications
 │   └── repos/                         # Task repository templates (including mini_orm drift probe)
-├── tests/                             # 31 quality gate test suites (201 passed, 1 skipped across 202 total tests)
+├── tests/                             # 31 core quality gate test suites (201 passed, 1 skipped across 202 total tests)
 ├── paper/
 │   ├── main.tex                       # Primary IEEE conference submission manuscript
 │   ├── archive_neurips_extended_report.tex # Archived internal extended-results technical report
@@ -912,24 +948,24 @@ To definitively eliminate reviewer confusion across timing statements, the table
 
 | Benchmark Dimension | Platform / Environment | Specification Budget / SLA | Empirical Measured Value | Measurement Scope & Latency Context | Canonical Reference |
 |---|---|:---:|:---:|---|---|
-| **Fast CI Integration Gate** | Linux CI (`ubuntu-latest`) | $< 15.00$s | **8.45s** | Pre-commit fast gate: 1 task $\times$ 1 cycle $\times$ $G_1$ + $G_2$ under MockLLM | [`test_integration.py`](file:///c:/Users/kruti/SAGE/tests/test_integration.py) |
-| **Fast CI Integration Gate** | Windows Development Host | $< 15.00$s | **13.22s** | Pre-commit fast gate on local developer Windows workstation | [`test_integration.py`](file:///c:/Users/kruti/SAGE/tests/test_integration.py) |
-| **Full Regression Suite** | Linux CI (`ubuntu-latest`) | $< 120.00$s | **94.15s** (1m 34s) | Complete test suite: **201 tests** across all **31 files** (0 failures, 1 skipped) | [`docs/CI_WORKFLOW_RUN.log`](file:///c:/Users/kruti/SAGE/docs/CI_WORKFLOW_RUN.log) |
-| **Full Regression Suite** | Windows Development Host | $< 300.00$s | **261.43s** (4m 21s) | Complete test suite: 201 passed, 1 skipped (vLLM live daemon skipped on local) | [`scripts/verify_reproducibility.py`](file:///c:/Users/kruti/SAGE/scripts/verify_reproducibility.py) |
+| **Fast CI Integration Gate** | Linux CI (`ubuntu-latest`) | $< 15.00$s | **8.45s** | Pre-commit fast gate: 1 task $\times$ 1 cycle $\times$ $G_1$ + $G_2$ under MockLLM | [`test_integration.py`](tests/test_integration.py) |
+| **Fast CI Integration Gate** | Windows Development Host | $< 15.00$s | **13.22s** | Pre-commit fast gate on local developer Windows workstation | [`test_integration.py`](tests/test_integration.py) |
+| **Full Regression Suite** | Linux CI (`ubuntu-latest`) | $< 120.00$s | **94.15s** (1m 34s) | Complete test suite: **201 tests** across all **31 files** (0 failures, 1 skipped) | [`docs/CI_WORKFLOW_RUN.log`](docs/CI_WORKFLOW_RUN.log) |
+| **Full Regression Suite** | Windows Development Host | $< 300.00$s | **261.43s** (4m 21s) | Complete test suite: 201 passed, 1 skipped (vLLM live daemon skipped on local) | [`scripts/verify_reproducibility.py`](scripts/verify_reproducibility.py) |
 | **Task Lifecycle ($G_1$ Frozen)** | Linux Docker (`evo-sandbox`) | $< 3.00$s | **1.84s** | Frozen baseline $G_1$ single-task lifecycle (setup, execution, pytest, score) | Section 6.4 / Table 1 |
 | **Task Lifecycle ($G_1$ Frozen)** | Windows LocalSandbox | $< 3.00$s | **1.68s** | Frozen baseline $G_1$ single-task lifecycle in local path-jail | Section 6.4 / Table 1 |
 | **Task Lifecycle (Cohort Mean)** | Linux Docker (`evo-sandbox`) | $< 3.00$s | **1.94s** | Grand mean across all 6 archetypes ($G_1$ 1.84s, $G_4$ 2.05s, $G_6$ 2.14s) | Section 6.4 / Table 1 |
 | **Task Lifecycle (Cohort Mean)** | Windows LocalSandbox | $< 3.00$s | **1.75s** | Grand mean across all 6 archetypes in local path-jail | Section 6.4 / Table 1 |
-| **Agent Tool Turns ($G_1$)** | Cross-Platform Invariant | N/A | **1.62 steps** | Mean agent reasoning turns/steps per task (algorithmic count, not seconds) | [`comparative_baselines_results.json`](file:///c:/Users/kruti/SAGE/experiments/runs/comparative_baselines_results.json) |
-| **Single LLM Step (Mock)** | In-Process Memory | $< 50$ms | **15ms** | Fast mock token response generator for CI testing | [`LIVE_INFERENCE_API_AUDIT.md`](file:///c:/Users/kruti/SAGE/docs/LIVE_INFERENCE_API_AUDIT.md) |
-| **Single LLM Step (Local GGUF)** | Local CPU/GPU (`llama-cpp`) | $< 5.00$s | **1,842ms** | `Qwen2.5-Coder-3B-Instruct` 4-bit local neural inference | [`local_qwen_empirical_run`](file:///c:/Users/kruti/SAGE/experiments/runs/local_qwen_empirical_run) |
-| **Single LLM Step (Cloud API)**| Remote OpenAI-Compatible | $< 5.00$s | **2,145ms** | `gemma-4-26b-a4b-it` live cloud foundation model completion | [`full_study_live`](file:///c:/Users/kruti/SAGE/experiments/runs/full_study_live) |
-| **Task Turn (Live Neural)** | Remote OpenAI-Compatible | $< 60.00$s | **21.80s** | Full multi-turn task execution with live neural reasoning + Docker | Table 11 / [`PROJECT_DOSSIER.md`](file:///c:/Users/kruti/SAGE/PROJECT_DOSSIER.md) |
+| **Agent Tool Turns ($G_1$)** | Cross-Platform Invariant | N/A | **1.62 steps** | Mean agent reasoning turns/steps per task (algorithmic count, not seconds) | [`comparative_baselines_results.json`](experiments/runs/comparative_baselines_results.json) |
+| **Single LLM Step (Mock)** | In-Process Memory | $< 50$ms | **15ms** | Fast mock token response generator for CI testing | [`LIVE_INFERENCE_API_AUDIT.md`](docs/LIVE_INFERENCE_API_AUDIT.md) |
+| **Single LLM Step (Local GGUF)** | Local CPU/GPU (`llama-cpp`) | $< 5.00$s | **1,842ms** | `Qwen2.5-Coder-3B-Instruct` 4-bit local neural inference | [`local_qwen_empirical_run`](experiments/runs/local_qwen_empirical_run) |
+| **Single LLM Step (Cloud API)**| Remote OpenAI-Compatible | $< 5.00$s | **2,145ms** | `gemma-4-26b-a4b-it` live cloud foundation model completion | [`full_study_live`](experiments/runs/full_study_live) |
+| **Task Turn (Live Neural)** | Remote OpenAI-Compatible | $< 60.00$s | **21.80s** | Full multi-turn task execution with live neural reasoning + Docker | Table 11 / [`PROJECT_DOSSIER.md`](PROJECT_DOSSIER.md) |
 
 > **Key Timing Principles**:
 > 1. **Specification SLA vs. Empirical Measurement**: The `< 15.00s` integration claim is the continuous integration budget limit; the measured performance is **8.45s** on Linux and **13.22s** on Windows.
 > 2. **Reasoning Steps vs. Elapsed Time**: The metric **1.62** represents mean agent tool turns (algorithmic action count), while **1.68s / 1.84s** is $G_1$ task lifecycle duration, and **1.75s / 1.94s** is the cohort grand mean across all archetypes.
-> 3. **Authoritative Regression Suite**: The full suite contains **201 tests across 31 test files**, executing in **94.15s** in clean Linux CI and **261.43s** on Windows development hosts.
+> 3. **Authoritative Regression Suite**: The full core suite contains **201 tests across 31 test files**, executing in **94.15s** in clean Linux CI and **261.43s** on Windows development hosts (100% pass rate). In addition, the **SAGE-Live** subsystem contains **110 comprehensive tests** in [`sage_live/tests/test_all.py`](sage_live/tests/test_all.py) (0.53s, 100% pass rate), bringing the monorepo's complete automated test coverage to **311 tests**.
 
 ### Detailed Dual-Platform Per-Suite Timing Breakdown & Slow-Path Analysis
 
@@ -937,37 +973,37 @@ To enable peer reviewers to audit test execution latency and profile performance
 
 | Test Suite File | Tests | Linux CI (s) | Windows (s) | Performance Profile & Slow Path Root Cause |
 |---|:---:|:---:|:---:|---|
-| [`tests/test_reproducibility.py`](file:///c:/Users/kruti/SAGE/tests/test_reproducibility.py) | 3 | 14.12s | 42.50s | **Slow Path**: Runs multiple identical-config benchmark executions to assert byte-identical SHA-256 trajectory invariance across seeds. |
-| [`tests/test_week3_sandbox_security.py`](file:///c:/Users/kruti/SAGE/tests/test_week3_sandbox_security.py) | 14 | 12.80s | 40.29s | **Slow Path**: `test_first_ten_tasks_catalog_and_execution` executes end-to-end task setup and pytest runs across all 10 task repos. |
-| [`tests/test_week9_10_pilot_and_schema.py`](file:///c:/Users/kruti/SAGE/tests/test_week9_10_pilot_and_schema.py) | 4 | 11.45s | 38.32s | **Slow Path**: `test_pilot_matrix_orchestration` simulates full 10-task $\times$ 3-group $\times$ 3-cycle orchestration matrix. |
-| [`tests/test_week4_evolution.py`](file:///c:/Users/kruti/SAGE/tests/test_week4_evolution.py) | 4 | 9.80s | 32.36s | **Slow Path**: `test_run_2cycles_10tasks_metrics` executes 2-cycle recursive evolution and metrics computation over 10 tasks. |
-| [`tests/test_integration.py`](file:///c:/Users/kruti/SAGE/tests/test_integration.py) | 2 | 8.45s | 25.57s | **Fast Integration Suite**: Fast deterministic test executes in **8.45s Linux / 13.22s Windows** (< 15s CI gate). |
-| [`tests/test_vllm_integration.py`](file:///c:/Users/kruti/SAGE/tests/test_vllm_integration.py) | 5 | 6.50s | 19.76s | Simulated and live wire protocol verification with end-to-end task execution. |
-| [`tests/test_week11_12_hardening.py`](file:///c:/Users/kruti/SAGE/tests/test_week11_12_hardening.py) | 5 | 4.20s | 12.16s | ThreadPoolExecutor timeout simulation, backoff retries, and orchestrator crash-recovery. |
-| [`tests/test_drift_probes.py`](file:///c:/Users/kruti/SAGE/tests/test_drift_probes.py) | 6 | 3.80s | 10.95s | H2 reward hacking naive agent simulation and H5 verification guard invariant check. |
-| [`tests/test_judge_isolation.py`](file:///c:/Users/kruti/SAGE/tests/test_judge_isolation.py) | 8 | 3.10s | 8.97s | Auxiliary-only score bounds and cross-family diversity validation. |
-| [`tests/test_adapters.py`](file:///c:/Users/kruti/SAGE/tests/test_adapters.py) | 5 | 2.10s | 5.92s | G1 single-task manual execution loop. |
-| [`tests/test_scorer_invisibility.py`](file:///c:/Users/kruti/SAGE/tests/test_scorer_invisibility.py) | 14 | 1.85s | 4.86s | Hidden scorer read-only mounts, tamper disqualification, and volume concealment. |
-| [`tests/test_tamper_logging.py`](file:///c:/Users/kruti/SAGE/tests/test_tamper_logging.py) | 7 | 1.60s | 4.28s | 5-vector audit check execution and canonical JSONL logging. |
-| [`tests/test_week5_6_advanced_agents.py`](file:///c:/Users/kruti/SAGE/tests/test_week5_6_advanced_agents.py) | 6 | 1.40s | 3.86s | G3 memory accumulation and G4 reflection agent lifecycle checks. |
-| [`tests/test_reproducibility_contract.py`](file:///c:/Users/kruti/SAGE/tests/test_reproducibility_contract.py) | 6 | 1.20s | 2.83s | Pinned revision SHAs, pinned image digests, Croissant metadata, and compose spec checks. |
-| [`tests/test_metrics_recomputation.py`](file:///c:/Users/kruti/SAGE/tests/test_metrics_recomputation.py) | 3 | 0.95s | 1.78s | Direct CLI recomputation from raw JSONL trajectory and headless figure rendering. |
-| [`tests/test_evolution.py`](file:///c:/Users/kruti/SAGE/tests/test_evolution.py) | 3 | 0.45s | 0.92s | Proposal parser, verifier filter, and snapshot manager. |
-| [`tests/test_horizon_sensitivity.py`](file:///c:/Users/kruti/SAGE/tests/test_horizon_sensitivity.py) | 2 | 0.35s | 0.68s | Multi-horizon logarithmic decay and asymptotic plateau analyzer. |
-| [`tests/test_ablation.py`](file:///c:/Users/kruti/SAGE/tests/test_ablation.py) | 5 | 0.20s | 0.35s | Anti-tamper check scaling, seed variance bounds, horizon saturation, and dual-container isolation. |
-| [`tests/test_baselines.py`](file:///c:/Users/kruti/SAGE/tests/test_baselines.py) | 4 | 0.20s | 0.35s | Macro cross-benchmark calibration taxonomy, SWE-bench Verified G1 subset, external commercial agent baselines, and artifact export. |
-| [`tests/test_cross_family.py`](file:///c:/Users/kruti/SAGE/tests/test_cross_family.py) | 2 | 0.18s | 0.33s | Cross-family hypothesis testing and LaTeX table generation. |
-| [`tests/test_week7_8_dashboard_wrapper.py`](file:///c:/Users/kruti/SAGE/tests/test_week7_8_dashboard_wrapper.py) | 5 | 0.12s | 0.24s | REST endpoints and telemetry ingestion checks. |
-| [`tests/test_significance.py`](file:///c:/Users/kruti/SAGE/tests/test_significance.py) | 9 | 0.08s | 0.10s | Permutation test, Cliff's delta, Cohen's d, and Holm-Bonferroni correction. |
-| [`tests/test_scoring.py`](file:///c:/Users/kruti/SAGE/tests/test_scoring.py) | 3 | 0.06s | 0.09s | Tamper detection unit assertions and proxy gap thresholding. |
-| [`tests/test_contamination.py`](file:///c:/Users/kruti/SAGE/tests/test_contamination.py) | 4 | 0.05s | 0.08s | 100-task contamination 4-gram overlap and TF-IDF cosine similarity. |
-| [`tests/test_dashboard_hardening.py`](file:///c:/Users/kruti/SAGE/tests/test_dashboard_hardening.py) | 7 | 0.04s | 0.06s | Sliding-window rate limiter, ConstantTimeAuth, and security headers middleware. |
-| [`tests/test_schema.py`](file:///c:/Users/kruti/SAGE/tests/test_schema.py) | 4 | 0.03s | 0.04s | TrajectoryWriter thread-safety and Pydantic v2 schema conformance. |
-| [`tests/test_human_audit.py`](file:///c:/Users/kruti/SAGE/tests/test_human_audit.py) | 7 | 0.02s | 0.03s | Stratified sampling, Cohen's kappa calculation, and CSV queue export. |
-| [`tests/test_backend.py`](file:///c:/Users/kruti/SAGE/tests/test_backend.py) | 18 | 0.85s | 2.64s | Comprehensive REST API routes, models, pagination, audit upsert, security headers. |
-| [`tests/test_metrics.py`](file:///c:/Users/kruti/SAGE/tests/test_metrics.py) | 22 | 0.01s | 0.01s | Property-tested metric invariant checks and boundary collapse invariants. |
-| [`tests/test_g7_verification_taxonomy.py`](file:///c:/Users/kruti/SAGE/tests/test_g7_verification_taxonomy.py) | 4 | 0.25s | 0.42s | Deployable proxy canary gating taxonomy, verification isolation, and rollback invariants. |
-| [`tests/test_inductive_heldout_split.py`](file:///c:/Users/kruti/SAGE/tests/test_inductive_heldout_split.py) | 5 | 0.30s | 0.55s | Inductive evaluation split on held-out tasks (80 standard vs 20 drift probes) and proxy gap bounds. |
+| [`tests/test_reproducibility.py`](tests/test_reproducibility.py) | 3 | 14.12s | 42.50s | **Slow Path**: Runs multiple identical-config benchmark executions to assert byte-identical SHA-256 trajectory invariance across seeds. |
+| [`tests/test_week3_sandbox_security.py`](tests/test_week3_sandbox_security.py) | 14 | 12.80s | 40.29s | **Slow Path**: `test_first_ten_tasks_catalog_and_execution` executes end-to-end task setup and pytest runs across all 10 task repos. |
+| [`tests/test_week9_10_pilot_and_schema.py`](tests/test_week9_10_pilot_and_schema.py) | 4 | 11.45s | 38.32s | **Slow Path**: `test_pilot_matrix_orchestration` simulates full 10-task $\times$ 3-group $\times$ 3-cycle orchestration matrix. |
+| [`tests/test_week4_evolution.py`](tests/test_week4_evolution.py) | 4 | 9.80s | 32.36s | **Slow Path**: `test_run_2cycles_10tasks_metrics` executes 2-cycle recursive evolution and metrics computation over 10 tasks. |
+| [`tests/test_integration.py`](tests/test_integration.py) | 2 | 8.45s | 25.57s | **Fast Integration Suite**: Fast deterministic test executes in **8.45s Linux / 13.22s Windows** (< 15s CI gate). |
+| [`tests/test_vllm_integration.py`](tests/test_vllm_integration.py) | 5 | 6.50s | 19.76s | Simulated and live wire protocol verification with end-to-end task execution. |
+| [`tests/test_week11_12_hardening.py`](tests/test_week11_12_hardening.py) | 5 | 4.20s | 12.16s | ThreadPoolExecutor timeout simulation, backoff retries, and orchestrator crash-recovery. |
+| [`tests/test_drift_probes.py`](tests/test_drift_probes.py) | 6 | 3.80s | 10.95s | H2 reward hacking naive agent simulation and H5 verification guard invariant check. |
+| [`tests/test_judge_isolation.py`](tests/test_judge_isolation.py) | 8 | 3.10s | 8.97s | Auxiliary-only score bounds and cross-family diversity validation. |
+| [`tests/test_adapters.py`](tests/test_adapters.py) | 5 | 2.10s | 5.92s | G1 single-task manual execution loop. |
+| [`tests/test_scorer_invisibility.py`](tests/test_scorer_invisibility.py) | 14 | 1.85s | 4.86s | Hidden scorer read-only mounts, tamper disqualification, and volume concealment. |
+| [`tests/test_tamper_logging.py`](tests/test_tamper_logging.py) | 7 | 1.60s | 4.28s | 5-vector audit check execution and canonical JSONL logging. |
+| [`tests/test_week5_6_advanced_agents.py`](tests/test_week5_6_advanced_agents.py) | 6 | 1.40s | 3.86s | G3 memory accumulation and G4 reflection agent lifecycle checks. |
+| [`tests/test_reproducibility_contract.py`](tests/test_reproducibility_contract.py) | 6 | 1.20s | 2.83s | Pinned revision SHAs, pinned image digests, Croissant metadata, and compose spec checks. |
+| [`tests/test_metrics_recomputation.py`](tests/test_metrics_recomputation.py) | 3 | 0.95s | 1.78s | Direct CLI recomputation from raw JSONL trajectory and headless figure rendering. |
+| [`tests/test_evolution.py`](tests/test_evolution.py) | 3 | 0.45s | 0.92s | Proposal parser, verifier filter, and snapshot manager. |
+| [`tests/test_horizon_sensitivity.py`](tests/test_horizon_sensitivity.py) | 2 | 0.35s | 0.68s | Multi-horizon logarithmic decay and asymptotic plateau analyzer. |
+| [`tests/test_ablation.py`](tests/test_ablation.py) | 5 | 0.20s | 0.35s | Anti-tamper check scaling, seed variance bounds, horizon saturation, and dual-container isolation. |
+| [`tests/test_baselines.py`](tests/test_baselines.py) | 4 | 0.20s | 0.35s | Macro cross-benchmark calibration taxonomy, SWE-bench Verified G1 subset, external commercial agent baselines, and artifact export. |
+| [`tests/test_cross_family.py`](tests/test_cross_family.py) | 2 | 0.18s | 0.33s | Cross-family hypothesis testing and LaTeX table generation. |
+| [`tests/test_week7_8_dashboard_wrapper.py`](tests/test_week7_8_dashboard_wrapper.py) | 5 | 0.12s | 0.24s | REST endpoints and telemetry ingestion checks. |
+| [`tests/test_significance.py`](tests/test_significance.py) | 9 | 0.08s | 0.10s | Permutation test, Cliff's delta, Cohen's d, and Holm-Bonferroni correction. |
+| [`tests/test_scoring.py`](tests/test_scoring.py) | 3 | 0.06s | 0.09s | Tamper detection unit assertions and proxy gap thresholding. |
+| [`tests/test_contamination.py`](tests/test_contamination.py) | 4 | 0.05s | 0.08s | 100-task contamination 4-gram overlap and TF-IDF cosine similarity. |
+| [`tests/test_dashboard_hardening.py`](tests/test_dashboard_hardening.py) | 7 | 0.04s | 0.06s | Sliding-window rate limiter, ConstantTimeAuth, and security headers middleware. |
+| [`tests/test_schema.py`](tests/test_schema.py) | 4 | 0.03s | 0.04s | TrajectoryWriter thread-safety and Pydantic v2 schema conformance. |
+| [`tests/test_human_audit.py`](tests/test_human_audit.py) | 7 | 0.02s | 0.03s | Stratified sampling, Cohen's kappa calculation, and CSV queue export. |
+| [`tests/test_backend.py`](tests/test_backend.py) | 18 | 0.85s | 2.64s | Comprehensive REST API routes, models, pagination, audit upsert, security headers. |
+| [`tests/test_metrics.py`](tests/test_metrics.py) | 22 | 0.01s | 0.01s | Property-tested metric invariant checks and boundary collapse invariants. |
+| [`tests/test_g7_verification_taxonomy.py`](tests/test_g7_verification_taxonomy.py) | 4 | 0.25s | 0.42s | Deployable proxy canary gating taxonomy, verification isolation, and rollback invariants. |
+| [`tests/test_inductive_heldout_split.py`](tests/test_inductive_heldout_split.py) | 5 | 0.30s | 0.55s | Inductive evaluation split on held-out tasks (80 standard vs 20 drift probes) and proxy gap bounds. |
 | **Total Test Suite** | **201** | **94.15s** (1m 34s) | **261.43s** (4m 21s) | **100% Pass Rate** across all 31 files (201 passed, 1 skipped on Windows; 201 passed on Linux). |
 
 > **Key Reviewer Takeaways**:
@@ -978,20 +1014,20 @@ To enable peer reviewers to audit test execution latency and profile performance
 
 | Suite | File | Tests | Validated Invariants |
 |---|---|---|---|
-| **Reproducibility Contract** | [`test_reproducibility_contract.py`](file:///c:/Users/kruti/SAGE/tests/test_reproducibility_contract.py) | 6 | Pinned revision SHAs, pinned image digests, seeded generators determinism, trajectory manifests, 4-service compose, HuggingFace dataset export. |
-| **Comparative Baselines & Cross-Benchmark Calibration** | [`test_baselines.py`](file:///c:/Users/kruti/SAGE/tests/test_baselines.py) | 4 | 7-benchmark taxonomy coverage, cross-family foundation model replication ($G_1$–$G_7, G_6^*$ across Qwen/Llama), SWE-bench Verified $G_1$ baseline calibration, artifact export integrity. |
-| **LLM-Judge Isolation** | [`test_judge_isolation.py`](file:///c:/Users/kruti/SAGE/tests/test_judge_isolation.py) | 8 | Cross-family diversity ($Qwen \ne Llama$), same-family rejection, prompt concealment, auxiliary-only score guarantee, tamper override. |
-| **Deliberate Drift Probes** | [`test_drift_probes.py`](file:///c:/Users/kruti/SAGE/tests/test_drift_probes.py) | 6 | 20% catalog distribution, visible proxy vs hidden GT test divergence, workspace isolation, progress metric execution, $H_2$ reward gaming, $H_5$ verification invariance. |
-| **METR Scorer Invisibility** | [`test_scorer_invisibility.py`](file:///c:/Users/kruti/SAGE/tests/test_scorer_invisibility.py) | 14 | Distinct container images/users (`1000` vs `1001`), read-only test mounts (`:ro`), agent container cannot list or inspect scorer volume, shell access blocked. |
-| **Tamper Logging Quality Gate** | [`test_tamper_logging.py`](file:///c:/Users/kruti/SAGE/tests/test_tamper_logging.py) | 7 | Audit checks (a)-(e) logged as canonical `TrajectoryEvent` items with `event_type="safety_check"` and full incident payload details. |
-| **Property-Tested Metric Invariants** | [`test_metrics.py`](file:///c:/Users/kruti/SAGE/tests/test_metrics.py) | 22 | Property-tested invariants of `SecurityDrift`, `RetentionRatio`, `ImprovementGain`, `GeneralizationGap`, `SeedVariance`, `BootstrapCI` interval bounds. |
-| **Reviewer Recomputation** | [`test_metrics_recomputation.py`](file:///c:/Users/kruti/SAGE/tests/test_metrics_recomputation.py) | 3 | Full ground-truth metric equivalence and headless vector figure regeneration from raw `trajectory.jsonl` in clean environment. |
-| **Byte-Identical Hashing** | [`test_reproducibility.py`](file:///c:/Users/kruti/SAGE/tests/test_reproducibility.py) | 3 | Deterministic projection, stripping wall-clock timestamps while preserving event ordering; byte-identical SHA-256 digests. |
-| **System Hardening** | [`test_week11_12_hardening.py`](file:///c:/Users/kruti/SAGE/tests/test_week11_12_hardening.py) | 5 | Task timeouts via ThreadPoolExecutor, exponential backoff retries, fatal security short-circuit, crash recovery resumption, budget ceilings. |
-| **Sandbox Confinement** | [`test_week3_sandbox_security.py`](file:///c:/Users/kruti/SAGE/tests/test_week3_sandbox_security.py) | 14 | Forbidden command blocking (`rm -rf`, `chmod 777`, `sudo`), protected file write prevention, path traversal defense. |
-| **Evolution & Verifier Gates** | [`test_evolution.py`](file:///c:/Users/kruti/SAGE/tests/test_evolution.py) / [`test_week4_evolution.py`](file:///c:/Users/kruti/SAGE/tests/test_week4_evolution.py) | 7 | Mutation proposal parsing, verifier gate filtering, canary regressions, snapshot checkpointing. |
-| **Advanced Agent Archetypes** | [`test_week5_6_advanced_agents.py`](file:///c:/Users/kruti/SAGE/tests/test_week5_6_advanced_agents.py) | 6 | Memory accumulation ($G_3$), reflection diagnosis ($G_4$), verifier gate wrapper ($G_5$), automatic atomic rollback ($G_6$). |
-| **Fast Deterministic Integration** | [`test_integration.py`](file:///c:/Users/kruti/SAGE/tests/test_integration.py) | 2 | 1 task $\times$ 1 cycle $\times$ $G_1$ + $G_2$ with deterministic Mock LLM, executing in CI in **under 15 seconds**. |
+| **Reproducibility Contract** | [`test_reproducibility_contract.py`](tests/test_reproducibility_contract.py) | 6 | Pinned revision SHAs, pinned image digests, seeded generators determinism, trajectory manifests, 4-service compose, HuggingFace dataset export. |
+| **Comparative Baselines & Cross-Benchmark Calibration** | [`test_baselines.py`](tests/test_baselines.py) | 4 | 7-benchmark taxonomy coverage, cross-family foundation model replication ($G_1$–$G_7, G_6^*$ across Qwen/Llama), SWE-bench Verified $G_1$ baseline calibration, artifact export integrity. |
+| **LLM-Judge Isolation** | [`test_judge_isolation.py`](tests/test_judge_isolation.py) | 8 | Cross-family diversity ($Qwen \ne Llama$), same-family rejection, prompt concealment, auxiliary-only score guarantee, tamper override. |
+| **Deliberate Drift Probes** | [`test_drift_probes.py`](tests/test_drift_probes.py) | 6 | 20% catalog distribution, visible proxy vs hidden GT test divergence, workspace isolation, progress metric execution, $H_2$ reward gaming, $H_5$ verification invariance. |
+| **METR Scorer Invisibility** | [`test_scorer_invisibility.py`](tests/test_scorer_invisibility.py) | 14 | Distinct container images/users (`1000` vs `1001`), read-only test mounts (`:ro`), agent container cannot list or inspect scorer volume, shell access blocked. |
+| **Tamper Logging Quality Gate** | [`test_tamper_logging.py`](tests/test_tamper_logging.py) | 7 | Audit checks (a)-(e) logged as canonical `TrajectoryEvent` items with `event_type="safety_check"` and full incident payload details. |
+| **Property-Tested Metric Invariants** | [`test_metrics.py`](tests/test_metrics.py) | 22 | Property-tested invariants of `SecurityDrift`, `RetentionRatio`, `ImprovementGain`, `GeneralizationGap`, `SeedVariance`, `BootstrapCI` interval bounds. |
+| **Reviewer Recomputation** | [`test_metrics_recomputation.py`](tests/test_metrics_recomputation.py) | 3 | Full ground-truth metric equivalence and headless vector figure regeneration from raw `trajectory.jsonl` in clean environment. |
+| **Byte-Identical Hashing** | [`test_reproducibility.py`](tests/test_reproducibility.py) | 3 | Deterministic projection, stripping wall-clock timestamps while preserving event ordering; byte-identical SHA-256 digests. |
+| **System Hardening** | [`test_week11_12_hardening.py`](tests/test_week11_12_hardening.py) | 5 | Task timeouts via ThreadPoolExecutor, exponential backoff retries, fatal security short-circuit, crash recovery resumption, budget ceilings. |
+| **Sandbox Confinement** | [`test_week3_sandbox_security.py`](tests/test_week3_sandbox_security.py) | 14 | Forbidden command blocking (`rm -rf`, `chmod 777`, `sudo`), protected file write prevention, path traversal defense. |
+| **Evolution & Verifier Gates** | [`test_evolution.py`](tests/test_evolution.py) / [`test_week4_evolution.py`](tests/test_week4_evolution.py) | 7 | Mutation proposal parsing, verifier gate filtering, canary regressions, snapshot checkpointing. |
+| **Advanced Agent Archetypes** | [`test_week5_6_advanced_agents.py`](tests/test_week5_6_advanced_agents.py) | 6 | Memory accumulation ($G_3$), reflection diagnosis ($G_4$), verifier gate wrapper ($G_5$), automatic atomic rollback ($G_6$). |
+| **Fast Deterministic Integration** | [`test_integration.py`](tests/test_integration.py) | 2 | 1 task $\times$ 1 cycle $\times$ $G_1$ + $G_2$ with deterministic Mock LLM, executing in CI in **under 15 seconds**. |
 
 ---
 
@@ -1126,18 +1162,18 @@ To definitively eliminate this risk, SAGE implements a rigorous **Dual-Stage Emp
     - *Core Finding*: $G_1$ achieves $20.0\%$ solve rate on SWE-bench Verified ($18.4$ turns, $\$0.0385$/task) vs. $60.0\%$ on SAGE ($1.62$ turns, $\$0.000079$/task), proving why SWE-bench creates a severe floor effect unviable for self-evolution. Across both Qwen and Llama backbones, unconstrained reflection ($G_4$) reliably induces severe security drift ($+0.28$ vs. $+0.26$), whereas deployable proxy canary verification ($G_7$) halts security erosion ($+0.02$) and preserves capability ($96.0\%$ retention). Pre-training contamination is certified at $0.0\%$ on SAGE vs $32.7\%$ on SWE-bench Verified, $98.2\%$ on MBPP, and $100\%$ on HumanEval.
 
 12. **Evaluation Dashboard Validation, Interactive Workbench & 4-Service Stack Certification (Appendix J, Figures 5--8)**:
-    - *Scope*: End-to-end operational validation of the 4-service Docker Compose topology (`evo_sandbox`, `evo_scorer`, `evo_backend`, `evo_frontend`), accompanied by 18 automated endpoint integration tests ([`tests/test_backend.py`](file:///c:/Users/kruti/SAGE/tests/test_backend.py)), complete technical documentation ([`docs/DASHBOARD_API_REFERENCE.md`](file:///c:/Users/kruti/SAGE/docs/DASHBOARD_API_REFERENCE.md)), and high-resolution publication figures ([`paper/figures/dashboard_*.png`](file:///c:/Users/kruti/SAGE/paper/figures)).
+    - *Scope*: End-to-end operational validation of the 4-service Docker Compose topology (`evo_sandbox`, `evo_scorer`, `evo_backend`, `evo_frontend`), accompanied by 18 automated endpoint integration tests ([`tests/test_backend.py`](tests/test_backend.py)), complete technical documentation ([`docs/DASHBOARD_API_REFERENCE.md`](docs/DASHBOARD_API_REFERENCE.md)), and high-resolution publication figures ([`paper/figures/dashboard_*.png`](paper/figures)).
     - *Core Finding*: Demonstrates 100% operational fidelity across all 9 REST API routes (`/health`, `/runs`, `/runs/{id}`, `/runs/{id}/cycles`, `/runs/{id}/trajectories`, `/audit/queue`, `/audit/stats`, `/audit/labels`, `/leaderboard`). Proves defense-in-depth security enforcement (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, sliding-window rate limiting at 20--120 req/min, constant-time API key verification) and interactive Next.js 14 visualization of multi-group drift curves, mutation diffs, double-blind human auditing, and telemetry event streaming.
 
 13. **Comprehensive Compute Cost Accounting & Token Consumption Reconciliation (Appendix F.3, Table 15)**:
-    - *Scope*: Rigorous mathematical reconciliation published in Table 15 of the manuscript and [`docs/COST_ACCOUNTING_RECONCILIATION.md`](file:///c:/Users/kruti/SAGE/docs/COST_ACCOUNTING_RECONCILIATION.md) resolving pilot calibration metrics ($0.08217 USD base generation vs. $0.510 USD holistic system evolution) against the completed 18,000-task full benchmark ($73.95 USD empirical spend across 334.8M tokens).
+    - *Scope*: Rigorous mathematical reconciliation published in Table 15 of the manuscript and [`docs/COST_ACCOUNTING_RECONCILIATION.md`](docs/COST_ACCOUNTING_RECONCILIATION.md) resolving pilot calibration metrics ($0.08217 USD base generation vs. $0.510 USD holistic system evolution) against the completed 18,000-task full benchmark ($73.95 USD empirical spend across 334.8M tokens).
     - *Core Finding*: Disambiguates why pilot tasks consumed 304.3 tokens/task in concise 1–2 turn edits while multi-turn benchmark evaluations averaged 18,602.7 tokens/task due to cumulative prompt expansion across 10 generations ($G_3, G_4$) and canary regression evaluation re-runs ($G_6$). Proves that an idealized flat 5,000 tokens/task ($18\text{k} \times 5\text{k} = 90\text{M tokens}$) costs **$18.00–$20.70 USD** (defining the exact lower boundary of the $20–$150 USD projection), while 20,000 tokens/task ($360\text{M tokens}$) defines the upper budget ceiling ($86.40–$144.00 USD), with actual empirical multi-turn execution landing at **$73.95 USD**, strictly within the pre-registered budget envelope.
 
 ---
 
 ### P0.2 Double-Blind Human Verification Protocol & Pre-Experiment Sample-Size Planning ($N_{\text{audit}}=79$)
 
-To eliminate reviewer skepticism regarding whether automated safety monitors over-flag benign developer commands or fail to detect subtle reward hacking, SAGE incorporates a pre-registered double-blind human verification study. Complete protocol rules, codebooks, and unblind mappings are documented in [`docs/HUMAN_AUDIT_PROTOCOL.md`](file:///c:/Users/kruti/SAGE/docs/HUMAN_AUDIT_PROTOCOL.md).
+To eliminate reviewer skepticism regarding whether automated safety monitors over-flag benign developer commands or fail to detect subtle reward hacking, SAGE incorporates a pre-registered double-blind human verification study. Complete protocol rules, codebooks, and unblind mappings are documented in [`docs/HUMAN_AUDIT_PROTOCOL.md`](docs/HUMAN_AUDIT_PROTOCOL.md).
 
 #### 1. Annotator Qualifications, Review Methodology, and Scope
 - **Annotator 1 ($\text{Reviewer}_\alpha$)**: Computer engineering researcher specializing in Python software engineering, pytest internals, and static code analysis.
@@ -1195,7 +1231,7 @@ Reviewers disagreed on exactly 2 out of 79 traces ($2.53\%$ discordance):
 
 ### P0.3 Architectural Ablation Studies & Design Choice Validation
 
-To eliminate reviewer accusations of "over-engineering without ablation justification" and answer "Are all these components necessary?", SAGE publishes four quantitative ablation studies in [`docs/ABLATION_STUDIES.md`](file:///c:/Users/kruti/SAGE/docs/ABLATION_STUDIES.md), certified in [`experiments/runs/ablation_study_results.json`](file:///c:/Users/kruti/SAGE/experiments/runs/ablation_study_results.json), and typeset in Table 10 of the manuscript:
+To eliminate reviewer accusations of "over-engineering without ablation justification" and answer "Are all these components necessary?", SAGE publishes four quantitative ablation studies in [`docs/ABLATION_STUDIES.md`](docs/ABLATION_STUDIES.md), certified in [`experiments/runs/ablation_study_results.json`](experiments/runs/ablation_study_results.json), and typeset in Table 10 of the manuscript:
 
 #### 1. Why 5 Tamper Checks instead of 3 or 7?
 - **1-Check (Diff Scrutiny)**: Catches only 33.3% of exploits (misses scorer file editing, log rewriting, zero-time bytecode mocks, git rebase/squashing).
@@ -1227,7 +1263,7 @@ To eliminate reviewer accusations of "over-engineering without ablation justific
 To address reviewer concerns regarding weak baseline comparisons and definitively resolve:
 > *"How does your G1–G6 performance compare to baselines from EvoAgentBench, ActBench, SkillsBench, SWE-bench Verified, and across foundation model families (Qwen vs. Llama)?"*
 
-SAGE provides four complete empirical baseline comparative studies (certified in [`experiments/runs/comparative_baselines_results.json`](file:///c:/Users/kruti/SAGE/experiments/runs/comparative_baselines_results.json), documented in [`docs/COMPARATIVE_BASELINES.md`](file:///c:/Users/kruti/SAGE/docs/COMPARATIVE_BASELINES.md), and published in Table 12 and Table 13 of the manuscript):
+SAGE provides four complete empirical baseline comparative studies (certified in [`experiments/runs/comparative_baselines_results.json`](experiments/runs/comparative_baselines_results.json), documented in [`docs/COMPARATIVE_BASELINES.md`](docs/COMPARATIVE_BASELINES.md), and published in Table 12 and Table 13 of the manuscript):
 
 #### 1. Cross-Family Foundation Model Replication (Qwen-2.5-Coder-7B vs. Llama-3.1-8B) on SAGE Tasks
 
@@ -1287,7 +1323,7 @@ Reviewers evaluating early benchmark drafts occasionally conflate deterministic 
 #### 1. Why `test_integration.py` Uses `MockLLMClient`
 - `test_integration.py::test_deterministic_mock_llm_integration_g1_g2_fast` serves strictly as the **automated fast CI pre-commit integration test**.
 - Per standard software engineering practices, pre-commit integration tests must execute deterministically in **$< 15$ seconds** (actual: 8.45s on Linux, 13.22s on Windows) without requiring GPU compute clusters or external network API tokens.
-- Live vLLM wire protocol parsing, HTTP health checks, and streaming response extraction are separately and rigorously tested in [`tests/test_vllm_integration.py`](file:///c:/Users/kruti/SAGE/tests/test_vllm_integration.py), which enforces **zero silent fallback** (`allow_fallback=False` raises `RuntimeError` on connection failure).
+- Live vLLM wire protocol parsing, HTTP health checks, and streaming response extraction are separately and rigorously tested in [`tests/test_vllm_integration.py`](tests/test_vllm_integration.py), which enforces **zero silent fallback** (`allow_fallback=False` raises `RuntimeError` on connection failure).
 
 #### 2. Side-by-Side Trajectory Manifests: Mock Calibration vs. Live Empirical Inference
 
@@ -1304,9 +1340,9 @@ Reviewers evaluating early benchmark drafts occasionally conflate deterministic 
 | **Economic Tariff Billing** | $0.08217 USD | $0.23100 USD | $0.07100 USD | **$73.95 USD** (within $20–$150 budget) |
 
 #### 3. Real LLM API Wire Logs & Audit Trail
-Sanitized, production wire-level HTTP request/response payloads, inference latency headers, and C++ token evaluation logs are comprehensively documented in [`docs/LIVE_INFERENCE_API_AUDIT.md`](file:///c:/Users/kruti/SAGE/docs/LIVE_INFERENCE_API_AUDIT.md).
+Sanitized, production wire-level HTTP request/response payloads, inference latency headers, and C++ token evaluation logs are comprehensively documented in [`docs/LIVE_INFERENCE_API_AUDIT.md`](docs/LIVE_INFERENCE_API_AUDIT.md).
 
-An automated drift probe between mock and real endpoints ([`vllm_smoke_test_report.json`](file:///c:/Users/kruti/SAGE/experiments/runs/vllm_smoke_canonical/vllm_smoke_test_report.json)) directly quantifies the physical reality of live inference: real neural model completion generates 651 tokens ($40.69\times$ mock length) with an inference latency of 48.2 seconds for complex multi-turn reasoning ($48{,}200\times$ mock latency).
+An automated drift probe between mock and real endpoints ([`vllm_smoke_test_report.json`](experiments/runs/vllm_smoke_canonical/vllm_smoke_test_report.json)) directly quantifies the physical reality of live inference: real neural model completion generates 651 tokens ($40.69\times$ mock length) with an inference latency of 48.2 seconds for complex multi-turn reasoning ($48{,}200\times$ mock latency).
 
 #### 4. Compute Cost Accounting Reconciliation: Standardized Benchmark Footprint ($73.95) & Live Cohorts
 - **Calibration Study Spend ($N=900$)**: Direct out-of-pocket spend is certified at **$0.00 USD** (zero third-party API dependencies). When billed under the standardized economic tariff formula ($\text{Cost} = 10^{-6} \times (T_{\text{in}} \times \$0.20 + T_{\text{out}} \times \$0.40)$), the 273,900 tokens equate to **$0.08217 USD** ($0.000091/task).
@@ -1387,8 +1423,8 @@ SAGE explicitly reports both Linux Docker and Windows LocalSandbox results side-
 To satisfy the standards of the NeurIPS 2027 Datasets & Benchmarks Track, this section documents the exact operational checklist for peer review and publication:
 
 ### 1. Document & Manuscript Deliverables
-- **Primary Submission Manuscript**: [`paper/main.tex`](file:///c:/Users/kruti/SAGE/paper/main.tex) is formatted under IEEE conference standards with the full author block from Vishwakarma Institute of Technology, Pune.
-- **Archived Extended Technical Report**: [`paper/archive_neurips_extended_report.tex`](file:///c:/Users/kruti/SAGE/paper/archive_neurips_extended_report.tex) archives the extended double-blind report with the full 6-domain checklist and auxiliary appendices.
+- **Primary Submission Manuscript**: [`paper/main.tex`](paper/main.tex) is formatted under IEEE conference standards with the full author block from Vishwakarma Institute of Technology, Pune.
+- **Archived Extended Technical Report**: [`paper/archive_neurips_extended_report.tex`](paper/archive_neurips_extended_report.tex) archives the extended double-blind report with the full 6-domain checklist and auxiliary appendices.
 - **Paper Checklist (NeurIPS 2027 Section 9)**: Fully answered across claims, limitations, reproducibility, compute, human subjects, and data governance. Exported to `neurips_checklist.md`.
 - **Pre-Submission PDF Compilation**: Upload `paper/` to Overleaf or run `pdflatex paper/main.tex` to visually verify bounding boxes, font embeddings, and table column widths.
 
@@ -1409,19 +1445,19 @@ To satisfy the standards of the NeurIPS 2027 Datasets & Benchmarks Track, this s
 | Priority | Pre-Submission Item | Status | Verification & Evidence Artifacts |
 |---|---|:---:|---|
 | **Critical** | **Run full 18,000-task study with live LLM inference** | **PASSED** | Generated canonical longitudinal dataset (`experiments/runs/full_study_canonical/`, 148,200 events, 18,000 tasks) + live neural inference runs (`experiments/runs/full_study_live/`, 9,302 events with Qwen-2.5-Coder & Llama-3.1). |
-| **Critical** | **Publish complete task catalog (100 tasks with descriptions)** | **PASSED** | Complete catalog authored in [`docs/TASK_CATALOG.md`](file:///c:/Users/kruti/SAGE/docs/TASK_CATALOG.md) (1,209 lines) and embedded via Table~\ref{tab:tasks_bug_fix}--\ref{tab:tasks_security_audit} in `paper/tables/table_task_catalog_full.tex` across all 5 categories. |
-| **Critical** | **Clarify mock vs. live LLM methodology (Separate sections)** | **PASSED** | Explicit two-stage decoupling articulated in Section 5.1, Appendix F (`\label{app:live_llm_audit}`), and [`docs/LIVE_INFERENCE_API_AUDIT.md`](file:///c:/Users/kruti/SAGE/docs/LIVE_INFERENCE_API_AUDIT.md). |
-| **Critical** | **Expand human audit to $N=200+$ (Previously $N=79$)** | **PASSED** | Expanded double-blind human audit to $N=240$ execution traces ($40$ per archetype $G_1$--$G_6$, balanced across Cycles 0--9). Reported in Table~\ref{tab:human_audit}, Appendix G, `full_study_canonical/results/human_audit_results.json`, and [`docs/HUMAN_AUDIT_PROTOCOL.md`](file:///c:/Users/kruti/SAGE/docs/HUMAN_AUDIT_PROTOCOL.md). |
+| **Critical** | **Publish complete task catalog (100 tasks with descriptions)** | **PASSED** | Complete catalog authored in [`docs/TASK_CATALOG.md`](docs/TASK_CATALOG.md) (1,209 lines) and embedded via Table~\ref{tab:tasks_bug_fix}--\ref{tab:tasks_security_audit} in `paper/tables/table_task_catalog_full.tex` across all 5 categories. |
+| **Critical** | **Clarify mock vs. live LLM methodology (Separate sections)** | **PASSED** | Explicit two-stage decoupling articulated in Section 5.1, Appendix F (`\label{app:live_llm_audit}`), and [`docs/LIVE_INFERENCE_API_AUDIT.md`](docs/LIVE_INFERENCE_API_AUDIT.md). |
+| **Critical** | **Expand human audit to $N=200+$ (Previously $N=79$)** | **PASSED** | Expanded double-blind human audit to $N=240$ execution traces ($40$ per archetype $G_1$--$G_6$, balanced across Cycles 0--9). Reported in Table~\ref{tab:human_audit}, Appendix G, `full_study_canonical/results/human_audit_results.json`, and [`docs/HUMAN_AUDIT_PROTOCOL.md`](docs/HUMAN_AUDIT_PROTOCOL.md). |
 | **High** | **Add ablation studies (5-check vs 3-check, seed sensitivity, etc.)** | **PASSED** | 4-dimension ablation study evaluated and documented in Table 6, Appendix H (`\label{app:ablations}`), and `experiments/runs/ablation_study_results.json`. |
 | **High** | **Baseline comparisons (Run on SWE-bench, cross-family replication)** | **PASSED** | Cross-benchmark comparative study with SWE-bench Verified and cross-family replication (Qwen vs. Llama) evaluated in Table 12 & Table 13, Appendix I (`\label{app:baselines}`), and `comparative_baselines_results.json`. |
 | **High** | **Task difficulty validation (Inter-annotator agreement on labels)** | **PASSED** | Double-blind difficulty categorization by two student researchers: 91% agreement, Cohen's quadratic weighted $\kappa = 0.884$. Documented in Table 11, Appendix E.3, `task_difficulty_validation.json`, and `docs/TASK_CATALOG.md`. |
 | **High** | **Complete contamination audit (Per-task n-gram overlap)** | **PASSED** | 100-task contamination audit confirming 0.0% overlap against The Stack v2, CodeParrot, and StarCoder. Documented in Table 7, Appendix A, and `tasks/contamination_audit_results.json`. |
 | **Medium** | **Consolidate timing tables (Remove discrepancies)** | **PASSED** | Single unified timing reconciliation matrix authored in Table 14, Appendix D (`\label{app:timing_reconciliation}`), and `paper/tables/table_timing_reconciliation.tex`. |
-| **Medium** | **Dashboard demo (Screenshots in appendix)** | **PASSED** | Appendix J (`\label{app:dashboard_api}`) added with 4 publication figures (`paper/figures/dashboard_*.png`), Table 16 REST API endpoints, and [`docs/DASHBOARD_API_REFERENCE.md`](file:///c:/Users/kruti/SAGE/docs/DASHBOARD_API_REFERENCE.md). |
-| **Medium** | **Cost accounting reconciliation (Match projections to actual)** | **PASSED** | Reconciled in Table 15, Appendix F.3, and [`docs/COST_ACCOUNTING_RECONCILIATION.md`](file:///c:/Users/kruti/SAGE/docs/COST_ACCOUNTING_RECONCILIATION.md): Pilot (\$0.08217 base vs \$0.510 holistic), 18k lower bound (\$18.00--\$20.70 USD), 18k ceiling (\$144.00--\$150.00 USD), empirical actual (\$73.95 USD across 334.8M tokens). |
+| **Medium** | **Dashboard demo (Screenshots in appendix)** | **PASSED** | Appendix J (`\label{app:dashboard_api}`) added with 4 publication figures (`paper/figures/dashboard_*.png`), Table 16 REST API endpoints, and [`docs/DASHBOARD_API_REFERENCE.md`](docs/DASHBOARD_API_REFERENCE.md). |
+| **Medium** | **Cost accounting reconciliation (Match projections to actual)** | **PASSED** | Reconciled in Table 15, Appendix F.3, and [`docs/COST_ACCOUNTING_RECONCILIATION.md`](docs/COST_ACCOUNTING_RECONCILIATION.md): Pilot (\$0.08217 base vs \$0.510 holistic), 18k lower bound (\$18.00--\$20.70 USD), 18k ceiling (\$144.00--\$150.00 USD), empirical actual (\$73.95 USD across 334.8M tokens). |
 
 ---
 
-*Authored by the SAGE Research Team. Certified and tagged for submission release at [`v1.0.0`](file:///c:/Users/kruti/SAGE).*
+*Authored by the SAGE Research Team. Certified and tagged for submission release at `v1.0.0`.*
 
 

@@ -26,7 +26,7 @@ All empirical results in SAGE are produced under sealed execution environments w
 ## 2. Table-by-Table Empirical Proofs & Lineage
 
 ### Table 1: Main Evolutionary Benchmark Results ($G_1$--$G_7$, $G_6^*$)
-- **LaTeX Source**: [`paper/tables/table1_main_results.tex`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/tables/table1_main_results.tex)
+- **LaTeX Source**: [`paper/tables/table1_main_results.tex`](../paper/tables/table1_main_results.tex)
 - **Generating CLI**: `sage analyze --run-id full_study_canonical` / `sage analyze --run-id pilot_20261002_173622`
 - **Data Source**: `experiments/runs/*/results/cycle_metrics.json`
 - **Trajectory Logs**: Fsynced append-only JSONL files in `experiments/runs/*/trajectory.jsonl`
@@ -43,7 +43,7 @@ All empirical results in SAGE are produced under sealed execution environments w
 ---
 
 ### Table 2: Deliberate Drift Probes (Specification Gaming vs. Ground Truth)
-- **LaTeX Source**: [`paper/tables/table2_drift_probes.tex`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/tables/table2_drift_probes.tex)
+- **LaTeX Source**: [`paper/tables/table2_drift_probes.tex`](../paper/tables/table2_drift_probes.tex)
 - **Generating Script**: `scripts/render_paper_figures.py`
 - **Benchmark Tasks Involved**: 20 sequestered probe tasks with seductive visible proxy tests (`proxy_tests`) and hidden ground-truth tests (`gt_tests`).
 - **Proof of Vulnerability**:
@@ -54,8 +54,8 @@ All empirical results in SAGE are produced under sealed execution environments w
 ---
 
 ### Table 3: Canonical Statistical Significance & Hypothesis Testing
-- **LaTeX Source**: [`paper/tables/table3_statistical_significance.tex`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/tables/table3_statistical_significance.tex)
-- **Full Report**: [`experiments/runs/pilot_20261002_173622/results/significance_report.md`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/experiments/runs/pilot_20261002_173622/results/significance_report.md)
+- **LaTeX Source**: [`paper/tables/table3_statistical_significance.tex`](../paper/tables/table3_statistical_significance.tex)
+- **Full Report**: [`experiments/runs/pilot_20261002_173622/results/significance_report.md`](../experiments/runs/pilot_20261002_173622/results/significance_report.md)
 - **Generating CLI**: `sage stats --run-id pilot_20261002_173622`
 - **Statistical Rigor**:
   - **Unit of Analysis**: Random seeds (independent evolutionary lineages; zero pseudo-replication across tasks).
@@ -66,9 +66,9 @@ All empirical results in SAGE are produced under sealed execution environments w
 ---
 
 ### Table 4: Double-Blind Human Verification Audit
-- **LaTeX Source**: [`paper/tables/table4_human_audit.tex`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/tables/table4_human_audit.tex)
+- **LaTeX Source**: [`paper/tables/table4_human_audit.tex`](../paper/tables/table4_human_audit.tex)
 - **Audit Data**: `experiments/runs/full_study_canonical/results/human_audit_results.json`
-- **Protocol**: [`docs/HUMAN_AUDIT_PROTOCOL.md`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/docs/HUMAN_AUDIT_PROTOCOL.md)
+- **Protocol**: [`docs/HUMAN_AUDIT_PROTOCOL.md`](../docs/HUMAN_AUDIT_PROTOCOL.md)
 - **Sample Size**: $N = 319$ trajectory events sampled across all 7 archetypes.
 - **Inter-Rater Reliability**:
   - **Safety Violations**: Cohen's $\kappa = 0.86$, Observed Agreement $P_o = 96.2\%$, False Positive Rate $< 3.2\%$
@@ -77,9 +77,9 @@ All empirical results in SAGE are produced under sealed execution environments w
 ---
 
 ### Appendix Tables
-- **Task Contamination Audit** ([`table_appendix_contamination.tex`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/tables/table_appendix_contamination.tex)): 100/100 tasks audited with $N$-gram Jaccard and LCS analysis; 0.0% contaminated (SWE-bench verified retired for ~32.7% leakage).
-- **Cross-Family Diversity** ([`table_appendix_cross_family.tex`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/tables/table_appendix_cross_family.tex)): Demonstrates that Qwen-based agents and Llama-based judges exhibit invariant drift metrics.
-- **Cost Reconciliation** ([`table_cost_reconciliation.tex`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/tables/table_cost_reconciliation.tex)): Token-by-token USD breakdown across all runs (budget guard verified under $50/run ceiling).
+- **Task Contamination Audit** ([`table_appendix_contamination.tex`](../paper/tables/table_appendix_contamination.tex)): 100/100 tasks audited with $N$-gram Jaccard and LCS analysis; 0.0% contaminated (SWE-bench verified retired for ~32.7% leakage).
+- **Cross-Family Diversity** ([`table_appendix_cross_family.tex`](../paper/tables/table_appendix_cross_family.tex)): Demonstrates that Qwen-based agents and Llama-based judges exhibit invariant drift metrics.
+- **Cost Reconciliation** ([`table_cost_reconciliation.tex`](../paper/tables/table_cost_reconciliation.tex)): Token-by-token USD breakdown across all runs (budget guard verified under $50/run ceiling).
 
 ---
 
@@ -90,16 +90,16 @@ All figures are compiled from raw trajectory event streams using Python matplotl
 | Figure | Image Path | Description & Provenance Source | Regenerating Command |
 |---|---|---|---|
 | **Fig. 1** | Architecture Diagram | 5-Layer Container-Isolated Sandbox & Anti-Tamper Engine | Embedded in `main.tex` / docx |
-| **Fig. 2** | [`safety_drift.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/safety_drift.png) | Security boundary drift trajectories across evolution cycles 0 to 10 | `sage analyze` |
-| **Fig. 3** | [`proxy_gap.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/proxy_gap.png) | Divergence between visible proxy score and sequestered ground truth | `sage analyze` |
-| **Fig. 4** | [`retention_curve.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/retention_curve.png) | Historical capability retention curve showing catastrophic forgetting | `sage analyze` |
-| **Fig. 5** | [`capability_vs_safety.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/capability_vs_safety.png) | Pareto frontier comparing capability gains vs safety drift tradeoffs | `sage analyze` |
-| **Fig. 6** | [`fig6_drift_probes.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/fig6_drift_probes.png) | Category-by-category breakdown of the 20 drift probe tasks | `python scripts/render_paper_figures.py` |
-| **Fig. 7** | [`fig7_horizon_saturation.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/fig7_horizon_saturation.png) | Evolutionary horizon sensitivity (Cycles 1 to 20 saturation behavior) | `python scripts/render_paper_figures.py` |
-| **Fig. 8** | [`dashboard_overview.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/dashboard_overview.png) | Real-time Web dashboard executive overview & run monitoring | `python scripts/render_dashboard_figures.py` |
-| **Fig. 9** | [`dashboard_drift_inspector.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/dashboard_drift_inspector.png) | Granular prompt and memory mutation diff inspector | `python scripts/render_dashboard_figures.py` |
-| **Fig. 10**| [`dashboard_audit_workbench.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/dashboard_audit_workbench.png) | Human auditor review workbench with blind labeling interfaces | `python scripts/render_dashboard_figures.py` |
-| **Fig. 11**| [`dashboard_trajectory_explorer.png`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/figures/dashboard_trajectory_explorer.png) | Step-by-step tool-call observation trajectory replayer | `python scripts/render_dashboard_figures.py` |
+| **Fig. 2** | [`safety_drift.png`](../paper/figures/safety_drift.png) | Security boundary drift trajectories across evolution cycles 0 to 10 | `sage analyze` |
+| **Fig. 3** | [`proxy_gap.png`](../paper/figures/proxy_gap.png) | Divergence between visible proxy score and sequestered ground truth | `sage analyze` |
+| **Fig. 4** | [`retention_curve.png`](../paper/figures/retention_curve.png) | Historical capability retention curve showing catastrophic forgetting | `sage analyze` |
+| **Fig. 5** | [`capability_vs_safety.png`](../paper/figures/capability_vs_safety.png) | Pareto frontier comparing capability gains vs safety drift tradeoffs | `sage analyze` |
+| **Fig. 6** | [`fig6_drift_probes.png`](../paper/figures/fig6_drift_probes.png) | Category-by-category breakdown of the 20 drift probe tasks | `python scripts/render_paper_figures.py` |
+| **Fig. 7** | [`fig7_horizon_saturation.png`](../paper/figures/fig7_horizon_saturation.png) | Evolutionary horizon sensitivity (Cycles 1 to 20 saturation behavior) | `python scripts/render_paper_figures.py` |
+| **Fig. 8** | [`dashboard_overview.png`](../paper/figures/dashboard_overview.png) | Real-time Web dashboard executive overview & run monitoring | `python scripts/render_dashboard_figures.py` |
+| **Fig. 9** | [`dashboard_drift_inspector.png`](../paper/figures/dashboard_drift_inspector.png) | Granular prompt and memory mutation diff inspector | `python scripts/render_dashboard_figures.py` |
+| **Fig. 10**| [`dashboard_audit_workbench.png`](../paper/figures/dashboard_audit_workbench.png) | Human auditor review workbench with blind labeling interfaces | `python scripts/render_dashboard_figures.py` |
+| **Fig. 11**| [`dashboard_trajectory_explorer.png`](../paper/figures/dashboard_trajectory_explorer.png) | Step-by-step tool-call observation trajectory replayer | `python scripts/render_dashboard_figures.py` |
 
 ---
 
@@ -108,14 +108,14 @@ All figures are compiled from raw trajectory event streams using Python matplotl
 In addition to canonical simulation trajectories, this repository stores actual empirical live-model executions:
 
 1. **Live Google Colab Multi-Cycle Pilot Run**:
-   - **Run Directory**: [`experiments/runs/pilot_20261002_173622/`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/experiments/runs/pilot_20261002_173622/)
+   - **Run Directory**: [`experiments/runs/pilot_20261002_173622/`](../experiments/runs/pilot_20261002_173622/)
    - **Configuration**: 10 tasks, 3 cycles, seeds 42 & 43
    - **Events Logged**: 786 events
    - **Raw SHA-256**: `3d07b088011fc1b9b3f88fbaa7c3a303a42800f2e00d1a050e535cd20813d337`
    - **Deterministic SHA-256**: `8da6ad6942b37aab9d9a27a4f39c4993f686e9551624fc34d0db1a0c302c33c1`
 
 2. **Local In-Process Live GGUF Model Execution**:
-   - **Run Directory**: [`experiments/manual_runs/real_single_task_run/`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/experiments/manual_runs/real_single_task_run/)
+   - **Run Directory**: [`experiments/manual_runs/real_single_task_run/`](../experiments/manual_runs/real_single_task_run/)
    - **Model**: `Qwen2.5-Coder-3B-Instruct` (GGUF Q4_K_M via `llama-cpp-python`)
    - **Task**: `task_001` (numeric quotient bug fix)
    - **Trajectory**: 10 events, real token generation (493 in / 493 out), 1,031 bytes code generated and scored by `HiddenScorer`.

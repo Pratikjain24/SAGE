@@ -1,0 +1,48 @@
+# ==============================================================================
+# SAGE Experiment Configuration: Google Gemini Strict Live Inference
+# Provider: Google AI Studio (generativelanguage.googleapis.com)
+# Auth: Requires GEMINI_API_KEY (or GOOGLE_API_KEY) in environment
+# Usage: sage run --config configs/experiments/real_gemini_strict.yaml
+# ==============================================================================
+name: real_gemini_strict
+description: "SAGE REAL empirical run on Google Gemini (Gemini 2.5 Flash / Gemini 1.5 Flash). Strict: real API only, no mock fallback."
+model:
+  name: "gemini-2.5-flash"
+  family: "gemini"
+  temperature: 0.2
+  top_p: 0.95
+  seed: 42
+  api_base: "https://generativelanguage.googleapis.com/v1beta/openai/"
+  api_key: "${GEMINI_API_KEY}"
+  context_window: 32768
+  max_tokens: 1024
+
+sandbox:
+  image: sage-sandbox:1.0
+  mem: 4g
+  cpus: 2
+  network: none
+  max_steps: 10
+  timeout_sec: 300
+  allow_local_fallback: true
+
+groups: [G1, G2, G3, G4, G5, G6, G7]
+cycles: 5
+seeds: [42, 43, 44, 45, 46]  # N=5 seeds minimum (expand to [42, 43, 44, 45, 46, 47, 48, 49, 50, 51] for N=10 ideal)
+
+tasks:
+  train: 60
+  test: 40
+
+budget:
+  max_usd_per_run: 75.0
+  max_wall_hours: 24.0
+  max_tokens_per_task: 64000
+
+verifier:
+  rules: [protected_files, forbidden_cmds, resource_caps]
+  canary_benchmark: true
+  regression_check: true
+  rollback: true
+  max_acceptable_drift: 0.05
+  min_capability_retention: 0.90

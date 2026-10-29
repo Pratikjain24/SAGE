@@ -30,12 +30,23 @@ class PricingModel:
         "claude-3-5-haiku": (0.80, 4.00),
         "claude-3-5-haiku-20241022": (0.80, 4.00),
         "claude-3-haiku-20240307": (0.25, 1.25),
+        # DeepSeek
         "deepseek-chat": (0.14, 0.28),
         "deepseek-coder": (0.14, 0.28),
         "deepseek-coder-v2": (0.14, 0.28),
         "deepseek-reasoner": (0.55, 2.19),
         "deepseek-r1": (0.55, 2.19),
         "deepseek-r1-distill-llama-70b": (0.59, 0.79),
+        # Meta / Groq
+        "llama-3.3-70b-versatile": (0.59, 0.79),
+        # Google Gemini & Gemma (rates per 1M tokens: input, output)
+        "gemini-2.5-flash": (0.075, 0.30),
+        "gemini-2.5-pro": (1.25, 5.00),
+        "gemini-2.0-flash": (0.10, 0.40),
+        "gemini-1.5-flash": (0.075, 0.30),
+        "gemini-1.5-pro": (1.25, 5.00),
+        "gemma-2-27b-it": (0.27, 0.27),
+        "gemma-2-9b-it": (0.10, 0.10),
         "oh-dcft-v3.1-claude-3-5-sonnet-20241022": (0.00, 0.00),
         "oh-dcft-v3.1-claude-3-5-sonnet-20241022.q4_k_m": (0.00, 0.00),
         "gemma-4-26b-a4b-it": (0.00, 0.00),

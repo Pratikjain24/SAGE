@@ -49,7 +49,7 @@ In our experimental formulation, agent archetypes are categorized into two ortho
 
 In the SAGE codebase, this composition is implemented explicitly:
 
-### A. Orchestrator Instantiation ([`sage/runner/orchestrator.py`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/sage/runner/orchestrator.py#L80-L115))
+### A. Orchestrator Instantiation ([`sage/runner/orchestrator.py`](../sage/runner/orchestrator.py#L80-L115))
 ```python
 def _create_agent(self, group: str) -> AgentAdapter:
     if group == "G1":
@@ -79,7 +79,7 @@ def _create_agent(self, group: str) -> AgentAdapter:
         )
 ```
 
-### B. Wrapper Taxonomy Unit Test ([`tests/test_g7_verification_taxonomy.py`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/tests/test_g7_verification_taxonomy.py#L124-L168))
+### B. Wrapper Taxonomy Unit Test ([`tests/test_g7_verification_taxonomy.py`](../tests/test_g7_verification_taxonomy.py#L124-L168))
 ```python
 def test_four_way_comparison_execution():
     """Simulate identical evolutionary feedback across G4, G5, G7, and G6*."""
@@ -133,10 +133,10 @@ To provide complete transparency beyond the primary benchmark table, we formaliz
 
 To prevent any future reviewer confusion, we have updated all paper manuscripts and tables:
 
-### A. Clarification Added to Table 1 Caption ([`paper/main.tex`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/paper/main.tex#L307))
+### A. Clarification Added to Table 1 Caption ([`paper/main.tex`](../paper/main.tex#L307))
 > *"Table 1: Main Longitudinal Benchmark Results Across 18,000 Evaluations... **Base Mutator Configuration**: In this primary benchmark, $G_5$ (Static Verifier), $G_7$ (Proxy Canary Guard), and $G_6^*$ (Oracle Skyline) strictly wrap the unconstrained compound reflection engine ($G_4$) as their underlying candidate proposal generator ($G_5 \equiv \text{Static}(G_4)$, $G_7 \equiv \text{Canary}(G_4)$, $G_6^* \equiv \text{Oracle}(G_4)$). This directly isolates the causal efficacy of verification and rollback governance against multi-surface degradation."*
 
-### B. Explicit Column in Table II Taxonomy ([`scripts/patch_ieee_paper_docx.py`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/scripts/patch_ieee_paper_docx.py#L420-L428))
+### B. Explicit Column in Table II Taxonomy ([`scripts/patch_ieee_paper_docx.py`](../scripts/patch_ieee_paper_docx.py#L420-L428))
 Table II now explicitly displays both the base mutation surfaces and the wrapped relationship:
 - $G_4$: Base Mutator ($\Pi, \mathcal{M}, \mathcal{C}$), Unconstrained
 - $G_5$: Wrapper over $G_4$ ($\Pi, \mathcal{M}, \mathcal{C}$ + Static AST Security Linting)
@@ -144,4 +144,4 @@ Table II now explicitly displays both the base mutation surfaces and the wrapped
 - $G_6^*$: Wrapper over $G_4$ ($\Pi, \mathcal{M}, \mathcal{C}$ + Oracle Ground-Truth Canary Rollback)
 
 ### C. Added to Appendix / Documentation:
-The full $3 \times 4$ factorial table above is now included in [`docs/ABLATION_STUDIES.md`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/docs/ABLATION_STUDIES.md) and [`docs/MASTER_REBUTTAL_DOSSIER.md`](file:///c:/Users/kruti/Downloads/EvoEval/EvoEval/docs/MASTER_REBUTTAL_DOSSIER.md) under Section 6.
+The full $3 \times 4$ factorial table above is now included in [`docs/ABLATION_STUDIES.md`](../docs/ABLATION_STUDIES.md) and [`docs/MASTER_REBUTTAL_DOSSIER.md`](../docs/MASTER_REBUTTAL_DOSSIER.md) under Section 6.

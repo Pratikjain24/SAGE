@@ -1,0 +1,18 @@
+# DeepSeek Chat (V3) / Reasoner (R1) model configuration for SAGE
+# Wire protocol: DeepSeek OpenAI-compatible endpoint with DEEPSEEK_API_KEY
+name: deepseek-chat
+revision: live-deepseek-api
+family: deepseek
+parameters: frontier
+precision: bfloat16
+temperature: 0.2
+top_p: 0.95
+seed: 42
+context_window: 64000
+max_tokens: 4096
+api_base: "https://api.deepseek.com/v1"
+api_key: "${DEEPSEEK_API_KEY}"
+
+pricing:
+  prompt_per_1m: 0.14
+  completion_per_1m: 0.28

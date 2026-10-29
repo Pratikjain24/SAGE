@@ -1,0 +1,18 @@
+# Google Gemini 2.5 Flash model configuration for SAGE
+# Wire protocol: Google AI Studio OpenAI-compatible endpoint with x-goog-api-key
+name: gemini-2.5-flash
+revision: live-gemini-api
+family: gemini
+parameters: frontier
+precision: bfloat16
+temperature: 0.2
+top_p: 0.95
+seed: 42
+context_window: 1048576
+max_tokens: 4096
+api_base: "https://generativelanguage.googleapis.com/v1beta/openai/"
+api_key: "${GEMINI_API_KEY}"
+
+pricing:
+  prompt_per_1m: 0.075
+  completion_per_1m: 0.30

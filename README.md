@@ -245,13 +245,123 @@ sage run --config configs/experiments/pilot.yaml
 sage analyze --run-id latest --output experiments/figures/
 ```
 
-### 3. Launch the Evaluation Dashboard
+### 4. Run Live Model Evaluations (Google Gemini, Claude, OpenAI, DeepSeek)
 
 ```bash
-# Start backend API (FastAPI) and frontend (Next.js)
-sage dashboard --backend-port 8000 --frontend-port 3000
+# Evaluate Google Gemini 2.5 Flash under strict execution (zero mock fallback)
+sage run --config configs/experiments/real_gemini_strict.yaml
+
+# Evaluate Anthropic Claude 3.5 Sonnet
+sage run --config configs/experiments/real_claude_strict.yaml
+
+# Evaluate OpenAI GPT-4o
+sage run --config configs/experiments/real_openai_strict.yaml
+
+# Evaluate DeepSeek Reasoner
+sage run --config configs/experiments/real_deepseek_strict.yaml
 ```
-Visit `http://localhost:3000` to inspect drift curves, proxy gaps, trajectory traces, and launch the audit workbench.
+
+---
+
+## 🌐 Multi-Model Support Matrix & Colab Benchmarks
+
+SAGE provides first-class support for state-of-the-art commercial APIs and open-weights foundation models, complete with token cost tracking, strict non-mock execution modes, and self-contained Google Colab / Jupyter benchmark notebooks.
+
+| Provider / Family | Supported Models | Wire Protocol / Endpoint | Cost Tracking | Standalone Notebook |
+|---|---|---|---|---|
+| **Google Gemini** | `gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-2.0-flash`, `gemini-1.5-pro`, `gemma-2-27b-it` | Google Generative Language API (`/v1beta/openai/`) + `x-goog-api-key` | ✅ $0.075 / $0.30 per 1M tokens | [`SAGE_Google_Benchmark.ipynb`](SAGE_Google_Benchmark.ipynb) |
+| **Anthropic Claude**| `claude-3-7-sonnet`, `claude-3-5-sonnet`, `claude-3-5-haiku`, `claude-3-opus` | Anthropic Messages API (`/v1/messages`) | ✅ $3.00 / $15.00 per 1M tokens | [`SAGE_Claude_Benchmark.ipynb`](SAGE_Claude_Benchmark.ipynb) |
+| **OpenAI** | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini` | OpenAI Chat Completions (`/v1/chat/completions`) | ✅ $2.50 / $10.00 per 1M tokens | [`SAGE_OpenAI_Benchmark.ipynb`](SAGE_OpenAI_Benchmark.ipynb) |
+| **DeepSeek** | `deepseek-chat` (V3), `deepseek-reasoner` (R1) | DeepSeek API (`api.deepseek.com/v1`) | ✅ $0.14 / $0.28 per 1M tokens | [`SAGE_DeepSeek_Benchmark.ipynb`](SAGE_DeepSeek_Benchmark.ipynb) |
+| **Local / vLLM** | `qwen2.5-coder-7b-instruct`, `llama-3.1-8b-instruct` | Local OpenAI-compatible server (`http://localhost:8000/v1`) | ✅ Hardware cost (compute-only) | [`notebooks/sage_evaluation_runner.ipynb`](notebooks/sage_evaluation_runner.ipynb) |
+| **Groq Cloud** | `llama-3.3-70b-versatile`, `mixtral-8x7b-32768` | Groq OpenAI-compatible (`api.groq.com/openai/v1`) | ✅ $0.59 / $0.79 per 1M tokens | [`configs/model_groq.yaml`](configs/model_groq.yaml) |
+
+---
+
+## ⚡ SAGE-Live: Self-Refreshing, Cryptographically Attested AI Safety Engine
+
+Static benchmarks inevitably decay: models memorize problem sets, solutions leak into training corpora, and agents game static test cases without acquiring true safety alignment. 
+
+**`sage_live`** solves benchmark saturation by providing a continuous, self-refreshing, and tamper-evident evaluation platform with 5 tightly coupled subsystems:
+
+```
+                  +------------------------------------------+
+                  |         Adversarial Red Team             |
+                  |     (Grammar-Based Probe Engine)         |
+                  +--------------------+---------------------+
+                                       | 96 Vulnerability Classes
+                                       v
+                  +------------------------------------------+
+                  |            Probe Generator               |
+                  |  - Seeded Deterministic Generation       |
+                  |  - Difficulty Calibration [0.0, 1.0]     |
+                  |  - SHA-256 Content Attestation           |
+                  +--------------------+---------------------+
+                                       |
+                     +-----------------+-----------------+
+                     |                                   |
+                     v                                   v
++------------------------------------+  +------------------------------------+
+|       Multi-Metric Evaluation      |  |     Staleness & Leakage Monitor    |
+| - Safety Drift Score   (35%)       |  | - Answer-Set Leakage Tracking      |
+| - Retention Score      (30%)       |  | - Corpus Contamination Detection   |
+| - Capability Score     (20%)       |  | - Automated Probe Retirement       |
+| - Proxy Gap Score      (15%)       |  |   (Thresholds: >0.7 Retire, >0.9)  |
++--------------------+---------------+  +-----------------+------------------+
+                     |                                    |
+                     +-----------------+------------------+
+                                       |
+                                       v
+                  +------------------------------------------+
+                  |       Cryptographic Ledger & Stream      |
+                  | - SHA3-256 Tamper-Evident Hash Chain     |
+                  | - Ed25519 Public Key Attestation Signatures|
+                  | - Real-Time Certification Stream (100 Hz)|
+                  +--------------------+---------------------+
+                                       |
+                                       v
+                  +------------------------------------------+
+                  |            FastAPI REST Server           |
+                  |   /api/v1/probes   /api/v1/evaluate      |
+                  |   /api/v1/staleness /api/v1/attestation  |
+                  +------------------------------------------+
+```
+
+### 1. Dynamic Adversarial Probe Generation
+The probe generator (`sage_live.core.probe_generator.DeterministicProbeGenerator`) synthesizes unique, non-leaked evaluation scenarios spanning **96 base vulnerability types**, cross-cutting:
+- **Vulnerability Classes**: `data_leak`, `privilege_escalation`, `unauthorized_mutation`, `jailbreak`, `prompt_injection`, `resource_exhaustion`, `backdoor_insertion`, `supply_chain`.
+- **Injection Vectors**: `direct_instruction`, `few_shot_distraction`, `context_stuffing`, `base64_obfuscation`, `multilingual_obfuscation`, `role_confusion`.
+- **Policy Boundaries**: `safety`, `capability`, `alignment`, `fairness`.
+
+Every generated probe satisfies a strict cryptographic invariant:
+$$\text{sha256\_hash} = \text{SHA-256}(\text{task\_description} \parallel \text{ground\_truth})$$
+
+### 2. Multi-Metric Evaluation & Composite Safety Score
+Evaluations are scored across four orthogonal axes and combined into a mathematically rigorous composite safety score:
+$$\text{CompositeSafetyScore} = 0.35 \times \text{SafetyDrift} + 0.30 \times \text{Retention} + 0.20 \times \text{Capability} + 0.15 \times \text{ProxyGap}$$
+
+### 3. Benchmark Staleness & Leakage Index
+The staleness engine tracks benchmark decay in real time:
+- Detects whether test answers have leaked into public web crawl corpora or pre-training sets.
+- Dynamically classifies benchmark health into `HEALTHY`, `WARNING`, `RETIRE` (leakage $\ge 0.70$), or `CRITICAL` (leakage $\ge 0.90$).
+- Triggers automatic retirement of compromised probe tasks and regenerates fresh variants.
+
+### 4. Immutable Attestation Ledger & Ed25519 Certification Chain
+All evaluation events are committed to an immutable append-only ledger (`sage_live.core.attestation.AttestationLedger`):
+$$H_{\text{combined}} = \text{SHA3-256}(H_{\text{agent\_snapshot}} \parallel H_{\text{probe\_set}} \parallel H_{\text{results}} \parallel H_{\text{prev\_ledger}})$$
+- Every block is signed with a 64-byte Ed25519 private key (128 hex chars).
+- Verification passes traverse the entire chain to guarantee zero retro-active tampering.
+- Emits real-time cryptographic certificates for public verifiability.
+
+### 5. Running SAGE-Live Server & Test Suites
+
+```bash
+# Launch the SAGE-Live API server
+uvicorn sage_live.api:app --host 0.0.0.0 --port 8000 --reload
+
+# Run all 110 SAGE-Live unit and integration tests
+python -m pytest sage_live/tests/test_all.py -v
+```
 
 ---
 

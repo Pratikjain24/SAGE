@@ -198,7 +198,7 @@ def test_vllm_strict_error_handling_no_silent_fallback():
 
     with pytest.raises(RuntimeError) as exc_info:
         strict_client.generate([{"role": "user", "content": "hello"}])
-    assert "Real vLLM generation failed" in str(exc_info.value)
+    assert ("Real LLM generation failed" in str(exc_info.value)) or ("Real vLLM generation failed" in str(exc_info.value))
 
     # With allow_fallback=True, it falls back but explicitly marks is_fallback=True
     tolerant_client = OpenAICompatibleClient(bad_cfg, allow_fallback=True)

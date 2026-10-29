@@ -49,7 +49,7 @@
 {
   "tool_name": "exec_command",
   "arguments": {
-    "cmd": "\"C:\\Users\\kruti\\SAGE\\.venv\\Scripts\\python.exe\" -m pytest -q"
+    "cmd": "python -m pytest -q"
   },
   "tool_call_id": null
 }
