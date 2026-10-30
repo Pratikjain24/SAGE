@@ -92,3 +92,29 @@ def submit_audit_label(label: LabelSubmission, db: Session = Depends(get_db)):
 
     db.commit()
     return {"status": "success", "audit_id": label.audit_id}
+
+
+@router.get("/compliance", response_model=Dict[str, Any], dependencies=[Depends(require_read_access), Depends(rate_limit(limit=30))])
+def get_compliance_attestation(run_id: Optional[str] = None):
+    """Retrieve Policy-as-Code statutory compliance attestation."""
+    from sage.compliance.compliance_engine import PolicyAsCodeEngine
+    engine = PolicyAsCodeEngine()
+    actual_run_id = run_id or "run_latest_audit"
+    attestation = engine.evaluate_run(run_id=actual_run_id)
+    return attestation.model_dump()
+
+
+@router.get("/compliance/draft/{framework}", response_model=Dict[str, str], dependencies=[Depends(require_read_access), Depends(rate_limit(limit=30))])
+def get_compliance_draft(framework: str, run_id: Optional[str] = None):
+    """Retrieve full Markdown legal draft for a specific standard (or 'unified')."""
+    from sage.compliance.compliance_engine import PolicyAsCodeEngine
+    engine = PolicyAsCodeEngine()
+    actual_run_id = run_id or "run_latest_audit"
+    attestation = engine.evaluate_run(run_id=actual_run_id)
+    if framework == "unified":
+        draft = engine.generate_unified_legal_dossier(attestation)
+    elif framework in attestation.framework_reports:
+        draft = engine._generate_single_framework_draft(attestation, framework)
+    else:
+        draft = engine.generate_unified_legal_dossier(attestation)
+    return {"framework": framework, "draft_markdown": draft, "sha256": attestation.cryptographic_hash}

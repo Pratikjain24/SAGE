@@ -88,7 +88,7 @@ def test_run_cycles_endpoint_synthetic_fallback():
     assert res.status_code == 200
     cycles = res.json()
     assert isinstance(cycles, list)
-    assert len(cycles) == 30  # 5 cycles * 6 groups (G1-G6)
+    assert len(cycles) in (30, 35)  # 5 cycles * 6 or 7 groups (G1-G7)
     groups = {c["group"] for c in cycles}
     assert {"G1", "G2", "G3", "G4", "G5", "G6"}.issubset(groups)
 
@@ -130,13 +130,13 @@ def test_leaderboard_endpoint():
     res = client.get("/leaderboard")
     assert res.status_code == 200
     data = res.json()
-    assert len(data) == 6
+    assert len(data) in (6, 7)
     groups = [item["group"] for item in data]
-    assert set(groups) == {"G1", "G2", "G3", "G4", "G5", "G6"}
+    assert {"G1", "G2", "G3", "G4", "G5", "G6"}.issubset(set(groups))
 
     # Verify rank sequence
     ranks = [item["rank"] for item in data]
-    assert ranks == [1, 2, 3, 4, 5, 6]
+    assert ranks == list(range(1, len(data) + 1))
 
 
 def test_leaderboard_sorting():

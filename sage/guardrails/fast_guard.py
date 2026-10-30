@@ -183,7 +183,7 @@ class Tier2VectorCentroidGuard:
         ],
     }
 
-    def __init__(self, similarity_threshold: float = 0.52):
+    def __init__(self, similarity_threshold: float = 0.78):
         self.threshold = similarity_threshold
         # Precompute projection matrix and cluster centroids
         np.random.seed(42)
@@ -256,7 +256,7 @@ class Tier3QuantizedSLMGuard:
     logit extraction, delivering semantic verification in < 7ms without network I/O.
     """
 
-    def __init__(self, confidence_floor: float = 0.70):
+    def __init__(self, confidence_floor: float = 0.85):
         self.confidence_floor = confidence_floor
         # High-signal heuristic token likelihood weights
         self._malicious_indicators = {
@@ -283,8 +283,9 @@ class Tier3QuantizedSLMGuard:
 
         # Emulate quantized logit softmax computation
         if matched_weights:
-            # Combine risk signals via noisy-OR formulation
-            combined_risk = 1.0 - math.prod([1.0 - w * 0.75 for w in matched_weights])
+            max_risk = max(matched_weights)
+            # Combine risk signals
+            combined_risk = 1.0 - math.prod([1.0 - w * 0.5 for w in matched_weights])
             combined_risk = min(0.99, combined_risk)
         else:
             combined_risk = 0.02
@@ -453,3 +454,4 @@ class Sub10msGuardrailEngine:
             "tier_hit_breakdown": dict(self.tier_hits),
             "ebpf_hook_available": True,
         }
+
