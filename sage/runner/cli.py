@@ -25,6 +25,12 @@ app.add_typer(redteam_app, name="redteam")
 telemetry_app = typer.Typer(help="OpenTelemetry-native audit trails, token attribution, and mechanistic activation telemetry")
 app.add_typer(telemetry_app, name="telemetry")
 
+try:
+    from sage_live.cli import attest_app
+    app.add_typer(attest_app, name="attest")
+except ImportError:
+    pass
+
 console = Console()
 
 

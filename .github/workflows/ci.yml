@@ -99,6 +99,11 @@ jobs:
     - name: Run Reproducibility Digest Verification
       run: python scripts/verify_reproducibility.py
 
+    - name: Verify Cryptographic Attestation Chain & SQLite WAL
+      run: |
+        chmod +x ./sage-live || true
+        sage-live attest verify
+
     - name: Upload Reproducibility Attestation (Python 3.10 — Authoritative)
       if: matrix.python-version == '3.10'
       uses: actions/upload-artifact@v4

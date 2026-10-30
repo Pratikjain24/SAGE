@@ -58,10 +58,11 @@ dev = [
 
 [project.scripts]
 sage = "sage.runner.cli:app"
+sage-live = "sage_live.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["sage*"]
+include = ["sage*", "sage_live*"]
 
 [tool.pytest.ini_options]
 # Comprehensive regression test suite: 201 tests across 31 test files (100% pass rate)

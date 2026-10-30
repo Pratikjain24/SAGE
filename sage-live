@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# SAGE-Live CLI execution wrapper for Linux/macOS
+if [ -f "$(dirname "$0")/.venv/bin/python" ]; then
+    "$(dirname "$0")/.venv/bin/python" -m sage_live.cli "$@"
+else
+    python3 -m sage_live.cli "$@"
+fi
