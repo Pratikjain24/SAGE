@@ -63,3 +63,4 @@ class MultiTurnSimulationResult(BaseModel):
     turns: List[TurnInteraction] = Field(default_factory=list)
     verdict: str  # "CONTAINED", "BLOCKED_EARLY", "BREACHED"
     summary: str
+

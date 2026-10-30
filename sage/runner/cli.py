@@ -22,6 +22,8 @@ compliance_app = typer.Typer(help="Policy-as-Code drafts mapped to EU AI Act, IS
 app.add_typer(compliance_app, name="compliance")
 redteam_app = typer.Typer(help="Multi-turn stateful agentic red-teaming and privilege escalation simulations")
 app.add_typer(redteam_app, name="redteam")
+telemetry_app = typer.Typer(help="OpenTelemetry-native audit trails, token attribution, and mechanistic activation telemetry")
+app.add_typer(telemetry_app, name="telemetry")
 
 console = Console()
 
@@ -806,6 +808,139 @@ def redteam_list_cmd():
         )
 
     console.print(table)
+
+
+# =====================================================================
+# OpenTelemetry-Native AI Safety Audit Trails & Token Attribution
+# =====================================================================
+
+@telemetry_app.command("list")
+def telemetry_list_cmd(
+    limit: int = typer.Option(15, "--limit", "-n", help="Number of recent spans to display"),
+):
+    """List recent OpenTelemetry audit spans with latency, decisions, and token counts."""
+    from sage.telemetry.tracer import get_global_tracer
+
+    tracer = get_global_tracer()
+    spans = tracer.get_recent_spans(limit=limit)
+
+    if not spans:
+        # Seed a demonstration span if buffer empty
+        tracer.record_guardrail_span(
+            action_type="command_execution",
+            target_text="rm -rf /var/data",
+            approved=False,
+            layer_triggered="tier1_dfa_ast",
+            rule_name="forbidden_shell_command",
+            latency_ms=0.08,
+            details="Destructive recursive delete intercepted by DFA.",
+        )
+        spans = tracer.get_recent_spans(limit=limit)
+
+    table = Table(title="OpenTelemetry AI Safety Audit Spans (OTel 1.25+)", show_header=True, header_style="bold cyan")
+    table.add_column("Span ID", style="bold yellow")
+    table.add_column("Action Type", style="magenta")
+    table.add_column("Decision", justify="center")
+    table.add_column("Defense Tier", style="cyan")
+    table.add_column("Latency", justify="right")
+    table.add_column("Tokens Attributed", justify="center")
+    table.add_column("Statutory Clauses", style="dim")
+
+    for s in spans:
+        dec_color = "green" if s.attributes.get("sage.decision") == "PERMITTED" else "red"
+        clauses_str = ", ".join(c.clause_id for c in s.policy_clauses[:2]) or "EU-AIA-ART-15"
+        tokens_str = ", ".join(s.token_attribution.attributed_tokens) if s.token_attribution and s.token_attribution.attributed_tokens else "None"
+
+        table.add_row(
+            s.span_id,
+            s.attributes.get("gen_ai.action.type", "action"),
+            f"[{dec_color}]{s.attributes.get('sage.decision', 'UNKNOWN')}[/{dec_color}]",
+            s.attributes.get("sage.defense_tier", "tier1"),
+            f"{s.duration_ms:.2f}ms",
+            tokens_str,
+            clauses_str,
+        )
+
+    console.print(table)
+
+
+@telemetry_app.command("inspect")
+def telemetry_inspect_cmd(
+    span_id: str = typer.Argument("latest", help="Span ID or 'latest' to inspect in detail"),
+):
+    """Inspect exact token attribution, mechanistic states, and policy clauses for a span."""
+    from sage.telemetry.tracer import get_global_tracer
+
+    tracer = get_global_tracer()
+    spans = tracer.get_recent_spans()
+    if not spans:
+        tracer.record_guardrail_span(
+            action_type="command_execution",
+            target_text="chmod 777 /etc/passwd",
+            approved=False,
+            layer_triggered="tier1_dfa_ast",
+            rule_name="forbidden_shell_command",
+            latency_ms=0.07,
+            details="Insecure permissions assignment.",
+        )
+        spans = tracer.get_recent_spans()
+
+    target_span = spans[-1] if span_id == "latest" else tracer.get_span_by_id(span_id)
+    if not target_span:
+        console.print(f"[bold red]Span ID '{span_id}' not found in telemetry buffer.[/bold red]")
+        raise typer.Exit(code=1)
+
+    console.print(Panel.fit(
+        f"[bold cyan]OpenTelemetry AI Safety Span: {target_span.name}[/bold cyan]\n"
+        f"W3C Traceparent: [yellow]{target_span.to_w3c_traceparent()}[/yellow]\n"
+        f"Trace ID: [dim]{target_span.trace_id}[/dim] | Span ID: [dim]{target_span.span_id}[/dim]\n"
+        f"Decision: [bold cyan]{target_span.attributes.get('sage.decision')}[/bold cyan] "
+        f"({target_span.duration_ms:.3f}ms latency)\n"
+        f"Message: {target_span.status_message}"
+    ))
+
+    # 1. Token Attribution
+    if target_span.token_attribution:
+        attr = target_span.token_attribution
+        console.print("\n[bold underline]Exact Token Attribution & Character Saliency[/bold underline]")
+        console.print(f"Target Text:       [white]{attr.target_text}[/white]")
+        console.print(f"Attributed Tokens: [bold red]{', '.join(attr.attributed_tokens) or 'None'}[/bold red]")
+        console.print(f"Character Offsets: [cyan]{attr.character_offsets}[/cyan]")
+        console.print(f"Attribution Saliency: [yellow]{attr.saliency_scores}[/yellow]")
+        console.print(f"Annotated Snippet: {attr.annotated_source}")
+
+    # 2. Mechanistic Activation States
+    if target_span.mechanistic_state:
+        mech = target_span.mechanistic_state
+        console.print("\n[bold underline]Internal Mechanistic Activation Telemetry[/bold underline]")
+        console.print(f"Threat Cluster:          [bold magenta]{mech.threat_cluster or 'None'}[/bold magenta]")
+        console.print(f"128-Dim Cosine Distance: [bold cyan]{mech.cosine_similarity or 'N/A'}[/bold cyan] (Threshold: {mech.similarity_threshold or 0.520})")
+        console.print(f"Quantized SLM Logit:     [yellow]{mech.quantized_slm_probability or 'N/A'}[/yellow]")
+        console.print(f"DFA State Transitions:   [dim]{' -> '.join(mech.dfa_state_transitions)}[/dim]")
+        if mech.ebpf_syscall:
+            console.print(f"eBPF Kernel Tracepoint:  [bold green]{mech.ebpf_syscall}[/bold green]")
+
+    # 3. Policy Clauses
+    if target_span.policy_clauses:
+        console.print("\n[bold underline]Statutory & Standards Clauses Enforced[/bold underline]")
+        for c in target_span.policy_clauses:
+            console.print(f"  * [[bold cyan]{c.clause_id}[/bold cyan]] [white]{c.title}[/white] ([dim]{c.framework}[/dim])")
+
+
+@telemetry_app.command("export")
+def telemetry_export_cmd(
+    output: Path = typer.Option(Path("experiments/telemetry/otlp_spans.json"), "--output", "-o", help="Target OTLP JSON file"),
+):
+    """Export all recorded spans in standard OpenTelemetry Collector OTLP JSON format."""
+    from sage.telemetry.tracer import get_global_tracer
+
+    tracer = get_global_tracer()
+    out = tracer.export_otlp_batch(output)
+    console.print(Panel.fit(
+        f"[bold green]OpenTelemetry OTLP Export Complete![/bold green]\n"
+        f"File: [bold cyan]{out}[/bold cyan]\n"
+        f"Compatible with: [dim]Jaeger, Grafana Tempo, Datadog, Honeycomb, OpenTelemetry Collector[/dim]"
+    ))
 
 
 @app.command("verify-env")

@@ -265,3 +265,17 @@ def test_redteam_endpoints():
     assert sim_data["breach_prevented"] is True
     assert sim_data["total_turns_executed"] == 11
     assert sim_data["turn_intercepted"] is not None
+
+
+def test_telemetry_endpoints():
+    """Verify OpenTelemetry spans retrieval API."""
+    res = client.get("/telemetry/spans")
+    assert res.status_code == 200
+    spans = res.json()
+    assert isinstance(spans, list)
+
+    res_latest = client.get("/telemetry/spans/latest")
+    assert res_latest.status_code == 200
+    latest = res_latest.json()
+    assert "trace_id" in latest
+    assert "token_attribution" in latest

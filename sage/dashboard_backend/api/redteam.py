@@ -43,3 +43,4 @@ def run_redteam_simulation(scenario_id: str):
     sim = StatefulAdversarialUserSimulator()
     result = sim.run_simulation(scenario_id=scenario_id, stop_on_first_block=False)
     return result.model_dump()
+

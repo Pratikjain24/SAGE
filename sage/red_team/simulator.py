@@ -156,3 +156,4 @@ class StatefulAdversarialUserSimulator:
             verdict=verdict_str,
             summary=summary_msg,
         )
+

@@ -85,3 +85,4 @@ def test_stop_on_first_block_option():
     assert result.breach_prevented is True
     assert result.total_turns_executed == result.turn_intercepted
     assert result.total_turns_executed < 11
+

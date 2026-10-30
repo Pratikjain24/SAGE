@@ -314,3 +314,4 @@ def get_all_scenarios() -> Dict[str, MultiTurnAttackScenario]:
     scenarios[reward_hijack.scenario_id] = reward_hijack
 
     return scenarios
+

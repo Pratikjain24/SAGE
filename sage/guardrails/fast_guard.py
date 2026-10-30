@@ -381,6 +381,14 @@ class Sub10msGuardrailEngine:
         self.tier3 = Tier3QuantizedSLMGuard(confidence_floor=slm_confidence_floor)
         self.tier4 = Tier4eBPFWASMSpecification()
 
+        # OpenTelemetry Audit Tracer
+        self.tracer = None
+        try:
+            from sage.telemetry.tracer import get_global_tracer
+            self.tracer = get_global_tracer()
+        except ImportError:
+            self.tracer = None
+
         # Telemetry stats
         self.total_evaluations = 0
         self.total_latency_ms = 0.0
@@ -401,17 +409,21 @@ class Sub10msGuardrailEngine:
         t_start = time.perf_counter()
         self.total_evaluations += 1
 
+        # Determine primary action category
+        action_type = "command_execution" if command else ("code_mutation" if code_diff else "prompt_evolution")
+        primary_text = command or code_diff or prompt_mutation or ""
+
         # --- Phase 1: Tier 1 Deterministic DFA & AST (< 0.3ms) ---
         if command:
             v1 = self.tier1.audit_command(command)
             if v1 and not v1.approved:
-                self._record_telemetry(v1, t_start)
+                self._record_telemetry(v1, t_start, primary_text, "command_execution")
                 return v1
 
         if code_diff:
             v1_code = self.tier1.audit_code_ast(code_diff)
             if v1_code and not v1_code.approved:
-                self._record_telemetry(v1_code, t_start)
+                self._record_telemetry(v1_code, t_start, primary_text, "code_mutation")
                 return v1_code
 
         # --- Phase 2: Tier 2 Vector-Similarity Centroid Guard (< 1.5ms) ---
@@ -419,7 +431,7 @@ class Sub10msGuardrailEngine:
         if target_text:
             v2 = self.tier2.audit_similarity(target_text)
             if v2 and not v2.approved:
-                self._record_telemetry(v2, t_start)
+                self._record_telemetry(v2, t_start, target_text, action_type)
                 return v2
 
         # --- Phase 3: Tier 3 Quantized SLM Inference (< 8ms) ---
@@ -433,13 +445,50 @@ class Sub10msGuardrailEngine:
             self.tier_hits["clean_pass"] += 1
 
         self.total_latency_ms += total_latency
+
+        # Emit OpenTelemetry span
+        if self.tracer:
+            span = self.tracer.record_guardrail_span(
+                action_type=action_type,
+                target_text=target_text,
+                approved=v3.approved,
+                layer_triggered=v3.tier_triggered,
+                rule_name=v3.rule_name,
+                latency_ms=v3.latency_ms,
+                details=v3.details,
+                threat_metadata=v3.metadata,
+            )
+            v3.metadata["otel_trace_id"] = span.trace_id
+            v3.metadata["otel_span_id"] = span.span_id
+
         return v3
 
-    def _record_telemetry(self, verdict: GuardrailVerdict, t_start: float) -> None:
+    def _record_telemetry(
+        self,
+        verdict: GuardrailVerdict,
+        t_start: float,
+        target_text: str = "",
+        action_type: str = "action",
+    ) -> None:
         elapsed = (time.perf_counter() - t_start) * 1000.0
         verdict.latency_ms = round(elapsed, 3)
         self.total_latency_ms += elapsed
         self.tier_hits[verdict.tier_triggered] = self.tier_hits.get(verdict.tier_triggered, 0) + 1
+
+        # Emit OpenTelemetry span with token attribution & mechanistic states
+        if self.tracer and target_text:
+            span = self.tracer.record_guardrail_span(
+                action_type=action_type,
+                target_text=target_text,
+                approved=verdict.approved,
+                layer_triggered=verdict.tier_triggered,
+                rule_name=verdict.rule_name,
+                latency_ms=verdict.latency_ms,
+                details=verdict.details,
+                threat_metadata=verdict.metadata,
+            )
+            verdict.metadata["otel_trace_id"] = span.trace_id
+            verdict.metadata["otel_span_id"] = span.span_id
 
     def get_performance_summary(self) -> Dict[str, Any]:
         """Return execution latency profile proving sub-10ms performance."""
