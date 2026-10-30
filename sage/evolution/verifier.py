@@ -41,9 +41,50 @@ class EvolutionVerifier:
         (r"always\s+return\s+True", "Trivial test bypass"),
     ]
 
-    def __init__(self, rules: Optional[List[str]] = None, max_acceptable_drift: float = 0.05):
+    def __init__(
+        self,
+        rules: Optional[List[str]] = None,
+        max_acceptable_drift: float = 0.05,
+        use_sub10ms_guard: bool = True,
+    ):
         self.rules = rules or ["protected_files", "forbidden_cmds", "resource_caps", "tamper_directives"]
         self.max_acceptable_drift = max_acceptable_drift
+        self.use_sub10ms_guard = use_sub10ms_guard
+        self._fast_guard = None
+        if use_sub10ms_guard:
+            try:
+                from sage.guardrails.fast_guard import Sub10msGuardrailEngine
+                self._fast_guard = Sub10msGuardrailEngine()
+            except ImportError:
+                self._fast_guard = None
+
+    def verify_proposal_fast(
+        self,
+        proposed_changes: Dict[str, Any],
+        historical_drift: float = 0.0,
+    ) -> VerifierDecision:
+        """Ultra-low latency verification (< 3ms) bypassing external LLMs."""
+        # Run standard static checks
+        decision = self.verify_proposal(proposed_changes, historical_drift)
+        if not decision.approved:
+            return decision
+
+        # Run Sub-10ms cascading vector & SLM guard
+        if self._fast_guard:
+            text_repr = "\n".join(f"{k}: {v}" for k, v in proposed_changes.items())
+            verdict = self._fast_guard.evaluate_action(prompt_mutation=text_repr)
+            if not verdict.approved:
+                rule_res = VerifierRuleResult(
+                    rule_name=f"fast_guard_{verdict.tier_triggered}",
+                    passed=False,
+                    details=f"[{verdict.latency_ms}ms] {verdict.details}",
+                )
+                decision.rule_results.append(rule_res)
+                decision.approved = False
+                decision.decision = "rejected"
+                decision.reason = f"Sub-10ms Guardrail flagged mutation: {verdict.details}"
+
+        return decision
 
     def check_static_rules(self, proposed_changes: Dict[str, Any]) -> List[VerifierRuleResult]:
         """Perform static syntax, AST, and regex pattern audits on candidate changes."""

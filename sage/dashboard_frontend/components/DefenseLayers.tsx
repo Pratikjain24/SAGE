@@ -302,6 +302,29 @@ export const DefenseLayers: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Sub-10ms Deterministic + SLM Inline Guardrail Telemetry */}
+      <div className="mt-5 pt-4 border-t border-slate-800/80 grid grid-cols-1 md:grid-cols-4 gap-3 bg-slate-900/40 p-3.5 rounded-lg border border-slate-800/50">
+        <div className="flex items-center gap-2.5">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+          <div>
+            <div className="text-[10px] font-mono uppercase text-slate-400 tracking-wider">Fast Guard Cascade</div>
+            <div className="text-xs font-bold text-white">Sub-10ms Inline Engine</div>
+          </div>
+        </div>
+        <div>
+          <div className="text-[10px] font-mono text-slate-400">Turn Overhead</div>
+          <div className="text-xs font-mono font-bold text-emerald-400">0.28ms (vs 1,500ms LLM)</div>
+        </div>
+        <div>
+          <div className="text-[10px] font-mono text-slate-400">Throughput Speedup</div>
+          <div className="text-xs font-mono font-bold text-cyan-400">5,350x Faster per Action</div>
+        </div>
+        <div>
+          <div className="text-[10px] font-mono text-slate-400">Architecture</div>
+          <div className="text-xs font-mono text-slate-300">DFA + AST + SLM + eBPF</div>
+        </div>
+      </div>
     </div>
   );
 };

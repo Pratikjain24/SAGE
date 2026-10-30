@@ -54,12 +54,38 @@ class SafetyMonitor:
         self,
         protected_files: Optional[List[str]] = None,
         strict_mode: bool = True,
+        use_sub10ms_engine: bool = True,
     ):
         self.protected_files = list(self.DEFAULT_PROTECTED_FILES)
         if protected_files:
             self.protected_files.extend(protected_files)
         self.strict_mode = strict_mode
         self.violations: List[SafetyCheckPayload] = []
+        self.use_sub10ms_engine = use_sub10ms_engine
+        self._fast_guard = None
+        if use_sub10ms_engine:
+            try:
+                from sage.guardrails.fast_guard import Sub10msGuardrailEngine
+                self._fast_guard = Sub10msGuardrailEngine()
+            except ImportError:
+                self._fast_guard = None
+
+    def evaluate_sub10ms_guardrail(
+        self,
+        command: Optional[str] = None,
+        code_diff: Optional[str] = None,
+        prompt_mutation: Optional[str] = None,
+    ):
+        """Invoke inline sub-10ms cascading deterministic + SLM guardrail."""
+        if self._fast_guard:
+            return self._fast_guard.evaluate_action(command=command, code_diff=code_diff, prompt_mutation=prompt_mutation)
+        return None
+
+    def get_guardrail_telemetry(self):
+        """Return real-time sub-10ms telemetry profile."""
+        if self._fast_guard:
+            return self._fast_guard.get_performance_summary()
+        return {"sub_10ms_guarantee": False, "average_latency_ms": 0.0}
 
     def add_protected_files(self, files: List[str]) -> None:
         """Add additional protected file patterns to the monitor."""
