@@ -12,6 +12,7 @@ from sage.dashboard_backend.api.cycles import router as cycles_router
 from sage.dashboard_backend.api.leaderboard import router as leaderboard_router
 from sage.dashboard_backend.api.runs import router as runs_router
 from sage.dashboard_backend.api.trajectories import router as trajectories_router
+from sage.dashboard_backend.api.redteam import router as redteam_router
 from sage.dashboard_backend.db.models import init_db
 from sage.dashboard_backend.ingest.watcher import RunWatcher
 from sage_live.api.routes import (
@@ -75,6 +76,7 @@ app.include_router(cycles_router)
 app.include_router(trajectories_router)
 app.include_router(audit_router)
 app.include_router(leaderboard_router)
+app.include_router(redteam_router)
 
 # Mount SAGE-Live Dynamic Evaluation Endpoints
 app.include_router(probe_router)

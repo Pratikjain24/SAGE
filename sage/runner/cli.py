@@ -20,6 +20,8 @@ tasks_app = typer.Typer(help="Inspect and validate benchmark tasks")
 app.add_typer(tasks_app, name="tasks")
 compliance_app = typer.Typer(help="Policy-as-Code drafts mapped to EU AI Act, ISO 42001, NIST AI RMF, and OWASP")
 app.add_typer(compliance_app, name="compliance")
+redteam_app = typer.Typer(help="Multi-turn stateful agentic red-teaming and privilege escalation simulations")
+app.add_typer(redteam_app, name="redteam")
 
 console = Console()
 
@@ -725,6 +727,85 @@ def compliance_status_cmd():
         f"NIST AI RMF 1.0 Profile: [bold green]ALIGNED[/bold green]\n"
         f"OWASP Agentic Top 10: [bold green]HARDENED[/bold green]"
     ))
+
+
+# =====================================================================
+# Multi-Turn Stateful Agentic Red-Teaming
+# =====================================================================
+
+@redteam_app.command("run")
+def redteam_run_cmd(
+    scenario: str = typer.Option("trojan_hotfix_escalation", "--scenario", "-s", help="Scenario ID to simulate"),
+    stop_early: bool = typer.Option(False, "--stop-early", help="Halt simulation on first intercepted turn"),
+):
+    """Execute a multi-turn stateful attack simulation (10+ turns) against SAGE defenses."""
+    from sage.red_team.simulator import StatefulAdversarialUserSimulator
+
+    sim = StatefulAdversarialUserSimulator()
+    with console.status(f"[bold red]Simulating multi-turn adversarial campaign: {scenario}..."):
+        result = sim.run_simulation(scenario_id=scenario, stop_on_first_block=stop_early)
+
+    status_color = "green" if result.breach_prevented else "red"
+    console.print(Panel.fit(
+        f"[bold {status_color}]Multi-Turn Simulation Result: {result.verdict}[/bold {status_color}]\n"
+        f"Scenario: [bold cyan]{result.scenario_name}[/bold cyan]\n"
+        f"Turns Executed: [yellow]{result.total_turns_executed} / {result.planned_turns}[/yellow]\n"
+        f"First Intercepted Turn: [bold cyan]{result.turn_intercepted or 'None'}[/bold cyan]\n"
+        f"Defense-in-Depth Score: [bold green]{result.defense_in_depth_score:.2f}[/bold green]\n"
+        f"Summary: [dim]{result.summary}[/dim]"
+    ))
+
+    # Turn-by-turn trajectory table
+    table = Table(title="10+ Turn Stateful Escalation Trajectory", show_header=True, header_style="bold red")
+    table.add_column("Turn", justify="center", style="dim")
+    table.add_column("Attack Phase", style="magenta")
+    table.add_column("Action / Command / Code", style="cyan")
+    table.add_column("Defense Verdict", justify="center")
+    table.add_column("Overhead", justify="right")
+    table.add_column("Risk", justify="center")
+
+    for t in result.turns:
+        action_desc = t.attempted_command or (t.attempted_code_diff[:40] + "..." if t.attempted_code_diff else t.adversary_prompt[:40] + "...")
+        if t.intercepted:
+            v_str = f"[bold green]INTERCEPTED[/bold green]\n[dim]{t.intercepting_layer}[/dim]"
+        else:
+            v_str = "[cyan]PERMITTED[/cyan]"
+
+        table.add_row(
+            str(t.turn),
+            t.phase.value,
+            action_desc,
+            v_str,
+            f"{t.latency_ms:.2f}ms",
+            f"{t.accumulated_risk:.2f}",
+        )
+
+    console.print(table)
+
+
+@redteam_app.command("list")
+def redteam_list_cmd():
+    """List all standardized multi-turn stateful red-teaming scenarios."""
+    from sage.red_team.scenarios import get_all_scenarios
+    scenarios = get_all_scenarios()
+
+    table = Table(title="SAGE Multi-Turn Red-Team Scenarios", show_header=True, header_style="bold magenta")
+    table.add_column("Scenario ID", style="cyan")
+    table.add_column("Scenario Name", style="bold white")
+    table.add_column("Threat Category", style="yellow")
+    table.add_column("Turns", justify="center")
+    table.add_column("Target Breach", style="dim")
+
+    for s_id, s in scenarios.items():
+        table.add_row(
+            s.scenario_id,
+            s.name,
+            s.threat_category,
+            f"{s.planned_turns} turns",
+            s.target_breach,
+        )
+
+    console.print(table)
 
 
 @app.command("verify-env")

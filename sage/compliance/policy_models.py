@@ -71,3 +71,4 @@ class PolicyAsCodeAttestation(BaseModel):
     cryptographic_hash: str
     signature: Optional[str] = None
     telemetry_summary: Dict[str, Any] = Field(default_factory=dict)
+

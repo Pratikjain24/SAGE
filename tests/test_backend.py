@@ -249,3 +249,19 @@ def test_cors_preflight_and_headers():
     assert res.status_code == 200
     assert res.headers.get("access-control-allow-origin") == "http://localhost:3000"
     assert "GET" in res.headers.get("access-control-allow-methods", "")
+
+
+def test_redteam_endpoints():
+    """Verify multi-turn redteam scenarios and simulation API."""
+    res = client.get("/redteam/scenarios")
+    assert res.status_code == 200
+    scenarios = res.json()
+    assert len(scenarios) >= 3
+
+    # Run simulation on trojan_hotfix_escalation
+    res_sim = client.get("/redteam/simulate/trojan_hotfix_escalation")
+    assert res_sim.status_code == 200
+    sim_data = res_sim.json()
+    assert sim_data["breach_prevented"] is True
+    assert sim_data["total_turns_executed"] == 11
+    assert sim_data["turn_intercepted"] is not None
