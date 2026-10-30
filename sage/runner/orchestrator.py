@@ -293,7 +293,7 @@ class ExperimentOrchestrator:
         task_key = (seed, group, cycle, task.id)
         if self.verbose:
             idx_str = f"[{task_idx + 1}/{total_tasks}] " if task_idx is not None and total_tasks else ""
-            print(f"  ▶ {idx_str}Task {task.id:<18} ({task.type:<9}) running...", end="", flush=True)
+            print(f"  > {idx_str}Task {task.id:<18} ({task.type:<9}) running...", end="", flush=True)
         safety_mon = SafetyMonitor(protected_files=task.protected_files)
         task_ws = run_dir / "scratch" / f"seed_{seed}" / f"{group}_c{cycle}_{task.id}"
         self.task_loader.setup_task_workspace(task, task_ws)
@@ -520,12 +520,12 @@ class ExperimentOrchestrator:
 
             if self.verbose:
                 idx_str = f"[{task_idx + 1}/{total_tasks}] " if task_idx is not None and total_tasks else ""
-                status_tag = "✓ PASS" if is_success else "✗ FAIL"
+                status_tag = "[PASS] PASS" if is_success else "[FAIL] FAIL"
                 dur_s = res.wall_time_ms / 1000.0
                 tot_tok = real_tokens_in + real_tokens_out
-                viol_info = f" | ⚠️ Violations: {len(task_safety_violations)}" if task_safety_violations else ""
+                viol_info = f" | [WARN] Violations: {len(task_safety_violations)}" if task_safety_violations else ""
                 print(
-                    f"\r  ▶ {idx_str}Task {task.id:<18} ({task.type:<9}) -> {status_tag} "
+                    f"\r  > {idx_str}Task {task.id:<18} ({task.type:<9}) -> {status_tag} "
                     f"[gt={eval_score.ground_truth_score:.2f}, gap={eval_score.proxy_gap:+.2f}] "
                     f"in {dur_s:.1f}s | {tot_tok:,} tok | ${res.cost_usd:.4f}{viol_info}",
                     flush=True,
@@ -617,8 +617,8 @@ class ExperimentOrchestrator:
                         if self.verbose:
                             print(
                                 f"\n{'='*70}\n"
-                                f"🚀 Archetype Layer: {group} — {arch_name}\n"
-                                f"🔄 Cycle {cycle + 1}/{self.config.cycles} (Seed {seed}) | Agent: {agent.version} | Tasks: {len(active_cycle_tasks)}\n"
+                                f"[LAUNCH] Archetype Layer: {group} -- {arch_name}\n"
+                                f"[CYCLE] Cycle {cycle + 1}/{self.config.cycles} (Seed {seed}) | Agent: {agent.version} | Tasks: {len(active_cycle_tasks)}\n"
                                 f"{'='*70}",
                                 flush=True,
                             )
@@ -632,7 +632,7 @@ class ExperimentOrchestrator:
                         if all_tasks_cached and cycle_already_evolved:
                             if self.verbose:
                                 print(
-                                    f"  ⚡ Cycle {cycle + 1} already completed in previous run. Replaying cached metrics.",
+                                    f"    Cycle {cycle + 1} already completed in previous run. Replaying cached metrics.",
                                     flush=True,
                                 )
                             # Replay cached task results for metrics calculation
@@ -731,7 +731,7 @@ class ExperimentOrchestrator:
                                 status_str = evo_outcome.status.upper()
                                 rat = f" | Rationale: {evo_outcome.rationale[:80]}" if evo_outcome.rationale else ""
                                 print(
-                                    f"  🧬 [Evolution Decision] Status: {status_str} -> Version: {agent.version}{rat}",
+                                    f"  [EVO] [Evolution Decision] Status: {status_str} -> Version: {agent.version}{rat}",
                                     flush=True,
                                 )
 
@@ -758,7 +758,7 @@ class ExperimentOrchestrator:
 
                         if self.verbose:
                             print(
-                                f"  📊 [Cycle {cycle + 1} Summary] Pass Rate: {c_success_rate:.1%} "
+                                f"    [Cycle {cycle + 1} Summary] Pass Rate: {c_success_rate:.1%} "
                                 f"({pass_count}/{len(cycle_task_results)}) | "
                                 f"Safety Drift: {drift:.3f} | Cost: ${sum(t['cost_usd'] for t in cycle_task_results):.4f}\n",
                                 flush=True,

@@ -76,6 +76,11 @@ def run(
         "--seeds", "-s",
         help="Comma-separated random seeds (e.g. 42,43,44,45,46 for N=5 minimum; 42,43,44,45,46,47,48,49,50,51 for N=10 ideal)",
     ),
+    mock: bool = typer.Option(
+        False,
+        "--mock",
+        help="Force zero-setup offline deterministic mock LLM execution (zero API keys needed)",
+    ),
 ):
     """Run an evolutionary benchmark evaluation across agent groups and cycles."""
     from sage.config.models import ExperimentConfig
@@ -110,6 +115,11 @@ def run(
     if seeds:
         parsed_seeds = [int(s.strip()) for s in seeds.split(",") if s.strip()]
         exp_cfg.seeds = parsed_seeds
+
+    if mock:
+        exp_cfg.model.api_base = None
+        exp_cfg.model.family = "mock"
+        console.print("[cyan]Zero-Setup Mock Execution enabled: running offline deterministic evaluator (no API keys needed)[/cyan]")
 
     console.print(f"[green]Loaded config:[/green] {exp_cfg.name} (groups: {exp_cfg.groups}, cycles: {exp_cfg.cycles}, seeds: {exp_cfg.seeds})")
 

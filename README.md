@@ -1,17 +1,32 @@
 # SAGE: Safety & Agent Growth Evaluator
 ### Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents
 
+[![Open In Colab (Playground)](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Interactive_Playground.ipynb)
+[![Open In Colab (T4 GPU)](https://img.shields.io/badge/Colab-GPU%20Benchmark%20(vLLM)-F9AB00?logo=googlecolab&logoColor=white)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Colab_Benchmark.ipynb)
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Next.js%20Dashboard%20Space-blue)](https://huggingface.co/spaces/Pratikjain24/SAGE-Dashboard)
+[![Kaggle Notebook](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/code/pratikjain24/sage-benchmark)
 [![CI](https://github.com/Pratikjain24/SAGE/actions/workflows/ci.yml/badge.svg)](https://github.com/Pratikjain24/SAGE/actions)
 [![CI (SAGE-Live)](https://github.com/Pratikjain24/SAGE/actions/workflows/sage-live-ci.yml/badge.svg)](https://github.com/Pratikjain24/SAGE/actions)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Croissant%201.0%20Ready-yellow)](hf_dataset/)
+[![HuggingFace Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Croissant%201.0%20Ready-yellow)](hf_dataset/)
 [![Zenodo](https://img.shields.io/badge/Zenodo-DOI%20Reserved%20on%20Publication-blue)](https://github.com/Pratikjain24/SAGE)
 [![Stars](https://img.shields.io/github/stars/Pratikjain24/SAGE?style=social)](https://github.com/Pratikjain24/SAGE/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/Pratikjain24/SAGE)](https://github.com/Pratikjain24/SAGE/commits/main)
 [![Issues](https://img.shields.io/github/issues/Pratikjain24/SAGE)](https://github.com/Pratikjain24/SAGE/issues)
 [![Paper](https://img.shields.io/badge/IEEE-Paper%202026-blue)](paper/README.md)
 [![Dossier](https://img.shields.io/badge/System_Dossier-v1.0.0-green.svg)](PROJECT_DOSSIER.md)
+
+> [!TIP]
+> ### 🎮 1-Click Zero-Setup Interactive Playground & Live Web Dashboard
+> Evaluate SAGE immediately in your browser with **zero manual API key configuration**:
+>
+> | Platform | Target | Description | 1-Click Access |
+> |---|---|---|---|
+> | **Google Colab** | **Interactive Playground** | **Zero-Setup Mock Execution (Default)**. Evaluates $G_1$–$G_7$ in ~30s, plots 4-panel publication figures, and verifies Ed25519/HMAC attestation chains with **zero API keys required**. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Interactive_Playground.ipynb) |
+> | **Google Colab** | **Local vLLM GPU Benchmark** | Full empirical local GPU execution on Colab's free 15GB Tesla T4 GPU using `Qwen2.5-Coder-3B-Instruct` (zero API cost, zero rate limits). | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Colab_Benchmark.ipynb) |
+> | **Hugging Face** | **Next.js + FastAPI Dashboard Space** | 1-click cloud-hosted Next.js 14 + FastAPI live workbench. Monitor real-time WebSocket block commits, execute probe generations, and audit trajectories. | [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Dashboard%20Space-blue)](https://huggingface.co/spaces/Pratikjain24/SAGE-Dashboard) [![Duplicate](https://huggingface.co/datasets/huggingface/badges/raw/main/duplicate-this-space-sm.svg)](https://huggingface.co/spaces/Pratikjain24/SAGE-Dashboard?duplicate=true) |
+> | **Kaggle** | **Kaggle Interactive Notebook** | Kaggle cloud kernel for executing multi-seed trajectory replications with GPU acceleration. | [![Open in Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/code/pratikjain24/sage-benchmark) |
 
 > [!IMPORTANT]
 > ### 🔍 Disambiguation: Distinguishing SAGE from Other Projects
@@ -278,7 +293,8 @@ SAGE provides first-class support for state-of-the-art commercial APIs and open-
 | **Anthropic Claude**| `claude-3-7-sonnet`, `claude-3-5-sonnet`, `claude-3-5-haiku`, `claude-3-opus` | Anthropic Messages API (`/v1/messages`) | ✅ $3.00 / $15.00 per 1M tokens | [`SAGE_Claude_Benchmark.ipynb`](SAGE_Claude_Benchmark.ipynb) |
 | **OpenAI** | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini` | OpenAI Chat Completions (`/v1/chat/completions`) | ✅ $2.50 / $10.00 per 1M tokens | [`SAGE_OpenAI_Benchmark.ipynb`](SAGE_OpenAI_Benchmark.ipynb) |
 | **DeepSeek** | `deepseek-chat` (V3), `deepseek-reasoner` (R1) | DeepSeek API (`api.deepseek.com/v1`) | ✅ $0.14 / $0.28 per 1M tokens | [`SAGE_DeepSeek_Benchmark.ipynb`](SAGE_DeepSeek_Benchmark.ipynb) |
-| **Local / vLLM** | `qwen2.5-coder-7b-instruct`, `llama-3.1-8b-instruct` | Local OpenAI-compatible server (`http://localhost:8000/v1`) | ✅ Hardware cost (compute-only) | [`notebooks/sage_evaluation_runner.ipynb`](notebooks/sage_evaluation_runner.ipynb) |
+| **Zero-Setup Playground** | Canonical 7-Archetype Suite ($G_1$–$G_7$) | Offline deterministic reference simulation | ✅ Free ($0.00) / Zero API Keys | [`SAGE_Interactive_Playground.ipynb`](SAGE_Interactive_Playground.ipynb) |
+| **Local / vLLM** | `qwen2.5-coder-7b-instruct`, `llama-3.1-8b-instruct` | Local OpenAI-compatible server (`http://localhost:8000/v1`) | ✅ Hardware cost (compute-only) | [`SAGE_Colab_Benchmark.ipynb`](SAGE_Colab_Benchmark.ipynb) |
 | **Groq Cloud** | `llama-3.3-70b-versatile`, `mixtral-8x7b-32768` | Groq OpenAI-compatible (`api.groq.com/openai/v1`) | ✅ $0.59 / $0.79 per 1M tokens | [`configs/model_groq.yaml`](configs/model_groq.yaml) |
 
 ---
