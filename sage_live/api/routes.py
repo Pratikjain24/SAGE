@@ -644,7 +644,7 @@ class ConnectionManager:
 
     async def broadcast(self, message: dict) -> None:
         """Broadcast message to all connections."""
-        for connection in self.active_connections:
+        for connection in list(self.active_connections):
             try:
                 await connection.send_json(message)
             except Exception as e:
@@ -888,8 +888,29 @@ async def generate_probes(
 
         PROBES_GENERATED.labels(generation=str(request.generation)).inc(request.count)
 
-        # Background task to save to database
-        # background_tasks.add_task(save_probes_to_db, probes)
+        # Broadcast probe generation to connected WebSocket clients
+        background_tasks.add_task(
+            manager.broadcast,
+            {
+                "type": "probe_generated",
+                "data": {
+                    "count": len(probes),
+                    "generation": request.generation,
+                    "probe_id": probes[0].probe_id if probes else None,
+                    "vulnerability_class": probes[0].vulnerability_class if probes else None,
+                    "probes": [
+                        {
+                            "probe_id": p.probe_id,
+                            "difficulty": p.difficulty,
+                            "vulnerability_class": p.vulnerability_class,
+                            "injection_vector": p.injection_vector,
+                        }
+                        for p in probes[:5]
+                    ],
+                },
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            },
+        )
 
         duration = time.time() - start_time
         REQUEST_DURATION.labels(method="POST", endpoint="/probes/generate").observe(
@@ -1142,12 +1163,32 @@ async def evaluate(
             agent_id=request.agent_id, passed=str(passed).lower()
         ).inc()
 
-        # Broadcast to WebSocket clients
+        # Broadcast block commit & evaluation complete to WebSocket clients
+        block_entry = {
+            "window_id": window_id,
+            "window_hash": block.current_hash,
+            "previous_hash": block.previous_hash,
+            "block_number": block.block_number,
+            "timestamp": block.timestamp.isoformat(),
+            "agent_id": request.agent_id,
+            "signature": block.hmac_signature[:64] if block.hmac_signature else "valid-hmac-sha256",
+            "agent_count": 1,
+            "probe_count": 1,
+            "result_count": 1,
+        }
+        background_tasks.add_task(
+            manager.broadcast,
+            {
+                "type": "block_commit",
+                "data": block_entry,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            },
+        )
         background_tasks.add_task(
             manager.broadcast,
             {
                 "type": "evaluation_complete",
-                "data": result.model_dump(),
+                "data": result.model_dump(mode="json"),
                 "timestamp": datetime.now(timezone.utc).isoformat(),
             },
         )
@@ -1790,23 +1831,81 @@ async def get_agent_history(
 
 @health_router.websocket("/ws/evaluate")
 async def websocket_evaluate(websocket: WebSocket) -> None:
-    """WebSocket endpoint for real-time evaluation updates."""
+    """WebSocket endpoint for real-time evaluation updates, probe generation broadcasts, and block commits."""
     await manager.connect(websocket)
 
     try:
+        # Send initial handshake with current ledger stats
+        try:
+            service = get_attestation_service()
+            total_blocks = service._ledger.chain_length
+            head = service._ledger.head
+            await manager.send_personal_message(
+                {
+                    "type": "connection_established",
+                    "data": {
+                        "status": "ready",
+                        "channel": "live_telemetry",
+                        "total_blocks": total_blocks,
+                        "head_hash": head.current_hash if head else None,
+                    },
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                },
+                websocket,
+            )
+        except Exception as err:
+            logger.warning("Could not read ledger for initial handshake: {}", err)
+            await manager.send_personal_message(
+                {
+                    "type": "connection_established",
+                    "data": {"status": "ready", "channel": "live_telemetry"},
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                },
+                websocket,
+            )
+
         while True:
             # Receive messages from client
             data = await websocket.receive_json()
+            msg_type = data.get("type", "ping")
 
-            # Echo back or process
-            msg = WebSocketMessage(
-                type="status",
-                data={"message": "Connected", "status": "ready"},
-            )
-            await manager.send_personal_message(msg.model_dump(), websocket)
-
-            # Keep connection alive
-            await asyncio.sleep(1)
+            if msg_type == "ping":
+                await manager.send_personal_message(
+                    {"type": "pong", "timestamp": datetime.now(timezone.utc).isoformat()},
+                    websocket,
+                )
+            elif msg_type == "request_state":
+                try:
+                    service = get_attestation_service()
+                    blocks = service._ledger._store.get_all_blocks()
+                    await manager.send_personal_message(
+                        {
+                            "type": "state_snapshot",
+                            "data": {
+                                "total_blocks": len(blocks),
+                                "latest_blocks": [
+                                    {
+                                        "window_id": b.window_id,
+                                        "window_hash": b.current_hash,
+                                        "previous_hash": b.previous_hash,
+                                        "timestamp": b.timestamp.isoformat(),
+                                    }
+                                    for b in reversed(blocks[-10:])
+                                ],
+                            },
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
+                        },
+                        websocket,
+                    )
+                except Exception as e:
+                    logger.error("Failed to retrieve state snapshot: {}", e)
+            else:
+                msg = {
+                    "type": "status",
+                    "data": {"message": "Connected", "status": "ready", "received_type": msg_type},
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                }
+                await manager.send_personal_message(msg, websocket)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
@@ -1966,6 +2065,8 @@ __all__ = [
     "ALL_ROUTERS",
     "ErrorResponse",
     "health_router",
+    "manager",
+    "websocket_evaluate",
     "probe_router",
     "eval_router",
     "metrics_router",

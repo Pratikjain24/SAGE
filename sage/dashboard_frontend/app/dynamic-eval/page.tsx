@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   generateLiveProbes,
   evaluateAgentLive,
   fetchAttestationChain,
   verifyAttestationChain,
   fetchStalenessStatus,
+  getWebSocketUrl,
+  LiveWebSocketMessage,
   DynamicProbe,
   DynamicEvaluationResult,
   AttestationBlockEntry,
@@ -30,6 +32,9 @@ import {
   RefreshCw,
   Zap,
   Lock,
+  Radio,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 
 export default function DynamicEvalPage() {
@@ -56,6 +61,165 @@ export default function DynamicEvalPage() {
   const [isVerifyingChain, setIsVerifyingChain] = useState(false);
   const [staleness, setStaleness] = useState<StalenessStatus | null>(null);
   const [isLoadingChain, setIsLoadingChain] = useState(false);
+
+  // --- Real-time WebSocket Telemetry State ---
+  const [wsStatus, setWsStatus] = useState<"connected" | "connecting" | "disconnected">("connecting");
+  const [lastWsEvent, setLastWsEvent] = useState<{ message: string; timestamp: string; type: string } | null>(null);
+  const [liveEventsCount, setLiveEventsCount] = useState(0);
+  const wsRef = useRef<WebSocket | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Manage Live WebSocket telemetry connection
+  useEffect(() => {
+    let isMounted = true;
+
+    function connectWs() {
+      if (!isMounted) return;
+      try {
+        const wsUrl = getWebSocketUrl();
+        setWsStatus("connecting");
+        const socket = new WebSocket(wsUrl);
+        wsRef.current = socket;
+
+        socket.onopen = () => {
+          if (!isMounted) {
+            socket.close();
+            return;
+          }
+          setWsStatus("connected");
+          if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+          pingIntervalRef.current = setInterval(() => {
+            if (socket.readyState === WebSocket.OPEN) {
+              socket.send(JSON.stringify({ type: "ping" }));
+            }
+          }, 15000);
+        };
+
+        socket.onmessage = (event) => {
+          if (!isMounted) return;
+          try {
+            const msg: LiveWebSocketMessage = JSON.parse(event.data);
+            const ts = msg.timestamp || new Date().toISOString();
+
+            if (msg.type === "connection_established") {
+              setWsStatus("connected");
+              if (msg.data?.total_blocks !== undefined) {
+                setChainTotal((prev) => Math.max(prev, Number(msg.data.total_blocks)));
+              }
+              setLastWsEvent({
+                message: "WebSocket live telemetry tunnel established (Port 8000)",
+                timestamp: ts,
+                type: "connected",
+              });
+            } else if (msg.type === "block_commit") {
+              const d = msg.data || {};
+              const newBlock: AttestationBlockEntry = {
+                window_id: d.window_id || `WINDOW-${Date.now()}`,
+                timestamp: d.timestamp || ts,
+                result_count: d.result_count ?? 1,
+                agent_count: d.agent_count ?? 1,
+                probe_count: d.probe_count ?? 1,
+                window_hash: d.window_hash || "",
+                previous_hash: d.previous_hash || "",
+                signature: d.signature || "",
+                public_key: d.public_key || "",
+              };
+
+              setChainEntries((prev) => {
+                if (prev.some((b) => (b.window_hash && b.window_hash === newBlock.window_hash) || (b.window_id && b.window_id === newBlock.window_id))) {
+                  return prev;
+                }
+                return [newBlock, ...prev];
+              });
+
+              setChainTotal((prev) => {
+                if (typeof d.block_number === "number") {
+                  return Math.max(prev + 1, d.block_number + 1);
+                }
+                return prev + 1;
+              });
+
+              setLiveEventsCount((c) => c + 1);
+              setLastWsEvent({
+                message: `Cryptographic block sealed: #${d.block_number ?? 'live'} (${(d.window_hash || '').slice(0, 14)}...)`,
+                timestamp: ts,
+                type: "block_commit",
+              });
+            } else if (msg.type === "evaluation_complete") {
+              const res = msg.data as DynamicEvaluationResult;
+              if (res && res.agent_id) {
+                setEvalResult(res);
+                setLiveEventsCount((c) => c + 1);
+                setLastWsEvent({
+                  message: `Evaluation committed: ${res.agent_id} • Safety ${res.composite_safety_score?.toFixed(1) ?? 'N/A'} • ${res.processing_time_ms ?? 0}ms`,
+                  timestamp: ts,
+                  type: "evaluation",
+                });
+              }
+            } else if (msg.type === "probe_generated") {
+              const d = msg.data || {};
+              setLiveEventsCount((c) => c + 1);
+              setLastWsEvent({
+                message: `Adversarial probe generated: ${d.probe_id || 'PROBE'} (${d.vulnerability_class || 'synthetic'})`,
+                timestamp: ts,
+                type: "probe",
+              });
+            } else if (msg.type === "state_snapshot") {
+              if (msg.data?.latest_blocks && Array.isArray(msg.data.latest_blocks)) {
+                setChainEntries((prev) => {
+                  const combined = [...msg.data.latest_blocks, ...prev];
+                  const seen = new Set<string>();
+                  return combined.filter((b) => {
+                    const id = b.window_hash || b.window_id;
+                    if (seen.has(id)) return false;
+                    seen.add(id);
+                    return true;
+                  });
+                });
+              }
+              if (typeof msg.data?.total_blocks === "number") {
+                setChainTotal(msg.data.total_blocks);
+              }
+            }
+          } catch (err) {
+            console.error("Failed to parse WebSocket message:", err);
+          }
+        };
+
+        socket.onerror = () => {
+          if (!isMounted) return;
+          setWsStatus("disconnected");
+        };
+
+        socket.onclose = () => {
+          if (!isMounted) return;
+          setWsStatus("disconnected");
+          if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+          reconnectTimeoutRef.current = setTimeout(() => {
+            connectWs();
+          }, 3000);
+        };
+      } catch (err) {
+        if (!isMounted) return;
+        setWsStatus("disconnected");
+        reconnectTimeoutRef.current = setTimeout(() => {
+          connectWs();
+        }, 3000);
+      }
+    }
+
+    connectWs();
+
+    return () => {
+      isMounted = false;
+      if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+    };
+  }, []);
 
   // Load initial chain & staleness on mount
   useEffect(() => {
@@ -166,11 +330,38 @@ export default function DynamicEvalPage() {
       {/* Header Command Center */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-4 gap-4 border-b border-slate-800/80">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
             <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               LIVE RUNTIME ENGINE
             </span>
+            {wsStatus === "connected" && (
+              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 shadow-sm shadow-emerald-500/20">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <Radio size={11} className="text-emerald-400" />
+                WS LIVE STREAM CONNECTED
+              </span>
+            )}
+            {wsStatus === "connecting" && (
+              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
+                <RefreshCw size={11} className="text-amber-400 animate-spin" />
+                CONNECTING WS STREAM...
+              </span>
+            )}
+            {wsStatus === "disconnected" && (
+              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 flex items-center gap-1.5">
+                <WifiOff size={11} className="text-slate-500" />
+                OFFLINE (POLLING FALLBACK)
+              </span>
+            )}
+            {liveEventsCount > 0 && (
+              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
+                {liveEventsCount} Live Event{liveEventsCount === 1 ? "" : "s"}
+              </span>
+            )}
             <span className="font-mono text-xs text-slate-400">Zero Mock Data • Port 8000</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
@@ -194,6 +385,24 @@ export default function DynamicEvalPage() {
           </button>
         </div>
       </div>
+
+      {/* Real-time WebSocket Live Stream Ticker */}
+      {lastWsEvent && (
+        <div className="flex items-center justify-between p-2.5 px-4 rounded-xl bg-slate-900/90 border border-cyan-500/30 text-xs font-mono backdrop-blur-sm animate-fade-in shadow-lg shadow-cyan-950/20">
+          <div className="flex items-center gap-2.5 truncate">
+            <Radio size={14} className="text-emerald-400 animate-pulse shrink-0" />
+            <span className="text-[10px] uppercase font-black px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+              {lastWsEvent.type}
+            </span>
+            <span className="text-slate-200 truncate font-semibold">
+              {lastWsEvent.message}
+            </span>
+          </div>
+          <span className="text-[10px] text-slate-400 shrink-0 ml-3">
+            {new Date(lastWsEvent.timestamp).toLocaleTimeString()}
+          </span>
+        </div>
+      )}
 
       {/* Top Telemetry KPI Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -511,11 +720,17 @@ export default function DynamicEvalPage() {
       <div className="hud-card p-6 border border-slate-800/80 bg-slate-950/80 space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-slate-800/80 gap-3">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="section-label">Immutable Ledger</span>
               <span className="font-mono text-[10px] text-purple-400 font-bold px-1.5 py-0.5 rounded bg-purple-500/10 border border-purple-500/20">
                 Ed25519 &bull; HMAC-SHA256
               </span>
+              {wsStatus === "connected" && (
+                <span className="font-mono text-[10px] text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Stream Active
+                </span>
+              )}
             </div>
             <h3 className="text-base font-black tracking-tight text-white mt-0.5 flex items-center gap-2">
               <LinkIcon size={16} className="text-purple-400" />

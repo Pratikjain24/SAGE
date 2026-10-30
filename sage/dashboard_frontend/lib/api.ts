@@ -211,11 +211,11 @@ export interface AttestationBlockEntry {
   window_id: string;
   window_hash: string;
   previous_hash: string;
-  signature: string;
-  public_key: string;
+  signature?: string;
+  public_key?: string;
   timestamp: string;
-  agent_count: number;
-  probe_count: number;
+  agent_count?: number;
+  probe_count?: number;
   result_count: number;
 }
 
@@ -357,4 +357,30 @@ export async function fetchStalenessStatus(): Promise<StalenessStatus> {
       checked_at: new Date().toISOString(),
     };
   }
+}
+
+export interface LiveWebSocketMessage {
+  type: "connection_established" | "block_commit" | "evaluation_complete" | "probe_generated" | "pong" | "state_snapshot" | "status";
+  data?: any;
+  timestamp?: string;
+}
+
+export function getWebSocketUrl(): string {
+  if (typeof window !== "undefined") {
+    if (process.env.NEXT_PUBLIC_WS_URL) {
+      return process.env.NEXT_PUBLIC_WS_URL;
+    }
+    const isHttps = window.location.protocol === "https:";
+    const wsProto = isHttps ? "wss:" : "ws:";
+    if (API_BASE_URL.startsWith("http://") || API_BASE_URL.startsWith("https://")) {
+      try {
+        const url = new URL(API_BASE_URL);
+        return `${wsProto}//${url.host}/ws/evaluate`;
+      } catch {
+        return `${wsProto}//localhost:8000/ws/evaluate`;
+      }
+    }
+    return `${wsProto}//localhost:8000/ws/evaluate`;
+  }
+  return "ws://localhost:8000/ws/evaluate";
 }

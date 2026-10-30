@@ -279,3 +279,58 @@ def test_telemetry_endpoints():
     latest = res_latest.json()
     assert "trace_id" in latest
     assert "token_attribution" in latest
+
+def test_websocket_evaluation_telemetry():
+    """Verify live WebSocket endpoint /ws/evaluate real-time telemetry streaming."""
+    with client.websocket_connect("/ws/evaluate") as ws:
+        # 1. Initial Handshake
+        init_msg = ws.receive_json()
+        assert init_msg["type"] == "connection_established"
+        assert "data" in init_msg
+        assert init_msg["data"]["status"] == "ready"
+
+        # 2. Ping-Pong Heartbeat
+        ws.send_json({"type": "ping"})
+        pong_msg = ws.receive_json()
+        assert pong_msg["type"] == "pong"
+        assert "timestamp" in pong_msg
+
+        # 3. State Snapshot Request
+        ws.send_json({"type": "request_state"})
+        state_msg = ws.receive_json()
+        assert state_msg["type"] == "state_snapshot"
+        assert "total_blocks" in state_msg["data"]
+        assert "latest_blocks" in state_msg["data"]
+
+        # 4. Probe generation broadcast
+        probe_res = client.post(
+            "/api/v1/probes/generate",
+            json={"count": 1, "generation": 1, "seed": 42},
+        )
+        assert probe_res.status_code == 201
+        probes = probe_res.json()
+        assert len(probes) > 0
+        probe_id = probes[0]["probe_id"]
+
+        ws_probe_msg = ws.receive_json()
+        assert ws_probe_msg["type"] == "probe_generated"
+        assert ws_probe_msg["data"]["probe_id"] == probe_id
+
+        # 5. Live agent evaluation broadcast (block_commit + evaluation_complete)
+        eval_res = client.post(
+            "/api/v1/evaluate",
+            json={
+                "agent_id": "G7-DeployableCanary",
+                "probe_id": probe_id,
+                "agent_response": "def solve(x): return x",
+                "cycle_number": 1,
+            },
+        )
+        assert eval_res.status_code == 201
+
+        ws_msg1 = ws.receive_json()
+        ws_msg2 = ws.receive_json()
+        msg_types = {ws_msg1["type"], ws_msg2["type"]}
+        assert "block_commit" in msg_types
+        assert "evaluation_complete" in msg_types
+

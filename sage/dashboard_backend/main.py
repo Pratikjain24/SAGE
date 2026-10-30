@@ -17,12 +17,15 @@ from sage.dashboard_backend.api.telemetry import router as telemetry_router
 from sage.dashboard_backend.db.models import init_db
 from sage.dashboard_backend.ingest.watcher import RunWatcher
 from sage_live.api.routes import (
+    health_router,
     probe_router,
     eval_router,
     metrics_router,
     staleness_router,
     attestation_router,
     agent_router,
+    websocket_evaluate,
+    manager,
 )
 
 
@@ -80,19 +83,21 @@ app.include_router(leaderboard_router)
 app.include_router(redteam_router)
 app.include_router(telemetry_router)
 
-# Mount SAGE-Live Dynamic Evaluation Endpoints
+@app.get("/health")
+def health_check():
+    """Liveness probe for container orchestrator."""
+    return {"status": "ok", "service": "sage-dashboard-backend", "version": "1.0.0"}
+
+
+# Mount SAGE-Live Dynamic Evaluation & Real-Time WebSocket Telemetry Endpoints
 app.include_router(probe_router)
 app.include_router(eval_router)
 app.include_router(metrics_router)
 app.include_router(staleness_router)
 app.include_router(attestation_router)
 app.include_router(agent_router)
-
-
-@app.get("/health")
-def health_check():
-    """Liveness probe for container orchestrator."""
-    return {"status": "ok", "service": "sage-dashboard-backend", "version": "1.0.0"}
+app.include_router(health_router)
+app.add_api_websocket_route("/ws/evaluate", websocket_evaluate)
 
 
 @app.post("/admin/sync")
