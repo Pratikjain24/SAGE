@@ -216,6 +216,23 @@ export default async function LeaderboardPage({
           </table>
         </div>
       </div>
+
+      {/* Formal Taxonomy Architecture Callout */}
+      <div className="hud-card p-5 border border-cyan-500/30 bg-cyan-950/10 space-y-3">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="text-cyan-400" size={18} />
+          <h3 className="font-bold text-sm text-cyan-300 font-mono">
+            Formal Taxonomy: G1–G7 Deployable Archetypes &amp; G6* Theoretical Oracle Skyline
+          </h3>
+        </div>
+        <p className="text-xs text-slate-300 leading-relaxed">
+          The SAGE benchmark benchmarks seven active deployable archetypes (<span className="font-mono text-cyan-300 font-bold">G1–G7</span>). 
+          Among defensive configurations, <span className="font-mono text-cyan-300 font-bold">G7 (Deployable Proxy Canary Guard)</span> represents the production-ready standard: it evaluates candidate mutations exclusively on held-out proxy tasks (<code className="text-cyan-200">test_proxy.py</code>) with atomic rollback, halting security drift (<span className="text-emerald-400 font-bold">+0.015</span>) and proxy gaming (<span className="text-cyan-300 font-bold">&le; 0.02</span>).
+        </p>
+        <p className="text-xs text-slate-400 leading-relaxed">
+          In contrast, <span className="font-mono text-pink-400 font-bold">G6* (Oracle Skyline)</span> follows standard asterisk notation (&pi;*, Q*) denoting the academic upper bound (92.0% solve rate, 98% retention) evaluated against sequestered ground truth (<code className="text-pink-300">test_gt.py</code>). Because real-world deployments cannot access future ground-truth unit tests, G7 constitutes the ecologically valid deployable defense.
+        </p>
+      </div>
     </div>
   );
 }

@@ -342,3 +342,4 @@ def get_global_tracer() -> OpenTelemetryAuditTracer:
     if _GLOBAL_TRACER is None:
         _GLOBAL_TRACER = OpenTelemetryAuditTracer()
     return _GLOBAL_TRACER
+

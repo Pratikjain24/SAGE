@@ -70,20 +70,25 @@
 
 ---
 
-## Agent Taxonomy ($G_1$ – $G_6$, $G_6^*$)
+## Agent Taxonomy ($G_1$ – $G_7$, $G_6^*$)
 
-| Group | Name | Mechanism | Evolution Target | Verifier & Rollback |
-|---|---|---|---|---|
-| **$G_1$** | **Static Agent** | Frozen baseline control | None | None |
-| **$G_2$** | **Prompt-Rewriter** | Rewrites system prompt from feedback | System Prompt | None |
-| **$G_3$** | **Memory Accumulator** | Appends & indexes reusable tactics | `memory.json` | None |
-| **$G_4$** | **Reflection Agent** | Analyzes execution failures & patches code/prompts | Prompts + Code | None |
-| **$G_5$** | **Verified Agent** | Wraps mutations with static AST safety gate | Filtered Mutations | Gate rejection |
-| **$G_6$** | **Proxy Canary Guard** | Realistic deployable dynamic verification on held-out tasks (code alias $G_7$) | Validated Mutations | Gate + Rollback (Deployable, 84.4%) |
-| **$G_6^*$** | **Oracle Skyline** | Theoretical upper bound evaluating canary on ground truth | Validated Mutations | Gate + Rollback (Upper Bound, 92.0%) |
+SAGE evaluates seven standardized agent archetypes ($G_1$–$G_7$) alongside the theoretical oracle ceiling ($G_6^*$):
 
-> 💡 **Taxonomy Rationalization & Asterisk Notation**:  
-> $G_1$–$G_6$ define the six primary deployable agent archetypes. The asterisk in $G_6^*$ follows standard mathematical convention ($\pi^*, Q^*$) denoting the idealized theoretical oracle ceiling (gated on sequestered ground truth). In internal development test suites and execution logs, the deployable proxy canary guard was tagged as $G_7$ to distinguish it from the original $G_6^*$ oracle run. In production deployments without ground-truth oracles, deployable $G_6$ ($G_7$) provides the ecologically valid guardrail, attaining 84.4% solve rate while halting security drift (+0.02).
+| Group | Name | Mechanism | Evolution Target | Verifier & Rollback | Empirical Outcome |
+|---|---|---|---|---|---|
+| **$G_1$** | **Static Frozen Baseline** | Frozen control group; ignores evolution feedback | None (Immutable) | None (Scientific Control) | 60.0% Solve, 0.00 Drift, 100% Ret. |
+| **$G_2$** | **Prompt-Rewriter** | Rewrites system prompt from execution failure logs | System Prompt | None (Unconstrained) | 73.0% Solve, +0.22 Drift, 82% Ret. |
+| **$G_3$** | **Memory Accumulator** | Indexes procedural heuristics into structured store | `memory.json` | None (Unconstrained) | 77.2% Solve, +0.15 Drift, 89% Ret. |
+| **$G_4$** | **Reflection Agent** | Multi-tier root-cause analysis; patches prompts & tools | Prompts + Tool Code | None (Unconstrained) | 78.4% Solve, +0.28 Drift, 81% Ret. |
+| **$G_5$** | **Static Verifier Gate** | Filters candidate mutations via AST linting & security rules | Filtered Mutations | Gate rejection (No rollback) | 84.0% Solve, +0.06 Drift, 94% Ret. |
+| **$G_6$** | **Regression-Guarded Verifier** | Evaluates candidate mutations on historical regression suite | Historical Checkpoints | Suite gate + regression rollback | 92.0% Solve, +0.02 Drift, 98% Ret. |
+| **$G_7$** | **Deployable Proxy Canary Guard** | Realistic dynamic verification on held-out proxy tasks (`test_proxy.py`) | Validated State | Canary gate + atomic rollback | 84.4% Solve, +0.02 Drift, 96% Ret. |
+| **$G_6^*$** | **Theoretical Oracle Skyline** | Theoretical upper bound evaluating canary on sequestered ground truth (`test_gt.py`) | Validated State | Oracle gate + atomic rollback | 92.0% Solve, +0.02 Drift, 98% Ret. |
+
+> 💡 **Unified Taxonomy Formalization: Deployable $G_7$ vs. Theoretical Oracle $G_6^*$**:  
+> - **$G_1$–$G_7$ (Deployable Archetypes)**: The 7 operational agent archetypes implemented across the SAGE test harness and UI. Among defensive configurations, **$G_7$ (Deployable Proxy Canary Guard)** is the production-ready standard: it dynamically evaluates candidate mutations against *strictly held-out proxy tasks* (`test_proxy.py`) without accessing hidden ground-truth oracles, triggering sub-second atomic rollback upon canary degradation. It achieves an 84.4% solve rate while suppressing security drift (+0.02) and preventing specification gaming ($\Delta_{\text{proxy}} \le 0.02$).
+> - **$G_6$ (Regression-Guarded Verifier)**: Gates mutations against fixed historical regression suites, guarding against regressions on already-solved tasks without dynamic held-out canary synthesis.
+> - **$G_6^*$ (Theoretical Oracle Skyline)**: An academic upper bound denoted with standard mathematical asterisk notation ($\pi^*, Q^*$). It evaluates canaries against sequestered ground-truth unit tests (`test_gt.py`), establishing the theoretical performance ceiling (92.0% solve rate, 98% retention). Because future ground-truth tests are unavailable in production, $G_6^*$ is non-deployable, while $G_7$ represents the ecologically valid deployable standard.
 
 ---
 

@@ -43,7 +43,10 @@ To address reviewer requirements regarding platform consistency and containerize
 | **G4** | Reflection Agent | **0.78** | 0.78 | **+0.28** | +0.28 | **0.11** | 0.11 | **81%** | 81% | **0.0%** | 96.4% | 2.05s | 1.82s |
 | **G5** | Static Verifier | **0.84** | 0.84 | **+0.06** | +0.06 | **0.00** | 0.00 | **94%** | 94% | **0.0%** | 99.2% | 1.88s | 1.70s |
 | **G6** | Regression Guard | **0.92** | 0.92 | **+0.02** | +0.02 | **0.00** | 0.00 | **98%** | 98% | **0.0%** | 100.0% | 2.14s | 1.95s |
-| **Mean** | *Platform Summary* | **0.77** | 0.77 | **+0.12** | +0.12 | **0.04** | 0.04 | **91%** | 91% | **0.0%** | **98.9%** | **1.94s** | **1.75s** |
+| **G7** | Deployable Canary Guard | **0.84** | 0.84 | **+0.02** | +0.02 | **0.02** | 0.02 | **96%** | 96% | **0.0%** | 100.0% | 2.08s | 1.91s |
+| **Mean** | *Platform Summary* | **0.78** | 0.78 | **+0.11** | +0.11 | **0.04** | 0.04 | **91%** | 91% | **0.0%** | **99.1%** | **1.96s** | **1.78s** |
+
+> 💡 **Taxonomy Formalization Note**: $G_1$–$G_7$ are the deployable agent archetypes. $G_7$ is the deployable proxy canary guard with atomic rollback on held-out tasks (retaining 96% capability and keeping drift $\le +0.02$). Meanwhile, $G_6^*$ represents the theoretical oracle skyline using sequestered ground truth to establish the theoretical upper bound ($92.0\%$ solve rate, $98\%$ retention).
 
 ### Key Platform Takeaways
 1. **Algorithmic Parity ($\Delta = 0.00$)**: Capability, drift, proxy gap, and retention are identical across platforms, confirming evaluation oracles are platform-invariant.

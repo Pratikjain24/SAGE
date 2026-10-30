@@ -39,3 +39,4 @@ def get_telemetry_span(span_id: str):
             return spans[-1].model_dump()
         raise HTTPException(status_code=404, detail=f"Span '{span_id}' not found.")
     return span.model_dump()
+

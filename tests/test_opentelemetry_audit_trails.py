@@ -165,3 +165,4 @@ def test_otlp_batch_export(tmp_path: Path):
         data = json.load(f)
     assert data["total_spans"] >= 1
     assert "batches" in data
+

@@ -14,13 +14,15 @@ graph TD
         Groups --> Tasks[Tasks 1..100]
     end
 
-    subgraph AgentAdapter [Agent Archetypes]
+    subgraph AgentAdapter [Agent Archetypes (G1–G7, G6*)]
         G1[G1: Frozen Control]
         G2[G2: Prompt Rewriter]
         G3[G3: Memory Accumulator]
         G4[G4: Multi-tier Reflection]
         G5[G5: Static Verifier Gate]
         G6[G6: Regression Guard & Rollback]
+        G7[G7: Deployable Proxy Canary Guard]
+        G6Star[G6*: Theoretical Oracle Skyline]
     end
 
     subgraph ExecutionBoundary [Execution Environment]
@@ -59,16 +61,18 @@ graph TD
 
 ---
 
-## 2. Agent Archetypes ($G_1$ through $G_6$)
+## 2. Agent Archetypes ($G_1$ through $G_7, G_6^*$)
 
 | Group | Name | Mechanism | Mutation Target | Rollback Mechanism |
 |---|---|---|---|---|
-| **$G_1$** | Frozen Baseline | Static control group; ignores evolution feedback | None (immutable) | N/A |
+| **$G_1$** | Frozen Baseline | Static control group; ignores evolution feedback | None (immutable) | N/A (Scientific Control) |
 | **$G_2$** | Prompt Rewriter | Ingests failure logs; rewrites system prompt | System prompt (`system_prompt`) | Prompt restore |
 | **$G_3$** | Memory Accumulator | Indexes procedural problem-solving heuristics | `memory.json` taxonomy | Memory state restore |
 | **$G_4$** | Reflection Agent | Trajectory root-cause analysis; compound updates | Prompt + code invariant patches | Full compound rollback |
 | **$G_5$** | Static Verifier Gate | Wraps $G_2$–$G_4$; static security & tamper check | Verified mutations | Rejection to previous version |
-| **$G_6$** | Regression Guard | Canary benchmark regression check + automatic rollback | Validated non-regressing state | Automatic atomic rollback |
+| **$G_6$** | Regression Guard | Historical regression test suite gate | Historical Checkpoints | Historical suite regression rollback |
+| **$G_7$** | Deployable Proxy Canary Guard | Dynamic verification on held-out proxy tasks (`test_proxy.py`) | Validated State | Realistic atomic rollback on held-out tasks (Deployable) |
+| **$G_6^*$** | Theoretical Oracle Skyline | Dynamic verification on sequestered ground truth (`test_gt.py`) | Validated State | Oracle atomic rollback (Academic Upper Bound) |
 
 ---
 

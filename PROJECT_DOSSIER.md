@@ -147,11 +147,14 @@ SAGE models standardized agent archetypes representing the spectrum of autonomou
 | **$G_3$** | **Memory Accumulator** | `memory.json` | Extracts procedural heuristics into categorized key-value memory store. | None (Unconstrained) |
 | **$G_4$** | **Reflection Agent** | Prompt + Code | Performs multi-tier root cause analysis; proposes compound prompt and tool code patches. | None (Unconstrained) |
 | **$G_5$** | **Static Verifier Gate** | Verified Mutations | Intercepts mutations from $G_2$–$G_4$; rejects mutations containing forbidden commands, protected file modifications, or malformed syntax. | Static gate rejection |
-| **$G_7$** | **Proxy Canary Guard (Deployable)** | Validated State | Realistic dynamic verification evaluating candidate mutations exclusively on strictly held-out historical proxy tasks (`test_proxy.py`). | Realistic automatic rollback on held-out tasks |
-| **$G_6^*$** | **Oracle Skyline (Upper Bound)** | Validated State | Theoretical upper bound evaluating candidate mutations against sequestered ground truth (`test_gt.py`). | Oracle atomic rollback (Upper Skyline) |
+| **$G_6$** | **Regression-Guarded Verifier** | Historical Checkpoints | Evaluates candidate mutations against historical regression test suites before committing. | Suite gate + historical regression rollback |
+| **$G_7$** | **Proxy Canary Guard (Deployable)** | Validated State | Realistic dynamic verification evaluating candidate mutations exclusively on strictly held-out historical proxy tasks (`test_proxy.py`). | Realistic automatic rollback on held-out tasks (Deployable, 84.4%) |
+| **$G_6^*$** | **Oracle Skyline (Upper Bound)** | Validated State | Theoretical upper bound evaluating candidate mutations against sequestered ground truth (`test_gt.py`). | Oracle atomic rollback (Theoretical Upper Skyline, 92.0%) |
 
-> ⚠️ **Critical Architectural Distinction (Oracle vs. Deployable Canary)**:  
-> $G_6^*$ serves as an **idealized upper skyline (Oracle Canary)** establishing the theoretical performance ceiling ($92.0\%$) of regression gating using sequestered ground truth. In contrast, $G_7$ represents the **realistic deployable proxy canary** ($84.4\%$) that evaluates candidate mutations strictly on held-out tasks using only visible validation proxies that an autonomous agent could actually execute in production deployments.
+> ⚠️ **Formal Distinction: Deployable $G_7$, Regression Guard $G_6$, and Oracle Skyline $G_6^*$**:  
+> - **$G_7$ (Deployable Proxy Canary Guard)**: Represents the **realistic, deployable defense** ($84.4\%$ solve rate, $+0.02$ drift, $96.0\%$ retention). In production, an agent does not have access to an omniscient ground-truth oracle for novel tasks. $G_7$ evaluates candidate mutations strictly on held-out proxy tasks using only visible validation proxies, enforcing sub-second atomic state rollback when canary performance regresses.
+> - **$G_6$ (Regression-Guarded Verifier)**: Represents the traditional software engineering regression suite approach, testing candidate mutations against historical test suites to prevent regressions on solved problems.
+> - **$G_6^*$ (Theoretical Oracle Skyline)**: Denoted with standard mathematical asterisk notation ($\pi^*, Q^*$), $G_6^*$ establishes the **idealized theoretical performance ceiling** ($92.0\%$ solve rate, $98.0\%$ retention) by gating canaries against sequestered ground-truth tests (`test_gt.py`). Because sequestered ground-truth oracles are non-deployable in open-ended production environments, $G_7$ serves as the ecologically valid real-world guardrail.
 
 ---
 

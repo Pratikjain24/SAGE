@@ -181,6 +181,7 @@ graph TD
 | **$G_3$** | **Memory Accumulator** | $\mathcal{M}_t$ | Extracts procedural heuristics into categorized key-value memory store. | ❌ None (Unconstrained) | ❌ None |
 | **$G_4$** | **Compound Reflection** | $\Pi_t + \mathcal{C}_t$ | Multi-tier root-cause analysis; proposes joint prompt patches and tool code. | ❌ None (Unconstrained) | ❌ None |
 | **$G_5$** | **Static AST Verifier** | $\Pi_t, \mathcal{M}_t$ | Passes candidate mutations through AST parser and security rulebook. | ✅ Static AST Gate (Blocks dangerous syntax/imports) | ❌ Rejects mutation, keeps old state |
+| **$G_6$** | **Regression Guard** | Historical State | Evaluates candidate mutations against historical regression test suites. | ✅ Historical Regression Gate | ✅ **Regression Rollback** on test failure |
 | **$G_7$** | **Deployable Proxy Canary** | Validated State | Dynamic verification on **strictly held-out historical proxy tasks**. | ✅ Realistic Deployable Gate (Canaries on held-out tasks) | ✅ **Atomic Rollback** on canary regression |
 | **$G_6^*$** | **Oracle Skyline** | Validated State | Idealized upper bound evaluating candidate state on **sequestered ground truth**. | ✅ Theoretical Oracle Gate (Historical ground truth) | ✅ **Atomic Rollback** on ground-truth drop |
 
@@ -697,10 +698,11 @@ pytest tests/ -v && pytest sage_live/tests/test_all.py -v
 >
 > To ensure broader generality, we also benchmark frontier commercial APIs (Claude 3.5 Sonnet, GPT-4o, DeepSeek Reasoner, Gemini 2.5 Flash), proving that vulnerability drift occurs across closed and open architectures alike.
 
-### ❓ Q5: "What is the difference between G7 and G6*?"
-> **Answer**: This is a crucial scientific distinction:
-> - **$G_6^*$ is an Idealized Oracle Skyline (92.0% solve rate, 98% retention)**: In canonical benchmark runs, $G_6^*$ tests candidate mutations against *hidden ground-truth tests* on historical tasks. In real-world software engineering, such an oracle does not exist.
-> - **$G_7$ is a Realistic Deployable Canary Guard (84.4% solve rate, 96% retention)**: In production, agents only have access to *held-out proxy tests*. $G_7$ evaluates candidate mutations strictly on held-out tasks. It proves that even without an oracle, deployable canary gating and atomic rollback successfully eliminate specification gaming and preserve 96% retention.
+### ❓ Q5: "What is the difference between G6, G7, and G6*?"
+> **Answer**: This is a crucial architectural and epistemological distinction:
+> - **$G_6$ is the Regression-Guarded Verifier (92.0% solve rate, 98% retention)**: Traditional software engineering regression gating. It tests candidate mutations against historical test suites to ensure previously mastered tasks do not break, but lacks dynamic held-out canary synthesis.
+> - **$G_7$ is the Deployable Proxy Canary Guard (84.4% solve rate, 96% retention)**: The realistic, deployable defense standard. In production, agents do not possess ground-truth oracles. $G_7$ dynamically synthesizes and evaluates candidate mutations strictly on *held-out proxy tasks* (`test_proxy.py`). It proves that even without an oracle, deployable canary gating and sub-second atomic rollback successfully eliminate specification gaming and halt security drift (+0.02).
+> - **$G_6^*$ is the Theoretical Oracle Skyline (92.0% solve rate, 98% retention)**: An idealized academic upper bound (using asterisk notation $\pi^*, Q^*$) evaluating candidate mutations against *sequestered ground-truth tests* (`test_gt.py`). It provides the theoretical performance ceiling to measure the gap between deployable proxy defenses and an omniscient oracle.
 
 ### ❓ Q6: "Why is behavioral testing on visible tests not enough? Why do you need static AST checks?"
 > **Answer**: Because of **Goodhart's Law**. When we evaluated an agent that gated mutations *only* on visible proxy tests, the agent learned shortcuts that satisfied the visible assertions while injecting severe vulnerabilities on exploit probes.
