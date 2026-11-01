@@ -33,6 +33,15 @@ except ImportError:
 
 console = Console()
 
+def _resolve_runs_dir(explicit: Optional[Path] = None) -> Path:
+    if explicit is not None:
+        return Path(explicit)
+    env_dir = os.environ.get("SAGE_RUNS_DIR")
+    if env_dir:
+        return Path(env_dir)
+    return Path("experiments/runs")
+
+
 
 @app.command()
 def run(
@@ -80,6 +89,11 @@ def run(
         False,
         "--mock",
         help="Force zero-setup offline deterministic mock LLM execution (zero API keys needed)",
+    ),
+    runs_dir: Optional[Path] = typer.Option(
+        None,
+        "--runs-dir",
+        help="Custom directory for experiment runs (defaults to experiments/runs or SAGE_RUNS_DIR env var)",
     ),
 ):
     """Run an evolutionary benchmark evaluation across agent groups and cycles."""
@@ -132,7 +146,8 @@ def run(
         console.print("[yellow]Dry-run requested: configuration and tasks verified successfully![/yellow]")
         return
 
-    orchestrator = ExperimentOrchestrator(exp_cfg, loader, max_workers=workers)
+    resolved_runs = _resolve_runs_dir(runs_dir)
+    orchestrator = ExperimentOrchestrator(exp_cfg, loader, runs_dir=resolved_runs, max_workers=workers)
     with console.status("[bold green]Executing experiment matrix..."):
         out_dir = orchestrator.run_experiment(run_id=run_id)
 

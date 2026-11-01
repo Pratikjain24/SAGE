@@ -68,7 +68,7 @@ class ExperimentOrchestrator:
     ):
         self.config = config
         self.task_loader = task_loader
-        self.runs_dir = Path(runs_dir or Path("experiments/runs"))
+        self.runs_dir = Path(runs_dir or os.environ.get("SAGE_RUNS_DIR") or Path("experiments/runs"))
         self.runs_dir.mkdir(parents=True, exist_ok=True)
         self.max_retries = max_retries
         self.retry_backoff = retry_backoff
@@ -550,6 +550,13 @@ class ExperimentOrchestrator:
         completed_tasks, task_end_results, completed_evolution_cycles, _ = (
             self._scan_existing_trajectory(writer_path)
         )
+        if completed_tasks and self.verbose:
+            print(
+                f"\n[RECOVERY] Resuming run '{run_name}': detected {len(completed_tasks)} completed task(s) "
+                f"across {len(completed_evolution_cycles)} completed evolution cycle(s).\n"
+                f"           Skipping already evaluated steps and resuming execution...",
+                flush=True,
+            )
 
         writer = TrajectoryWriter(writer_path)
 
@@ -632,7 +639,7 @@ class ExperimentOrchestrator:
                         if all_tasks_cached and cycle_already_evolved:
                             if self.verbose:
                                 print(
-                                    f"    Cycle {cycle + 1} already completed in previous run. Replaying cached metrics.",
+                                    f"    [SKIP] Cycle {cycle + 1} already 100% completed in previous run. Replaying cached metrics.",
                                     flush=True,
                                 )
                             # Replay cached task results for metrics calculation
@@ -682,6 +689,13 @@ class ExperimentOrchestrator:
                                 tasks_to_run_now.append(task)
 
                         if tasks_to_run_now:
+                            if self.verbose and len(tasks_to_run_now) < len(active_cycle_tasks):
+                                skipped_cnt = len(active_cycle_tasks) - len(tasks_to_run_now)
+                                print(
+                                    f"    [RESUME] Cycle {cycle + 1}: Skipping {skipped_cnt} already-completed task(s). "
+                                    f"Executing remaining {len(tasks_to_run_now)} task(s)...",
+                                    flush=True,
+                                )
                             if self.max_workers > 1 and len(tasks_to_run_now) > 1:
                                 with concurrent.futures.ThreadPoolExecutor(
                                     max_workers=min(self.max_workers, len(tasks_to_run_now))

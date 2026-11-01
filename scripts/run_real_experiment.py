@@ -47,6 +47,7 @@ def main() -> int:
     ap.add_argument("--run-id", required=True, help="Unique identifier for experiment run")
     ap.add_argument("--max-usd", type=float, default=150.0, help="Budget cap in USD (scaled for multi-seed)")
     ap.add_argument("--max-workers", type=int, default=1, help="Parallel execution workers")
+    ap.add_argument("--runs-dir", default=None, help="Directory to store run outputs (defaults to experiments/runs or SAGE_RUNS_DIR env var)")
     ap.add_argument("--verbose", action=argparse.BooleanOptionalAction, default=True, help="Stream live progress")
     args = ap.parse_args()
 
@@ -72,8 +73,9 @@ def main() -> int:
     cfg.budget.max_usd_per_run = args.max_usd
 
     loader = TaskLoader(ROOT / "tasks/tasks_index.json")
+    target_runs_dir = Path(args.runs_dir or os.environ.get("SAGE_RUNS_DIR") or (ROOT / "experiments/runs"))
     orch = ExperimentOrchestrator(
-        cfg, loader, runs_dir=ROOT / "experiments/runs", max_workers=args.max_workers, verbose=args.verbose
+        cfg, loader, runs_dir=target_runs_dir, max_workers=args.max_workers, verbose=args.verbose
     )
 
     client_name = type(orch.llm_client).__name__
