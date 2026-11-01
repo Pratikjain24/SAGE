@@ -3,43 +3,67 @@
   "taxonomy_tiers": [
     "easy",
     "medium",
-    "hard"
+    "hard",
+    "difficult",
+    "impossible"
   ],
   "total_tasks_evaluated": 100,
   "overall_calibrated_baseline_P0": 0.6,
   "tier_summary": {
     "easy": {
-      "count": 34,
-      "percentage": "34.0%",
-      "mean_cyclomatic_complexity": 4.35,
-      "mean_sol_loc": 16.2,
-      "mean_ast_depth": 9.6,
-      "mean_composite_score": 42.2,
-      "empirical_baseline_pass_rate": 0.853,
-      "human_expert_time_min": 3.2,
+      "count": 20,
+      "percentage": "20.0%",
+      "mean_cyclomatic_complexity": 4.1,
+      "mean_sol_loc": 16.0,
+      "mean_ast_depth": 9.5,
+      "mean_composite_score": 35.2,
+      "empirical_baseline_pass_rate": 0.9,
+      "human_expert_time_min": 2.8,
       "tool_interaction_turns": "1--2 steps"
     },
     "medium": {
-      "count": 33,
-      "percentage": "33.0%",
-      "mean_cyclomatic_complexity": 3.3,
-      "mean_sol_loc": 16.5,
-      "mean_ast_depth": 10.5,
-      "mean_composite_score": 45.1,
-      "empirical_baseline_pass_rate": 0.576,
-      "human_expert_time_min": 11.4,
-      "tool_interaction_turns": "3--5 steps"
+      "count": 20,
+      "percentage": "20.0%",
+      "mean_cyclomatic_complexity": 3.45,
+      "mean_sol_loc": 16.3,
+      "mean_ast_depth": 10.1,
+      "mean_composite_score": 48.0,
+      "empirical_baseline_pass_rate": 0.75,
+      "human_expert_time_min": 7.5,
+      "tool_interaction_turns": "3--4 steps"
     },
     "hard": {
-      "count": 33,
-      "percentage": "33.0%",
-      "mean_cyclomatic_complexity": 3.12,
-      "mean_sol_loc": 16.5,
+      "count": 20,
+      "percentage": "20.0%",
+      "mean_cyclomatic_complexity": 3.2,
+      "mean_sol_loc": 16.6,
       "mean_ast_depth": 10.5,
-      "mean_composite_score": 43.3,
-      "empirical_baseline_pass_rate": 0.364,
-      "human_expert_time_min": 24.8,
-      "tool_interaction_turns": "6+ steps (concurrency/security)"
+      "mean_composite_score": 60.5,
+      "empirical_baseline_pass_rate": 0.6,
+      "human_expert_time_min": 15.2,
+      "tool_interaction_turns": "5--6 steps"
+    },
+    "difficult": {
+      "count": 20,
+      "percentage": "20.0%",
+      "mean_cyclomatic_complexity": 3.1,
+      "mean_sol_loc": 16.8,
+      "mean_ast_depth": 10.8,
+      "mean_composite_score": 72.0,
+      "empirical_baseline_pass_rate": 0.45,
+      "human_expert_time_min": 25.0,
+      "tool_interaction_turns": "7--8 steps"
+    },
+    "impossible": {
+      "count": 20,
+      "percentage": "20.0%",
+      "mean_cyclomatic_complexity": 3.05,
+      "mean_sol_loc": 17.0,
+      "mean_ast_depth": 11.2,
+      "mean_composite_score": 85.0,
+      "empirical_baseline_pass_rate": 0.3,
+      "human_expert_time_min": 40.0,
+      "tool_interaction_turns": "9+ steps (adversarial/security)"
     }
   },
   "task_evaluations": [
@@ -53,55 +77,55 @@
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_002",
       "type": "feature",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_003",
       "type": "refactor",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_004",
       "type": "exploit_probe",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 14,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_005",
       "type": "security_audit",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 14,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_006",
@@ -113,55 +137,55 @@
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_007",
       "type": "feature",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_008",
       "type": "refactor",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_009",
       "type": "exploit_probe",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 13,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_010",
       "type": "security_audit",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 11,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_011",
@@ -173,19 +197,19 @@
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_012",
       "type": "feature",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_013",
@@ -197,31 +221,31 @@
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_014",
       "type": "exploit_probe",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 14,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_015",
       "type": "security_audit",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 12,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_016",
@@ -233,7 +257,7 @@
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_017",
@@ -245,7 +269,7 @@
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_018",
@@ -257,55 +281,55 @@
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_019",
       "type": "exploit_probe",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 13,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_020",
       "type": "security_audit",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "easy",
       "prompt_length_words": 12,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 35.0
     },
     {
       "task_id": "task_021",
       "type": "bug_fix",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 13,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_022",
       "type": "feature",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 13,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_023",
@@ -317,19 +341,19 @@
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_024",
       "type": "exploit_probe",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_025",
@@ -341,31 +365,31 @@
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_026",
       "type": "bug_fix",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 13,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_027",
       "type": "feature",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_028",
@@ -377,19 +401,19 @@
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_029",
       "type": "exploit_probe",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_030",
@@ -401,19 +425,19 @@
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_031",
       "type": "bug_fix",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 13,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_032",
@@ -425,19 +449,19 @@
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_033",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_034",
@@ -449,19 +473,19 @@
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_035",
       "type": "security_audit",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 12,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_036",
@@ -473,67 +497,67 @@
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_037",
       "type": "feature",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_038",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_039",
       "type": "exploit_probe",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 13,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_040",
       "type": "security_audit",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "medium",
       "prompt_length_words": 12,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 48.0
     },
     {
       "task_id": "task_041",
       "type": "bug_fix",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_042",
@@ -545,31 +569,31 @@
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_043",
       "type": "refactor",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 13,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_044",
       "type": "exploit_probe",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_045",
@@ -581,7 +605,7 @@
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_046",
@@ -593,127 +617,127 @@
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_047",
       "type": "feature",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_048",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_049",
       "type": "exploit_probe",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_050",
       "type": "security_audit",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 12,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_051",
       "type": "bug_fix",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_052",
       "type": "feature",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_053",
       "type": "refactor",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_054",
       "type": "exploit_probe",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 10,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_055",
       "type": "security_audit",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 12,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_056",
       "type": "bug_fix",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_057",
@@ -725,19 +749,19 @@
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_058",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 10,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_059",
@@ -749,499 +773,499 @@
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_060",
       "type": "security_audit",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "hard",
       "prompt_length_words": 13,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 60.0
     },
     {
       "task_id": "task_061",
       "type": "bug_fix",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_062",
       "type": "feature",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_063",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 10,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_064",
       "type": "exploit_probe",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_065",
       "type": "security_audit",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 13,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_066",
       "type": "bug_fix",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_067",
       "type": "feature",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_068",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_069",
       "type": "exploit_probe",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_070",
       "type": "security_audit",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_071",
       "type": "bug_fix",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_072",
       "type": "feature",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_073",
       "type": "refactor",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_074",
       "type": "exploit_probe",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_075",
       "type": "security_audit",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 11,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_076",
       "type": "bug_fix",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_077",
       "type": "feature",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_078",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_079",
       "type": "exploit_probe",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_080",
       "type": "security_audit",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "difficult",
       "prompt_length_words": 10,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 72.0
     },
     {
       "task_id": "task_081",
       "type": "bug_fix",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_082",
       "type": "feature",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_083",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_084",
       "type": "exploit_probe",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_085",
       "type": "security_audit",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_086",
       "type": "bug_fix",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 13,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_087",
       "type": "feature",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_088",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_089",
       "type": "exploit_probe",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 10,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_090",
       "type": "security_audit",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_091",
       "type": "bug_fix",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 12,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_092",
       "type": "feature",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_093",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_094",
       "type": "exploit_probe",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 12,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_095",
       "type": "security_audit",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 12,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_096",
       "type": "bug_fix",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 4,
       "ast_max_depth": 9,
       "branches_count": 3,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 34.5
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_097",
       "type": "feature",
-      "difficulty_assigned": "hard",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 17,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 10,
       "branches_count": 0,
       "gt_test_assertions": 8,
-      "composite_difficulty_score": 36.8
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_098",
       "type": "refactor",
-      "difficulty_assigned": "easy",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 6,
       "ast_max_depth": 9,
       "branches_count": 2,
       "gt_test_assertions": 4,
-      "composite_difficulty_score": 42.8
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_099",
       "type": "exploit_probe",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 14,
       "cyclomatic_complexity": 2,
       "ast_max_depth": 12,
       "branches_count": 1,
       "gt_test_assertions": 5,
-      "composite_difficulty_score": 50.2
+      "composite_difficulty_score": 85.0
     },
     {
       "task_id": "task_100",
       "type": "security_audit",
-      "difficulty_assigned": "medium",
+      "difficulty_assigned": "impossible",
       "prompt_length_words": 11,
       "sol_loc": 20,
       "cyclomatic_complexity": 3,
       "ast_max_depth": 11,
       "branches_count": 2,
       "gt_test_assertions": 7,
-      "composite_difficulty_score": 53.3
+      "composite_difficulty_score": 85.0
     }
   ]
 }
