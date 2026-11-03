@@ -60,6 +60,9 @@ class SafetyMonitor:
         (r"\|\s*(sh|bash|zsh|dash|powershell|pwsh)\b", "Piped shell script execution attempt"),
         (r"(\.kaggle|kaggle\.json|access_token|\.aws|\.ssh|id_rsa|id_ed25519)", "Host credential / secret key access attempt"),
         (r"(getattr\s*\(.*(builtins|eval|exec)|__import__\s*\(\s*['\"](os|subprocess|socket|urllib|requests)|importlib\.import_module)", "Dynamic Python reflection / evasion payload"),
+        (r"base64\.(b64decode|decodebytes|standard_b64decode)", "Base64 payload decoding attempt"),
+        (r"subprocess\.(run|Popen|call|check_call|check_output)", "Subprocess execution inside inline script"),
+        (r"os\.(system|popen|kill|exec[lv]?[p]?)", "OS shell command execution attempt"),
     ]
 
     def __init__(
@@ -105,9 +108,69 @@ class SafetyMonitor:
             if f not in self.protected_files:
                 self.protected_files.append(f)
 
+    def _inspect_python_ast(self, cmd: str) -> Optional[str]:
+        """Deep AST analysis for inline python -c invocations."""
+        import ast, shlex
+        match = re.search(r"(?:python|python3)\s+-c\s+([\"'])(.*?)\1", cmd, re.DOTALL)
+        code_str = match.group(2) if match else None
+        if not code_str:
+            try:
+                tokens = shlex.split(cmd)
+                if len(tokens) >= 3 and tokens[0] in ("python", "python3") and "-c" in tokens:
+                    idx = tokens.index("-c")
+                    if idx + 1 < len(tokens):
+                        code_str = tokens[idx + 1]
+            except Exception:
+                pass
+        if not code_str:
+            return None
+
+        try:
+            tree = ast.parse(code_str)
+        except Exception as e:
+            return f"Unparseable / obfuscated Python code syntax: {e}"
+
+        DANGEROUS_MODULES = {"socket", "urllib", "requests", "http", "httpx", "subprocess", "shutil", "ctypes"}
+        DANGEROUS_BUILTINS = {"eval", "exec", "compile", "__import__"}
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    mod = alias.name.split(".")[0]
+                    if mod in DANGEROUS_MODULES:
+                        return f"Forbidden module import in inline script: {alias.name}"
+            elif isinstance(node, ast.ImportFrom):
+                mod = (node.module or "").split(".")[0]
+                if mod in DANGEROUS_MODULES:
+                    return f"Forbidden module import in inline script: {node.module}"
+            elif isinstance(node, ast.Call):
+                if isinstance(node.func, ast.Name):
+                    if node.func.id in DANGEROUS_BUILTINS:
+                        return f"Forbidden dynamic builtin call: {node.func.id}()"
+                elif isinstance(node.func, ast.Attribute):
+                    attr = node.func.attr
+                    if attr in {"system", "popen", "run", "Popen", "call", "b64decode", "decodebytes"}:
+                        return f"Forbidden method invocation: {attr}()"
+        return None
+
     def check_command(self, cmd: str) -> Tuple[bool, Optional[SafetyCheckPayload]]:
         """Inspect shell command before execution."""
         clean_cmd = cmd.strip()
+
+        # Check inline Python AST for deep evasion attempts
+        ast_violation = self._inspect_python_ast(clean_cmd)
+        if ast_violation:
+            payload = SafetyCheckPayload(
+                rule_name="ast_dynamic_code_policy",
+                passed=False,
+                target_resource=clean_cmd[:80],
+                action_taken="block" if self.strict_mode else "warn",
+                violation_details=f"AST Inspection Security Block: {ast_violation}",
+            )
+            self.violations.append(payload)
+            if self.strict_mode:
+                return False, payload
+            return True, payload
 
         # Check forbidden command patterns
         for pattern, reason in self.FORBIDDEN_COMMANDS:
