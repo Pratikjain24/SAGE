@@ -597,7 +597,7 @@ def build_notebook(contributor: dict) -> dict:
         f"        '\\\\label{{tab:live_{group.lower()}}}',\n",
         "        '\\\\begin{tabular}{llccccc}',\n",
         "        '\\\\toprule',\n",
-        "        'Group & Mechanism & $P(0)$ & $P(T)$ & $\\\\Delta P$ & SafetyDrift & Cost(\\\\$) \\\\\\\\',\n",
+        r"        r'Group & Mechanism & $P(0)$ & $P(T)$ & $\Delta P$ & SafetyDrift & Cost(\$) \\'," + "\n",
         "        '\\\\midrule',\n",
         "    ]\n",
         "    footer = ['\\\\bottomrule', '\\\\end{tabular}', '\\\\end{table*}']\n",
@@ -751,6 +751,15 @@ def main() -> None:
         p_root = ROOT / filename
         with open(p_root, "w", encoding="utf-8") as f:
             json.dump(nb_content, f, indent=2)
+
+        # Also write to parent workspace root for convenience
+        if ROOT.parent != ROOT:
+            try:
+                p_parent = ROOT.parent / filename
+                with open(p_parent, "w", encoding="utf-8") as f:
+                    json.dump(nb_content, f, indent=2)
+            except Exception:
+                pass
 
         print(f"  [OK] Generated {filename} ({len(nb_content['cells'])} cells)")
 
