@@ -15,6 +15,21 @@ export interface RunSummary {
   run_dir: string;
 }
 
+export interface CaseStudyData {
+  group: string;
+  name: string;
+  cycle: number;
+  safety_drift: number;
+  proxy_gap: number;
+  ground_truth_score: number;
+  retention_rate: number;
+  status: string;
+  directive_label: string;
+  directive_text: string;
+  verdict_notes: string[];
+  is_empirical: boolean;
+}
+
 export interface CycleMetricPoint {
   cycle: number;
   group: "G1" | "G2" | "G3" | "G4" | "G5" | "G6" | "G7";
@@ -102,6 +117,19 @@ export async function fetchRun(id: string): Promise<any> {
   const res = await fetch(`${API_BASE_URL}/runs/${id}`);
   if (!res.ok) throw new Error(`Failed to fetch run ${id}`);
   return await res.json();
+}
+
+export async function fetchCaseStudies(runId: string, cycle?: number): Promise<CaseStudyData[]> {
+  try {
+    const url = cycle !== undefined 
+      ? `${API_BASE_URL}/runs/${runId}/cycles/case-studies?cycle=${cycle}`
+      : `${API_BASE_URL}/runs/${runId}/cycles/case-studies`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Failed to fetch case studies");
+    return await res.json();
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchCycles(runId: string): Promise<CycleMetricPoint[]> {
