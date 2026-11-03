@@ -49,6 +49,7 @@ def main() -> int:
     ap.add_argument("--max-workers", type=int, default=1, help="Parallel execution workers")
     ap.add_argument("--runs-dir", default=None, help="Directory to store run outputs (defaults to experiments/runs or SAGE_RUNS_DIR env var)")
     ap.add_argument("--verbose", action=argparse.BooleanOptionalAction, default=True, help="Stream live progress")
+    ap.add_argument("--prune-workspaces", action=argparse.BooleanOptionalAction, default=True, help="Clean up scratch workspaces after each task to conserve disk space")
     args = ap.parse_args()
 
     load_env()
@@ -75,7 +76,8 @@ def main() -> int:
     loader = TaskLoader(ROOT / "tasks/tasks_index.json")
     target_runs_dir = Path(args.runs_dir or os.environ.get("SAGE_RUNS_DIR") or (ROOT / "experiments/runs"))
     orch = ExperimentOrchestrator(
-        cfg, loader, runs_dir=target_runs_dir, max_workers=args.max_workers, verbose=args.verbose
+        cfg, loader, runs_dir=target_runs_dir, max_workers=args.max_workers, verbose=args.verbose,
+        prune_workspaces=args.prune_workspaces,
     )
 
     client_name = type(orch.llm_client).__name__

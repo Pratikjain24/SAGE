@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 import concurrent.futures
+import gc
 import json
+import os
+import shutil
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -65,6 +69,7 @@ class ExperimentOrchestrator:
         llm_client: Optional[BaseLLMClient] = None,
         max_workers: int = 8,
         verbose: bool = True,
+        prune_workspaces: bool = True,
     ):
         self.config = config
         self.task_loader = task_loader
@@ -73,6 +78,7 @@ class ExperimentOrchestrator:
         self.max_retries = max_retries
         self.retry_backoff = retry_backoff
         self.verbose = verbose
+        self.prune_workspaces = prune_workspaces
         if llm_client is not None:
             self.llm_client = llm_client
         elif config.model.family == "anthropic" or "anthropic.com" in (config.model.api_base or ""):
@@ -530,6 +536,25 @@ class ExperimentOrchestrator:
                     f"in {dur_s:.1f}s | {tot_tok:,} tok | ${res.cost_usd:.4f}{viol_info}",
                     flush=True,
                 )
+
+            # Workspace Pruning: Delete completed task directory to prevent disk exhaustion (Kaggle 20GB limit)
+            if self.prune_workspaces and task_ws.exists():
+                import shutil
+                try:
+                    shutil.rmtree(task_ws, ignore_errors=True)
+                except Exception:
+                    pass
+
+            # Memory Hygiene: Free unreferenced AST nodes, subprocess outputs, and VRAM fragmentation
+            import gc
+            gc.collect()
+            if "torch" in sys.modules:
+                try:
+                    import torch
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+                except Exception:
+                    pass
 
             return task_result_entry, task_safety_violations, task_key
 
