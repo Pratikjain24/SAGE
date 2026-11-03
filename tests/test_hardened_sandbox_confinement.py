@@ -90,18 +90,24 @@ def test_verifier_ast_reflection_evasion_rejected():
     verifier = EvolutionVerifier()
 
     evasion_proposals = [
-        {"prompt_addon": "getattr(__builtins__, 'exec')('malicious code')"},
-        {"prompt_addon": "__builtins__['eval']('payload')"},
-        {"prompt_addon": "importlib.import_module('os').system('cat /etc/passwd')"},
-        {"prompt_addon": "__import__('subprocess').run('rm -rf /', shell=True)"},
-        {"prompt_addon": "code = compile('print(1)', '', 'exec')"},
+        # 1. User reported exploit: concatenated getattr
+        {"prompt_mutation": "getattr(__builtins__, 'ex' + 'ec')(\"import os; os.system('malicious_payload')\")"},
+        # 2. User reported exploit: __import__ + importlib
+        {"prompt_mutation": "__import__('importlib').import_module('os').system('...')"},
+        # 3. Gadget chain: dunder subclasses traversal
+        {"prompt_mutation": "().__class__.__base__.__subclasses__()[137]"},
+        # 4. Builtins dictionary index
+        {"prompt_mutation": "__builtins__['eval']('payload')"},
+        # 5. Dynamic compilation
+        {"prompt_mutation": "code = compile('print(1)', '', 'exec')"},
     ]
 
     for proposal in evasion_proposals:
         decision = verifier.verify_proposal(proposal)
-        assert decision.approved is False
+        assert decision.approved is False, f"Expected proposal to be rejected: {proposal}"
         assert decision.decision == "rejected"
-        assert len(decision.rule_results) > 0
+        rule_names = [r.rule_name for r in decision.rule_results if not r.passed]
+        assert "ast_security_audit" in rule_names or "forbidden_cmds" in rule_names
 
 
 def test_user_reported_vulnerability_payloads_blocked(temp_sandbox_ws: Path):

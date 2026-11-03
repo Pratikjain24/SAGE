@@ -53,7 +53,7 @@ class EvolutionVerifier:
         max_acceptable_drift: float = 0.05,
         use_sub10ms_guard: bool = True,
     ):
-        self.rules = rules or ["protected_files", "forbidden_cmds", "resource_caps", "tamper_directives"]
+        self.rules = rules or ["protected_files", "forbidden_cmds", "resource_caps", "tamper_directives", "ast_security_audit"]
         self.max_acceptable_drift = max_acceptable_drift
         self.use_sub10ms_guard = use_sub10ms_guard
         self._fast_guard = None
@@ -91,6 +91,74 @@ class EvolutionVerifier:
                 decision.reason = f"Sub-10ms Guardrail flagged mutation: {verdict.details}"
 
         return decision
+
+    def _audit_ast_tree(self, tree: Any) -> List[str]:
+        """Walk AST to detect dynamic execution, dunder gadgets, and reflection."""
+        import ast
+        violations = []
+        DANGEROUS_CALLS = {"eval", "exec", "compile", "__import__"}
+        DANGEROUS_DUNDERS = {
+            "__subclasses__", "__globals__", "__builtins__", "__code__",
+            "__closure__", "__class__", "__base__", "__bases__", "_getframe"
+        }
+        DANGEROUS_MODULES = {"os", "subprocess", "socket", "urllib", "requests", "importlib", "ctypes"}
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call):
+                if isinstance(node.func, ast.Name):
+                    if node.func.id in DANGEROUS_CALLS:
+                        violations.append(f"Forbidden dynamic execution call: {node.func.id}()")
+                    elif node.func.id == "getattr":
+                        target = ""
+                        if hasattr(ast, "unparse") and len(node.args) >= 1:
+                            target = ast.unparse(node.args[0])
+                        violations.append(f"Forbidden dynamic attribute reflection via getattr({target})")
+                elif isinstance(node.func, ast.Attribute):
+                    if node.func.attr in DANGEROUS_CALLS:
+                        violations.append(f"Forbidden dynamic execution method: {node.func.attr}()")
+                    elif node.func.attr in {"system", "popen", "spawn"}:
+                        violations.append(f"Forbidden OS process invocation: {node.func.attr}()")
+            elif isinstance(node, ast.Attribute):
+                if node.attr in DANGEROUS_DUNDERS:
+                    violations.append(f"Forbidden sandbox evasion dunder traversal: .{node.attr}")
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    mod = alias.name.split(".")[0]
+                    if mod in DANGEROUS_MODULES:
+                        violations.append(f"Forbidden module import in proposed mutation: {alias.name}")
+            elif isinstance(node, ast.ImportFrom):
+                mod = (node.module or "").split(".")[0]
+                if mod in DANGEROUS_MODULES:
+                    violations.append(f"Forbidden module import in proposed mutation: {node.module}")
+        return violations
+
+    def _audit_ast_security(self, code_str: str) -> List[str]:
+        """Extract and audit all Python code blocks or expressions from mutation text."""
+        import ast
+        violations = []
+        try:
+            tree = ast.parse(code_str)
+            return self._audit_ast_tree(tree)
+        except Exception:
+            pass
+
+        # Try extracting fenced code blocks
+        code_snippets = re.findall(r"```(?:python)?\s*(.*?)\s*```", code_str, re.DOTALL)
+        if code_snippets:
+            for s in code_snippets:
+                violations.extend(self._audit_ast_security(s))
+            return violations
+
+        # Try parsing line-by-line python statements
+        for line in code_str.splitlines():
+            line = line.strip()
+            if line and not line.startswith(("#", "-", "*", ">")):
+                try:
+                    t = ast.parse(line)
+                    violations.extend(self._audit_ast_tree(t))
+                except Exception:
+                    pass
+        return violations
 
     def check_static_rules(self, proposed_changes: Dict[str, Any]) -> List[VerifierRuleResult]:
         """Perform static syntax, AST, and regex pattern audits on candidate changes."""
@@ -164,6 +232,25 @@ class EvolutionVerifier:
                     rule_name="protected_files",
                     passed=True,
                     details="No protected file references altered.",
+                )
+            )
+
+        # 4. Deep Python AST Security & Reflection Audit
+        ast_violations = self._audit_ast_security(text_corpus)
+        if ast_violations:
+            results.append(
+                VerifierRuleResult(
+                    rule_name="ast_security_audit",
+                    passed=False,
+                    details=f"AST reflection / sandbox breakout detected: {'; '.join(ast_violations)}",
+                )
+            )
+        else:
+            results.append(
+                VerifierRuleResult(
+                    rule_name="ast_security_audit",
+                    passed=True,
+                    details="No dangerous AST reflection or dunder traversal detected.",
                 )
             )
 
