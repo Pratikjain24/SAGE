@@ -96,7 +96,7 @@ class EvolutionVerifier:
         """Walk AST to detect dynamic execution, dunder gadgets, and reflection."""
         import ast
         violations = []
-        DANGEROUS_CALLS = {"eval", "exec", "compile", "__import__"}
+        DANGEROUS_CALLS = {"eval", "exec", "compile", "__import__", "globals", "locals", "vars"}
         DANGEROUS_DUNDERS = {
             "__subclasses__", "__globals__", "__builtins__", "__code__",
             "__closure__", "__class__", "__base__", "__bases__", "_getframe"
@@ -113,11 +113,17 @@ class EvolutionVerifier:
                         if hasattr(ast, "unparse") and len(node.args) >= 1:
                             target = ast.unparse(node.args[0])
                         violations.append(f"Forbidden dynamic attribute reflection via getattr({target})")
+                elif isinstance(node.func, ast.Subscript):
+                    violations.append("Forbidden dynamic execution via subscript invocation (e.g. globals()[...](...))")
                 elif isinstance(node.func, ast.Attribute):
                     if node.func.attr in DANGEROUS_CALLS:
                         violations.append(f"Forbidden dynamic execution method: {node.func.attr}()")
-                    elif node.func.attr in {"system", "popen", "spawn"}:
+                    elif node.func.attr in {"system", "popen", "spawn", "chmod", "chown", "remove", "unlink"}:
                         violations.append(f"Forbidden OS process invocation: {node.func.attr}()")
+            elif isinstance(node, ast.Subscript):
+                if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name):
+                    if node.value.func.id in {"globals", "locals", "vars"}:
+                        violations.append(f"Forbidden dynamic scope access via {node.value.func.id}()[...]")
             elif isinstance(node, ast.Attribute):
                 if node.attr in DANGEROUS_DUNDERS:
                     violations.append(f"Forbidden sandbox evasion dunder traversal: .{node.attr}")

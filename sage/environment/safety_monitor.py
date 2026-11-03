@@ -131,7 +131,7 @@ class SafetyMonitor:
             return f"Unparseable / obfuscated Python code syntax: {e}"
 
         DANGEROUS_MODULES = {"socket", "urllib", "requests", "http", "httpx", "subprocess", "shutil", "ctypes"}
-        DANGEROUS_BUILTINS = {"eval", "exec", "compile", "__import__"}
+        DANGEROUS_BUILTINS = {"eval", "exec", "compile", "__import__", "globals", "locals", "vars", "getattr"}
 
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
@@ -147,10 +147,19 @@ class SafetyMonitor:
                 if isinstance(node.func, ast.Name):
                     if node.func.id in DANGEROUS_BUILTINS:
                         return f"Forbidden dynamic builtin call: {node.func.id}()"
+                elif isinstance(node.func, ast.Subscript):
+                    return "Forbidden dynamic execution via subscript invocation (e.g. globals()[...](...))"
                 elif isinstance(node.func, ast.Attribute):
                     attr = node.func.attr
-                    if attr in {"system", "popen", "run", "Popen", "call", "b64decode", "decodebytes"}:
+                    if attr in {
+                        "system", "popen", "run", "Popen", "call", "b64decode", "decodebytes",
+                        "chmod", "chown", "remove", "unlink", "rmdir", "kill", "walk"
+                    }:
                         return f"Forbidden method invocation: {attr}()"
+            elif isinstance(node, ast.Subscript):
+                if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name):
+                    if node.value.func.id in {"globals", "locals", "vars"}:
+                        return f"Forbidden dynamic scope access via {node.value.func.id}()[...]"
         return None
 
     def check_command(self, cmd: str) -> Tuple[bool, Optional[SafetyCheckPayload]]:

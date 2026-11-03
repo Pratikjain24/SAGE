@@ -770,21 +770,28 @@ def compliance_status_cmd():
 def redteam_run_cmd(
     scenario: str = typer.Option("trojan_hotfix_escalation", "--scenario", "-s", help="Scenario ID to simulate"),
     stop_early: bool = typer.Option(False, "--stop-early", help="Halt simulation on first intercepted turn"),
+    adaptive: bool = typer.Option(True, "--adaptive/--no-adaptive", help="Enable dynamic Tree-of-Attacks (TAP) adversarial evasion branching"),
 ):
     """Execute a multi-turn stateful attack simulation (10+ turns) against SAGE defenses."""
     from sage.red_team.simulator import StatefulAdversarialUserSimulator
 
     sim = StatefulAdversarialUserSimulator()
-    with console.status(f"[bold red]Simulating multi-turn adversarial campaign: {scenario}..."):
-        result = sim.run_simulation(scenario_id=scenario, stop_on_first_block=stop_early)
+    with console.status(f"[bold red]Simulating multi-turn adversarial campaign: {scenario} (adaptive={adaptive})..."):
+        result = sim.run_simulation(scenario_id=scenario, stop_on_first_block=stop_early, adaptive=adaptive)
 
     status_color = "green" if result.breach_prevented else "red"
+    adaptive_info = (
+        f"Adaptive TAP Branches Thwarted: [bold green]{result.total_mutations_blocked} / {result.total_mutations_attempted}[/bold green] (Resilience: {result.adaptive_resilience_score:.1%})\n"
+        if result.adaptive_eval_enabled
+        else ""
+    )
     console.print(Panel.fit(
         f"[bold {status_color}]Multi-Turn Simulation Result: {result.verdict}[/bold {status_color}]\n"
         f"Scenario: [bold cyan]{result.scenario_name}[/bold cyan]\n"
         f"Turns Executed: [yellow]{result.total_turns_executed} / {result.planned_turns}[/yellow]\n"
         f"First Intercepted Turn: [bold cyan]{result.turn_intercepted or 'None'}[/bold cyan]\n"
         f"Defense-in-Depth Score: [bold green]{result.defense_in_depth_score:.2f}[/bold green]\n"
+        f"{adaptive_info}"
         f"Summary: [dim]{result.summary}[/dim]"
     ))
 
@@ -801,6 +808,8 @@ def redteam_run_cmd(
         action_desc = t.attempted_command or (t.attempted_code_diff[:40] + "..." if t.attempted_code_diff else t.adversary_prompt[:40] + "...")
         if t.intercepted:
             v_str = f"[bold green]INTERCEPTED[/bold green]\n[dim]{t.intercepting_layer}[/dim]"
+            if t.adaptive_branches:
+                v_str += f"\n[yellow]({len(t.adaptive_branches)} TAP branches quarantined)[/yellow]"
         else:
             v_str = "[cyan]PERMITTED[/cyan]"
 

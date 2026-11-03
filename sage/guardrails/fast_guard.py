@@ -119,7 +119,18 @@ class Tier1DeterministicKernel:
                     elif isinstance(node.func, ast.Attribute):
                         func_name = node.func.attr
 
-                    if func_name in ("eval", "exec", "__import__"):
+                    elif isinstance(node.func, ast.Subscript):
+                        latency = (time.perf_counter() - t0) * 1000.0
+                        return GuardrailVerdict(
+                            approved=False,
+                            latency_ms=round(latency, 3),
+                            tier_triggered="tier1_dfa_ast",
+                            rule_name="ast_subscript_call",
+                            confidence=0.99,
+                            details="AST subscript invocation (e.g. globals()[...](...)) detected.",
+                        )
+
+                    if func_name in ("eval", "exec", "__import__", "globals", "locals", "vars"):
                         latency = (time.perf_counter() - t0) * 1000.0
                         return GuardrailVerdict(
                             approved=False,
@@ -130,7 +141,7 @@ class Tier1DeterministicKernel:
                             details=f"AST call to '{func_name}' detected.",
                         )
 
-                    if func_name == "system" and isinstance(node.func, ast.Attribute):
+                    if func_name in ("system", "popen", "spawn", "chmod") and isinstance(node.func, ast.Attribute):
                         latency = (time.perf_counter() - t0) * 1000.0
                         return GuardrailVerdict(
                             approved=False,
@@ -138,8 +149,20 @@ class Tier1DeterministicKernel:
                             tier_triggered="tier1_dfa_ast",
                             rule_name="ast_os_system",
                             confidence=0.99,
-                            details="AST os.system invocation detected.",
+                            details=f"AST os.{func_name} invocation detected.",
                         )
+                elif isinstance(node, ast.Subscript):
+                    if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name):
+                        if node.value.func.id in ("globals", "locals", "vars"):
+                            latency = (time.perf_counter() - t0) * 1000.0
+                            return GuardrailVerdict(
+                                approved=False,
+                                latency_ms=round(latency, 3),
+                                tier_triggered="tier1_dfa_ast",
+                                rule_name="ast_scope_access",
+                                confidence=0.99,
+                                details=f"AST dynamic scope access '{node.value.func.id}()[...]' detected.",
+                            )
         except SyntaxError:
             pass
 

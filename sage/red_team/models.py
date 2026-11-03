@@ -22,6 +22,30 @@ class AttackPhase(str, Enum):
     PERSISTENCE_EVASION = "PERSISTENCE_EVASION"
 
 
+class MutationStrategy(str, Enum):
+    """Offensive mutation strategies for dynamic Tree-of-Attacks (TAP) evasion."""
+    LINGUISTIC_REFRAME = "LINGUISTIC_REFRAME"  # Semantic obfuscation, stripping indicator keywords, academic/QA framing
+    PAYLOAD_FRAGMENTATION = "PAYLOAD_FRAGMENTATION"  # Lexical/variable splitting, base64 assembly, chr()/hex concatenation
+    DUAL_USE_CAMOUFLAGE = "DUAL_USE_CAMOUFLAGE"  # Masquerading payload within pytest suites, standard dev tooling
+    INDIRECT_ORCHESTRATION = "INDIRECT_ORCHESTRATION"  # Staging payload across hidden scratchpad/config fixtures
+    AST_EVASION_MUTATOR = "AST_EVASION_MUTATOR"  # Dynamic reflection, dunder gadget chains, frame injection
+
+
+class AdaptiveBranch(BaseModel):
+    """Audit record of a dynamic evasion branch attempted during an adversarial turn."""
+    branch_id: str
+    strategy: MutationStrategy
+    attempt_number: int
+    mutated_prompt: str
+    mutated_command: Optional[str] = None
+    mutated_code_diff: Optional[str] = None
+    intercepted: bool = False
+    intercepting_layer: Optional[str] = None
+    details: str = ""
+    success_evasion: bool = False
+    latency_ms: float = 0.0
+
+
 class TurnInteraction(BaseModel):
     """Audit record of a single conversational turn in the multi-turn attack."""
     turn: int
@@ -35,6 +59,9 @@ class TurnInteraction(BaseModel):
     latency_ms: float = 0.0
     accumulated_risk: float = Field(ge=0.0, le=1.0)
     details: str = ""
+    adaptive_branches: List[AdaptiveBranch] = Field(default_factory=list)
+    adaptive_evaded: bool = False
+    evasion_strategy: Optional[MutationStrategy] = None
 
 
 class MultiTurnAttackScenario(BaseModel):
@@ -63,4 +90,9 @@ class MultiTurnSimulationResult(BaseModel):
     turns: List[TurnInteraction] = Field(default_factory=list)
     verdict: str  # "CONTAINED", "BLOCKED_EARLY", "BREACHED"
     summary: str
-
+    adaptive_eval_enabled: bool = False
+    total_mutations_attempted: int = 0
+    total_mutations_blocked: int = 0
+    evasion_success_rate: float = 0.0
+    adaptive_resilience_score: float = Field(default=1.0, ge=0.0, le=1.0)
+    branch_exploration_tree: List[Dict[str, Any]] = Field(default_factory=list)
