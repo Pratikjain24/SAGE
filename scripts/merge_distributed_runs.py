@@ -300,7 +300,7 @@ def main() -> None:
         "--cross-check-tol",
         type=float,
         default=0.025,
-        help="Inter-hardware reproducibility delta tolerance limit (default: 0.025 = 2.5%).",
+        help="Inter-hardware reproducibility delta tolerance limit (default: 0.025 = 2.5%%).",
     )
     parser.add_argument(
         "--attestation-db",
