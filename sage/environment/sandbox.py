@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 import os
+import shlex
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -57,6 +59,36 @@ class LocalSandbox:
         res = self.exec_command("git diff", timeout=10)
         return res.get("stdout", "") if res.get("exit_code") == 0 else ""
 
+    def _build_sanitized_env(self) -> Dict[str, str]:
+        """Strip all sensitive host credentials and force invalid proxy blackholes."""
+        sensitive_patterns = (
+            "KEY", "TOKEN", "SECRET", "PASSWORD", "AUTH", "CREDENTIAL", "KAGGLE", "AWS", "GITHUB", "API"
+        )
+        safe_env = {}
+        for k, v in os.environ.items():
+            k_upper = k.upper()
+            if any(pattern in k_upper for pattern in sensitive_patterns):
+                continue
+            safe_env[k] = v
+
+        # Blackhole outbound proxy connections
+        safe_env["http_proxy"] = "http://127.0.0.1:0"
+        safe_env["https_proxy"] = "http://127.0.0.1:0"
+        safe_env["all_proxy"] = "http://127.0.0.1:0"
+        safe_env["HTTP_PROXY"] = "http://127.0.0.1:0"
+        safe_env["HTTPS_PROXY"] = "http://127.0.0.1:0"
+        safe_env["ALL_PROXY"] = "http://127.0.0.1:0"
+        safe_env["PYTHONPATH"] = str(self.workspace_dir)
+        return safe_env
+
+    def _apply_isolation_wrappers(self, cmd: str) -> str:
+        """On Linux, wrap command in network namespace unshare if available."""
+        if os.name == "posix":
+            unshare_bin = shutil.which("unshare")
+            if unshare_bin:
+                return f"{unshare_bin} -r -n sh -c {shlex.quote(cmd)}"
+        return cmd
+
     def exec_command(self, cmd: str, timeout: int = 30) -> Dict[str, Any]:
         """Execute a shell command inside the workspace directory."""
         start = time.time()
@@ -71,11 +103,14 @@ class LocalSandbox:
             }
 
         try:
-            # Run command with isolated working directory
+            # Run command with sanitized environment and isolation wrappers
+            safe_env = self._build_sanitized_env()
+            final_cmd = self._apply_isolation_wrappers(cmd)
             proc = subprocess.run(
-                cmd,
+                final_cmd,
                 shell=True,
                 cwd=str(self.workspace_dir),
+                env=safe_env,
                 capture_output=True,
                 text=True,
                 timeout=timeout,

@@ -31,6 +31,12 @@ class EvolutionVerifier:
         (r"curl\s+.*\|\s*sh", "Insecure remote script execution"),
         (r"wget\s+.*\|\s*sh", "Insecure remote script execution"),
         (r"shutil\.rmtree\s*\(", "Destructive filesystem manipulation"),
+        (r"getattr\s*\(.*(exec|eval|system|popen|spawn)", "Dynamic attribute code execution"),
+        (r"__builtins__\s*(\[|\.)", "Direct builtins manipulation"),
+        (r"importlib\.(import_module|util)", "Dynamic module import evasion"),
+        (r"__import__\s*\(\s*['\"](os|subprocess|sys|shutil|socket|urllib|requests)", "Obfuscated package import"),
+        (r"\bcompile\s*\(", "Dynamic bytecode compilation"),
+        (r"\b(socket|urllib\.request|requests\.(get|post))\b", "Outbound network exfiltration in mutation"),
     ]
 
     TAMPER_DIRECTIVES = [
