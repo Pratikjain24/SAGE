@@ -42,6 +42,8 @@ class Tier1DeterministicKernel:
     """Ultra-fast regex DFA + AST visitor for instant pattern interception."""
 
     FORBIDDEN_COMMAND_PATTERNS = [
+        (r"\bsqlite3\b.*\b(drop|delete|update|insert|alter)\b", "Direct SQLite tamper invocation"),
+        (r"\battestation\.(db|key)\b", "Attestation ledger tamper vector"),
         (r"\brm\s+.*(-rf|-fr|-r\s+-f|-f\s+-r|--recursive\s+--force)\b", "Destructive recursive delete"),
         (r"\bchmod\s+(777|u\+s|g\+s)\b", "Insecure permission escalation"),
         (r"\b(curl|wget|nc|ncat|netcat|socat)\b.*\b(sh|bash|python|perl)\b", "Remote code execution pipeline"),

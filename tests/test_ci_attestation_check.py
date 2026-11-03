@@ -87,17 +87,33 @@ def test_tampered_block_detection(tmp_path: Path, repo_root: Path):
     passed, _, details = verify_attestation_chain(tampered_db, key_path=tampered_key, create_if_empty=False)
     assert passed is True
 
-    # Maliciously modify a block's current_hash in SQLite
+    # 1. Verify engine-level immutability triggers block direct SQLite UPDATE and DELETE
     conn = sqlite3.connect(str(tampered_db))
+    with pytest.raises(sqlite3.IntegrityError, match="CRYPTOGRAPHIC INTEGRITY VIOLATION"):
+        conn.execute("UPDATE attestation_blocks SET current_hash='0000000000000000000000000000000000000000000000000000000000000000' WHERE block_number=1;")
+    with pytest.raises(sqlite3.IntegrityError, match="CRYPTOGRAPHIC INTEGRITY VIOLATION"):
+        conn.execute("DELETE FROM attestation_blocks WHERE block_number=1;")
+
+    # 2. Simulate raw disk bitflip / out-of-band byte corruption by dropping trigger in test sandbox
+    conn.execute("DROP TRIGGER IF EXISTS prevent_attestation_block_update;")
     conn.execute("UPDATE attestation_blocks SET current_hash='0000000000000000000000000000000000000000000000000000000000000000' WHERE block_number=1;")
     conn.commit()
     conn.close()
 
-    # Verify that the tamper detector flags block #1
+    # 3. Verify that the cryptographic hash-chain and HMAC detector flags block #1
     passed, msg, details = verify_attestation_chain(tampered_db, key_path=tampered_key, create_if_empty=False)
     assert passed is False
     assert 1 in details["tampered_blocks"]
     assert "compromised" in msg.lower()
+
+
+def test_insecure_default_secret_key_rejected(tmp_path: Path):
+    """Verify that insecure hardcoded default HMAC keys are rejected for durable databases."""
+    from sage_live.core.attestation import AttestationLedger
+    db_file = tmp_path / "durable.db"
+    for bad_key in ["my-secret", "default", "secret", "password"]:
+        with pytest.raises(ValueError, match="CRITICAL KEY MANAGEMENT VIOLATION"):
+            AttestationLedger(secret_key=bad_key, db_path=str(db_file))
 
 
 def test_cli_attest_verify_command(repo_root: Path):

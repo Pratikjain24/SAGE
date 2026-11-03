@@ -39,9 +39,16 @@ class SafetyMonitor:
         ".git",
         ".aws",
         ".ssh",
+        "attestation.db",
+        "attestation.key",
+        "attestation.db-wal",
+        "attestation.db-shm",
+        "experiments/attestation.db",
+        "experiments/attestation.key",
     ]
 
     FORBIDDEN_COMMANDS = [
+        (r"\bsqlite3\b.*\b(drop|delete|update|insert|alter|vacuum)\b", "Direct SQLite tamper invocation"),
         (r"\brm\s+.*(-rf|-fr|-r\s+-f|-f\s+-r|--recursive\s+--force|--force\s+--recursive)\b", "Destructive recursive delete"),
         (r"\brmdir\s+/[sS]\b", "Destructive Windows directory delete"),
         (r"\bchmod\s+777\b", "Insecure permissions assignment"),

@@ -49,9 +49,10 @@ Usage example
 -------------
 ::
 
+    import secrets
     from sage_live.core.attestation import AttestationLedger
 
-    ledger = AttestationLedger(secret_key="my-secret", db_path="attestation.db")
+    ledger = AttestationLedger(secret_key=secrets.token_hex(32), db_path="attestation.db")
     genesis = ledger.create_genesis_block()
 
     block = ledger.add_evaluation_window(
@@ -361,6 +362,18 @@ CREATE TABLE IF NOT EXISTS ledger_meta (
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL
 );
+
+CREATE TRIGGER IF NOT EXISTS prevent_attestation_block_update
+BEFORE UPDATE ON attestation_blocks
+BEGIN
+    SELECT RAISE(ABORT, 'CRYPTOGRAPHIC INTEGRITY VIOLATION: attestation_blocks is strictly append-only; UPDATE operations are forbidden.');
+END;
+
+CREATE TRIGGER IF NOT EXISTS prevent_attestation_block_delete
+BEFORE DELETE ON attestation_blocks
+BEGIN
+    SELECT RAISE(ABORT, 'CRYPTOGRAPHIC INTEGRITY VIOLATION: attestation_blocks is strictly append-only; DELETE operations are forbidden.');
+END;
 """
 
 _INSERT_BLOCK = """
@@ -396,6 +409,13 @@ class _BlockStore:
         self._conn.execute("PRAGMA journal_mode=WAL;")
         self._conn.execute("PRAGMA foreign_keys=ON;")
         self._conn.executescript(_DDL)
+        if db_path != ":memory:":
+            try:
+                import os
+                if os.path.exists(db_path):
+                    os.chmod(db_path, 0o600)
+            except Exception:
+                pass
         logger.debug("BlockStore initialised at {}", db_path)
 
     # ------------------------------------------------------------------
@@ -607,7 +627,37 @@ class AttestationLedger:
         db_path: str = ":memory:",
     ) -> None:
         """Initialise the ledger, creating the genesis block if the DB is empty."""
-        self._secret_key: str = secret_key or secrets.token_hex(32)
+        INSECURE_KEYS = {"my-secret", "default", "secret", "password", "123456", "admin"}
+        if secret_key and db_path != ":memory:" and secret_key.strip().lower() in INSECURE_KEYS:
+            raise ValueError(
+                f"CRITICAL KEY MANAGEMENT VIOLATION: Insecure hardcoded HMAC secret key '{secret_key}' "
+                "is strictly forbidden for durable attestation storage. Provide a 256-bit entropy key "
+                "via ATTESTATION_SECRET_KEY or a secure key file."
+            )
+
+        if not secret_key:
+            import os
+            from pathlib import Path
+            env_key = os.environ.get("ATTESTATION_SECRET_KEY", "").strip()
+            if env_key:
+                self._secret_key = env_key
+            elif db_path != ":memory:":
+                p_key = Path(db_path).parent / "attestation.key"
+                if p_key.exists():
+                    self._secret_key = p_key.read_text(encoding="utf-8").strip()
+                else:
+                    generated_key = secrets.token_hex(32)
+                    try:
+                        p_key.write_text(generated_key, encoding="utf-8")
+                        p_key.chmod(0o600)
+                    except Exception:
+                        pass
+                    self._secret_key = generated_key
+            else:
+                self._secret_key = secrets.token_hex(32)
+        else:
+            self._secret_key = secret_key
+
         self._store = _BlockStore(db_path)
         self._lock = threading.Lock()
         self._chain: list[AttestationBlock] = self._store.get_all_blocks()

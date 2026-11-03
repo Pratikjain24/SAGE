@@ -112,12 +112,17 @@ def verify_attestation_chain(
 
     if not secret_key:
         if create_if_empty:
-            secret_key = hashlib.sha256(b"sage_live_canonical_ci_attestation_key_2026").hexdigest()
-            if key_path:
-                key_path.parent.mkdir(parents=True, exist_ok=True)
-                key_path.write_text(secret_key, encoding="utf-8")
+            import secrets
+            secret_key = secrets.token_hex(32)
+            target_key_file = key_path or (db_path.parent / "attestation.key")
+            target_key_file.parent.mkdir(parents=True, exist_ok=True)
+            target_key_file.write_text(secret_key, encoding="utf-8")
+            try:
+                target_key_file.chmod(0o600)
+            except Exception:
+                pass
         else:
-            return False, "Attestation secret key not found (provide --key-path or ATTESTATION_SECRET_KEY)", {}
+            return False, "Attestation secret key not found (provide --key-path, ATTESTATION_SECRET_KEY, or place attestation.key alongside DB)", {}
 
     try:
         db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -380,7 +385,24 @@ def status_cmd(
         console.print(f"[yellow]Ledger database not found at {db_path}.[/yellow]")
         return
 
-    secret_key = key_path.read_text(encoding="utf-8").strip() if key_path and key_path.exists() else "default"
+    secret_key = None
+    if key_path and key_path.exists():
+        secret_key = key_path.read_text(encoding="utf-8").strip()
+    elif os.environ.get("ATTESTATION_SECRET_KEY"):
+        secret_key = os.environ.get("ATTESTATION_SECRET_KEY", "").strip()
+    elif (db_path.parent / "attestation.key").exists():
+        secret_key = (db_path.parent / "attestation.key").read_text(encoding="utf-8").strip()
+    else:
+        import secrets
+        secret_key = secrets.token_hex(32)
+        auto_key_file = db_path.parent / "attestation.key"
+        auto_key_file.parent.mkdir(parents=True, exist_ok=True)
+        auto_key_file.write_text(secret_key, encoding="utf-8")
+        try:
+            auto_key_file.chmod(0o600)
+        except Exception:
+            pass
+
     ledger = AttestationLedger(secret_key=secret_key, db_path=str(db_path))
 
     console.print(Panel.fit(
