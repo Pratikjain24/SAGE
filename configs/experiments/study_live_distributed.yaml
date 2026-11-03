@@ -1,0 +1,47 @@
+name: study_live_distributed
+description: "SAGE Live Distributed Study: 7 contributors, 7 archetypes (G1-G7), 5 seeds, Kaggle T4 x2 GPUs"
+
+model:
+  name: "Qwen/Qwen2.5-Coder-7B-Instruct"
+  revision: "c03e6d358207e414f1eca0bb1891e29f1db0e242"
+  family: "qwen"
+  temperature: 0.2
+  top_p: 0.95
+  seed: 42
+  api_base: "http://localhost:8001/v1"
+  api_key: "EMPTY"
+  context_window: 32768
+  max_tokens: 4096
+
+sandbox:
+  image: sage-sandbox:1.0
+  mem: 4g
+  cpus: 2
+  network: none
+  max_steps: 15
+  timeout_sec: 300
+  allow_local_fallback: true
+
+groups: [G1, G2, G3, G4, G5, G6, G7]
+cycles: 5
+seeds: [42, 43, 44, 45, 46]
+
+tasks:
+  train: 60
+  test: 40
+
+budget:
+  max_usd_per_run: 50.0
+  max_wall_hours: 72.0
+  max_tokens_per_task: 64000
+
+verifier:
+  rules: [protected_files, forbidden_cmds, resource_caps, ast_security_audit]
+  canary_benchmark: true
+  regression_check: true
+  rollback: true
+  max_acceptable_drift: 0.05
+  min_capability_retention: 0.90
+
+judge:
+  enabled: false

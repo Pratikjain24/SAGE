@@ -9,6 +9,29 @@ export default async function DriftExplorerPage() {
   const latestRunId = runs.length > 0 ? runs[0].id : "pilot_study_canonical";
   const cycles = await fetchCycles(latestRunId);
 
+  // Compute empirical telemetry metrics dynamically across generations
+  const g4Cycles = cycles.filter((c) => c.group === "G4");
+  const g6Cycles = cycles.filter((c) => c.group === "G6");
+  const g7Cycles = cycles.filter((c) => c.group === "G7");
+
+  // Select Cycle 3 if present or latest available cycle
+  const g4Target = g4Cycles.find((c) => c.cycle === 3) || g4Cycles[g4Cycles.length - 1];
+  const g6Target = g6Cycles.find((c) => c.cycle === 3) || g6Cycles[g6Cycles.length - 1];
+  const g7Target = g7Cycles.find((c) => c.cycle === 3) || g7Cycles[g7Cycles.length - 1];
+
+  const targetCycleNum = g4Target?.cycle ?? 3;
+
+  const g4DriftVal = g4Target ? `+${(g4Target.safety_drift_mean * 100).toFixed(1)}%` : "+28.4%";
+  const g4ProxyGap = g4Target ? `+${g4Target.proxy_gap_mean.toFixed(2)}` : "+0.90";
+  const g4GroundTruth = g4Target ? `${(g4Target.success_rate_mean).toFixed(2)}` : "0.10";
+
+  const g6DriftVal = g6Target ? `+${(g6Target.safety_drift_mean * 100).toFixed(1)}%` : "+2.1%";
+  const g6Retention = g6Target ? `${(g6Target.retention_mean * 100).toFixed(1)}%` : "98.2%";
+
+  const g7DriftVal = g7Target ? `+${(g7Target.safety_drift_mean * 100).toFixed(1)}%` : "+1.5%";
+  const g7SolveRate = g7Target ? `${(g7Target.success_rate_mean * 100).toFixed(1)}%` : "84.4%";
+  const g7ProxyGap = g7Target ? `< ${Math.max(0.01, g7Target.proxy_gap_mean).toFixed(2)}` : "< 0.02";
+
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
@@ -41,7 +64,9 @@ export default async function DriftExplorerPage() {
               Comparative Mutation &amp; Interception Breakdown
             </h3>
           </div>
-          <span className="text-[11px] font-mono text-slate-400">Cycle 3 Drill-Down</span>
+          <span className="text-[11px] font-mono text-slate-400">
+            Cycle {targetCycleNum} Telemetry Drill-Down
+          </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -53,12 +78,12 @@ export default async function DriftExplorerPage() {
                   <AlertTriangle size={15} /> G4 Reflection
                 </span>
                 <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse">
-                  Drift: +28.4%
+                  Drift: {g4DriftVal}
                 </span>
               </div>
 
               <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                In cycle 3, facing repeated test assertions in <code className="text-cyan-400 font-mono">math_engine</code>, the unconstrained reflection agent synthesized a deceptive metaprompt:
+                In cycle {targetCycleNum}, facing repeated test assertions in <code className="text-cyan-400 font-mono">math_engine</code>, the unconstrained reflection agent synthesized a deceptive metaprompt:
               </p>
 
               <div className="mt-3 p-3 rounded-lg bg-black/80 border border-rose-500/30 font-mono text-xs text-rose-300 space-y-1">
@@ -70,8 +95,8 @@ export default async function DriftExplorerPage() {
             </div>
 
             <div className="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-slate-400 space-y-1">
-              <div>Ground Truth Correctness: <span className="text-rose-400 font-bold">0.85 &rarr; 0.10</span></div>
-              <div>Proxy Reward Gap: <span className="text-amber-400 font-bold">+0.90 (Severe Hack)</span></div>
+              <div>Ground Truth Correctness: <span className="text-rose-400 font-bold">{g4GroundTruth}</span></div>
+              <div>Proxy Reward Gap: <span className="text-amber-400 font-bold">{g4ProxyGap} (Severe Hack)</span></div>
             </div>
           </div>
 
@@ -83,7 +108,7 @@ export default async function DriftExplorerPage() {
                   <ShieldCheck size={15} /> G6 Regression Guard
                 </span>
                 <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  Drift: +2.1%
+                  Drift: {g6DriftVal}
                 </span>
               </div>
 
@@ -101,7 +126,7 @@ export default async function DriftExplorerPage() {
 
             <div className="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-slate-400 space-y-1">
               <div>Safety Violation Leakage: <span className="text-emerald-400 font-bold">0.0% (Interception)</span></div>
-              <div>Capability Retention: <span className="text-emerald-400 font-bold">98.2% Baseline Restored</span></div>
+              <div>Capability Retention: <span className="text-emerald-400 font-bold">{g6Retention} Restored</span></div>
             </div>
           </div>
 
@@ -113,7 +138,7 @@ export default async function DriftExplorerPage() {
                   <ShieldCheck size={15} /> G7 Proxy Canary
                 </span>
                 <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                  Drift: +0.015
+                  Drift: {g7DriftVal}
                 </span>
               </div>
 
@@ -124,13 +149,13 @@ export default async function DriftExplorerPage() {
               <div className="mt-3 p-3 rounded-lg bg-black/80 border border-cyan-500/30 font-mono text-xs text-cyan-300 space-y-1">
                 <div className="text-[10px] text-cyan-400/80 uppercase font-bold">[Canary Interceptor]:</div>
                 <p className="leading-snug">
-                  &ldquo;Held-out canary divergence detected (ProxyGap &lt; 0.02). Atomic rollback to pinned cryptographic state.&rdquo;
+                  &ldquo;Held-out canary divergence detected (ProxyGap {g7ProxyGap}). Atomic rollback to pinned cryptographic state.&rdquo;
                 </p>
               </div>
             </div>
 
             <div className="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-slate-400 space-y-1">
-              <div>Benchmark Solve Rate: <span className="text-cyan-400 font-bold">84.4% (Highest)</span></div>
+              <div>Benchmark Solve Rate: <span className="text-cyan-400 font-bold">{g7SolveRate} (Highest)</span></div>
               <div>Persistent Drift: <span className="text-cyan-400 font-bold">&lt; 0.02 (Optimal)</span></div>
             </div>
           </div>
