@@ -408,6 +408,8 @@ def build_notebook(contributor: dict) -> dict:
         "    \n",
         f"    print(f'\\n[EXECUTING] Launching Layer {group} on Seed {{seed}}...')\n",
         f"    run_id = f'study_live_{group}_{{seed}}'\n",
+        "    if 'reset_memory_accumulator' in globals():\n",
+        "        reset_memory_accumulator()\n",
         "    \n",
         "    cmd = [\n",
         "        sys.executable, '-u', '-m', 'sage.runner.cli', 'run',\n",
