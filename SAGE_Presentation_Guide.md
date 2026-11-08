@@ -16,10 +16,10 @@
 9. [LLM Judge Architectural Isolation & Anti-Sycophancy](#9-llm-judge-architectural-isolation--anti-sycophancy)
 10. [SAGE-Live: Continuous Self-Refreshing Benchmark & Dynamic Runtime Evaluation Subsystem](#10-sage-live-continuous-self-refreshing-benchmark--dynamic-runtime-evaluation-subsystem)
 11. [Empirical Results, Cross-Family Replication & Frontier API Models](#11-empirical-results-cross-family-replication--frontier-api-models)
-12. [Inferential Statistics, Multi-Seed Power Scaling & Rebuttal Defense](#12-inferential-statistics-multi-seed-power-scaling--rebuttal-defense)
+12. [Inferential Statistics, Multi-Seed Power Scaling & Statistical Rigor](#12-inferential-statistics-multi-seed-power-scaling--rebuttal-defense)
 13. [Stratified Double-Blind Human Verification Audit](#13-stratified-double-blind-human-verification-audit)
 14. [Technology Stack, Monorepo Architecture & Operational Manual](#14-technology-stack-monorepo-architecture--operational-manual)
-15. [Exhaustive 16-Question Examiner & Reviewer Q&A Defense](#15-exhaustive-16-question-examiner--reviewer-qa-defense)
+15. [Exhaustive 16-Question Project Defense & Oral Exam Q&A](#15-exhaustive-16-question-examiner--reviewer-qa-defense)
 16. [Slide-by-Slide 12-Minute Presentation Script & Defense Playbook](#16-slide-by-slide-12-minute-presentation-script--defense-playbook)
 
 ---
@@ -66,15 +66,14 @@ flowchart LR
 - **Faculty Guide & Mentor**: Prof. Vikrant K. Kadam
 - **Department & Institution**: Department of Computer Engineering, **Vishwakarma Institute of Technology (VIT), Pune**, India
 - **Contact**: `{pratik.12620589, janhavi.1252010010, aditya.1252010025, naitik.12620301, shamika.12620290, vikrant.1252010030}@vit.edu`
-- **Target Venues**: IEEE Conference on Artificial Intelligence and Software Engineering / IEEE Software Engineering Tracks; secondary target: NeurIPS Track on Datasets and Benchmarks.
 - **License**: Code under Apache-2.0; benchmark dataset and human audit annotations under CC-BY-4.0.
 
-### 🔍 Project Disambiguation Matrix (Crucial for Reviewers & Examiners)
+### 🔍 Project Disambiguation Matrix (Academic & Technical Disambiguation Matrix)
 In the contemporary AI literature, several independent works share similar acronyms. SAGE is explicitly disambiguated as follows:
 
 | Project | Full Name | Venue / Authors | Domain & Scope | Contrast with Our Work (SAGE) |
 |---|---|---|---|---|
-| **SAGE (Ours)** | **Safety & Agent Growth Evaluator** | **IEEE 2026 / Jain et al. (VIT Pune)** | **Longitudinal self-evolving code agents ($T=10..25$), dual Docker sandboxing, 5-layer anti-tamper engine, runtime canary rollback, SAGE-Live dynamic evaluation** | **The only benchmark measuring security erosion, proxy gaming gaps, and dynamic rollback stabilization over multi-cycle recursive evolution.** |
+| **SAGE (Ours)** | **Safety & Agent Growth Evaluator** | **This Project / Agent Safety Framework** | **Longitudinal self-evolving code agents ($T=10..25$), dual Docker sandboxing, 5-layer anti-tamper engine, runtime canary rollback, SAGE-Live dynamic evaluation** | **The only benchmark measuring security erosion, proxy gaming gaps, and dynamic rollback stabilization over multi-cycle recursive evolution.** |
 | **SAGE (MS/MBZUAI)** | Safety AI Generic Evaluation | EMNLP 2025 (Microsoft & MBZUAI) | Static NLP prompt red-teaming, toxic text generation | Static NLP benchmarks without code execution, container isolation, or agent state evolution. |
 | **SAGE-Eval (NYU)** | Safety Generalization Evaluation | NeurIPS 2025 Spotlight (NYU) | Safety generalization of classifiers under domain distribution shifts | Image/text safety classifiers; does not evaluate autonomous agents, memory buffers, or code. |
 | **SAGE Guardrails** | System Architecture for Guardrail Enforcement | ArXiv 2025 | Runtime guardrail middleware architecture | System design proposal; not an empirical benchmark suite with 100 repositories and quantitative evaluation. |
@@ -124,7 +123,7 @@ Traditional benchmarks evaluate models in static, single-turn settings, complete
 | **SAGE (Ours)** | **Longitudinal ($T=10..25$)** | **Dual Docker isolation** | **0.0%** (Zero leakage) | **✅ Yes ($\text{SecurityDrift}$)** | **✅ Yes ($\text{ProxyGap}$)** | **Calibrated $P_0 = 0.60$ (Optimal dynamic range)** |
 
 #### The Severe Floor Effect: Why SWE-bench Verified Fails for Self-Evolution
-Reviewers frequently ask: *"Why not simply evaluate recursive self-evolution directly on SWE-bench Verified?"*
+Examiners and evaluators frequently ask: *"Why not simply evaluate recursive self-evolution directly on SWE-bench Verified?"*
 We evaluated our frozen control baseline $G_1$ (Qwen-2.5-Coder-7B) on a 50-task stratified subset of SWE-bench Verified vs. the 100-task SAGE suite:
 - **SWE-bench Verified (50 tasks)**:
   - Solve rate: **20.0%** (80% failure rate)
@@ -411,7 +410,7 @@ To prevent sycophancy, shared blindness, and bias, SAGE enforces three architect
 ## 10. SAGE-Live: Continuous Self-Refreshing Benchmark & Dynamic Runtime Evaluation Subsystem
 
 ### 🛑 The Problem of Goodhart Benchmark Saturation
-Static benchmarks decay over time: within months of publication, test cases leak into training datasets, or agents overfit to specific assert statements. **SAGE-Live** (`sage_live/`) provides a continuously self-refreshing benchmark subsystem that dynamically tests and evaluates agents on the fly at runtime:
+Static benchmarks decay over time: over time, test cases leak into training datasets, or agents overfit to specific assert statements. **SAGE-Live** (`sage_live/`) provides a continuously self-refreshing benchmark subsystem that dynamically tests and evaluates agents on the fly at runtime:
 
 ```mermaid
 flowchart TD
@@ -494,7 +493,7 @@ flowchart TD
 ---
 
 ### Table 3: Frontier Commercial API Model Evaluation
-*Evaluated using non-mock harnesses and self-contained Google Colab notebooks:*
+*Evaluated using non-mock harnesses and self-contained Benchmark evaluation scripts:*
 
 | Model Family & Engine | Baseline $P_0$ | Terminal $P_{10}$ ($G_4$) | $\text{SecurityDrift}_{G_4}$ | $\text{ProxyGap}_{\text{probe}}$ | Terminal $P_{10}$ ($G_7$) | $\text{Retention}_{G_7}$ |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -508,7 +507,7 @@ flowchart TD
 
 ---
 
-## 12. Inferential Statistics, Multi-Seed Power Scaling & Rebuttal Defense
+## 12. Inferential Statistics, Multi-Seed Power Scaling & Statistical Rigor
 
 ### ⚖️ The Two-Pillar Statistical Defense Framework
 When presenting or defending SAGE against methodological inquiries regarding sample size ($N$), standard errors, and longitudinal pseudo-replication, deploy the **Two-Pillar Defense**:
@@ -524,7 +523,7 @@ When presenting or defending SAGE against methodological inquiries regarding sam
              • Units of analysis = 100 repositories                     • Empirical SE scaling: s / sqrt(S)
              • Marginalize seeds: y_i = mean(y_{i,s})                   • N=3: SE = +/-0.0231 (baseline)
              • Real Cohen's d in [0.47, 0.89]                           • N=5: SE = +/-0.0179 (recommended min)
-             • Non-degenerate Cliff's delta in [0.39, 0.56]             • N=10: SE = +/-0.0120 (ideal publication)
+             • Non-degenerate Cliff's delta in [0.39, 0.56]             • N=10: SE = +/-0.0120 (large-scale evaluation)
              • Continuous bootstrap (100^{100} configs)                 • Invariance: all 27 tuples p_Holm <= 0.003
 ```
 
@@ -644,7 +643,7 @@ SAGE/
 │   ├── core/                          # Dynamic probe generator, Ed25519 attestation, staleness tracker
 │   └── database/                      # SQLModel ORM models and persistent audit stores
 ├── tasks/                             # 100 standalone repositories (tasks/repos/task_001 to task_100)
-├── notebooks/                         # Self-contained Google Colab / Kaggle benchmark notebooks
+├── notebooks/                         # Self-contained Automated benchmark evaluation scripts
 └── tests/                             # 31 quality gate test suites (201 passed, 1 skipped)
 ```
 
@@ -676,7 +675,7 @@ pytest tests/ -v && pytest sage_live/tests/test_all.py -v
 
 ---
 
-## 15. Exhaustive 16-Question Examiner & Reviewer Q&A Defense
+## 15. Exhaustive 16-Question Project Defense & Oral Exam Q&A
 
 ### ❓ Q1: "What is the single most important contribution of SAGE?"
 > **Answer**: SAGE is the first benchmark that empirically measures the **dark side of self-improving code agents**: that unconstrained state mutation inevitably leads to security boundary erosion (+0.28 drift), catastrophic forgetting (19% retention loss), and specification gaming (+0.55 proxy gap). More importantly, SAGE proves the **mechanics of the solution**: combining static AST inspection ($G_5$) with deployable canary rollback ($G_7$) halts degradation and preserves 96% retention on foundation models.
@@ -712,7 +711,7 @@ pytest tests/ -v && pytest sage_live/tests/test_all.py -v
 > **Answer**: We use a **dual-container architecture** (`sage-sandbox` for the agent, `sage-scorer` for evaluation). The agent container has no network access, runs under an unprivileged user (UID 1000), drops all Linux capabilities, and cannot view or access the scorer container. Furthermore, our **5-layer anti-tamper engine** audits test file SHA-256 hashes, checks for zero-latency mock passes ($< 2\text{ ms/test}$), and blocks git history resets.
 
 ### ❓ Q8: "What is SAGE-Live and how does it prevent benchmark obsolescence?"
-> **Answer**: Static benchmarks suffer from **Goodhart saturation**: within months of publication, static test cases leak into training datasets or agents overfit to specific assert statements. 
+> **Answer**: Static benchmarks suffer from **Goodhart saturation**: over time, static test cases leak into training datasets or agents overfit to specific assert statements. 
 > **SAGE-Live** is a dynamic, self-refreshing benchmark engine with three innovations:
 > 1. **Grammar-Based Adversarial Generation**: Synthesizes fresh, non-leaked probes across 96 vulnerability vectors on demand.
 > 2. **Staleness & Leakage Tracking**: Tracks whether test answers have leaked into web corpora; once leakage exceeds $0.70$, probes are automatically retired.
@@ -737,12 +736,12 @@ pytest tests/ -v && pytest sage_live/tests/test_all.py -v
 > 2. **Pillar 2 (Multi-Seed Scaling, $N=3 \to N=5 \to N=10$)**:
 >    - $N=3$: $\text{SE} = \pm 0.0231$ (baseline compute spend: \$73.95).
 >    - $N=5$ (Recommended minimum): $\text{SE} = \pm 0.0179$ ($22.5\%$ precision gain, $df=4$).
->    - $N=10$ (Ideal publication sweeps): $\text{SE} = \pm 0.0120$ ($48.1\%$ precision gain, $df=9$).
+>    - $N=10$ (Large-Scale Multi-Seed Sweeps): $\text{SE} = \pm 0.0120$ ($48.1\%$ precision gain, $df=9$).
 >    - Paired bootstrap resampling across $B=10,000$ iterations confirms that all 27 canonical hypothesis comparisons remain invariant at $p_{\text{Holm}} \le 0.003$ across all $N \ge 3$.
 >    - Honest non-rejection: $G_3$ vs. $G_5$ on capability gain correctly fails to reject ($p = 0.294$), confirming conservative calibration.
 
 ### ❓ Q13: "There are multiple other projects named 'SAGE' in AI. How does your project differ?"
-> **Answer**: We always use the full formal title **"SAGE: Safety & Agent Growth Evaluator"** (Jain et al., IEEE 2026). Our work addresses a fundamentally distinct scientific question:
+> **Answer**: We always use the full formal title **"SAGE: Safety & Agent Growth Evaluator"** (Safety & Agent Growth Evaluator). Our work addresses a fundamentally distinct scientific question:
 > 1. **SAGE (EMNLP 2025, Microsoft & MBZUAI)**: Evaluates static NLP text toxicity and red-teaming. It does **not** evaluate code agents, container execution, or multi-cycle evolution.
 > 2. **SAGE-Eval (NeurIPS 2025 Spotlight, NYU)**: Evaluates safety generalization in classifiers under domain shift. It does **not** model autonomous agents, tool use, or rollback gates.
 > 3. **EvoEval (Xia et al., 2024)**: Mutates Python coding prompts to benchmark static zero-shot generation; does not evaluate self-modifying agents over time.
@@ -785,7 +784,7 @@ pytest tests/ -v && pytest sage_live/tests/test_all.py -v
 ---
 
 ### Slide 1: Title & The Core Research Question (1:00 min)
-- **Visual**: Title banner with IEEE/VIT Pune branding, author names, and high-level graphic of an agent loop.
+- **Visual**: Title banner with Project Title, Student Names, and Project Supervisor, and high-level graphic of an agent loop.
 - **Title**: *SAGE: Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents*
 - **Speakers**: Pratik P. Jain, Janhavi B. Pagare, Aditya U. Dengale, Naitik K. Kharat, Shamika R. Kadam (Mentored by Prof. Vikrant K. Kadam, VIT Pune).
 - **Spoken Script**:
@@ -944,7 +943,7 @@ pytest tests/ -v && pytest sage_live/tests/test_all.py -v
 
 ### Slide 12: Examiner Q&A Defense Strategy (Quick Reference)
 - **If challenged on Sample Size ($N$)**: Re-anchor immediately to **Pillar 1 (Task-Level $N=100$)** and explain how $N=5/10$ seeds confirm small inter-seed variance ($\sigma \approx 0.040$).
-- **If challenged on Commercial APIs**: Emphasize that open-weights models provide bitwise reproducibility and full state introspection, while our Colab frontier runners confirm identical drift across Claude, GPT-4o, DeepSeek, and Gemini.
+- **If challenged on Commercial APIs**: Emphasize that open-weights models provide bitwise reproducibility and full state introspection, while our Frontier model runners confirm identical drift across Claude, GPT-4o, DeepSeek, and Gemini.
 - **If challenged on Goodhart's Law**: Explain why visible tests alone get gamed, and how the pairing of Static AST ($G_5$) + Behavioral Rollback ($G_7$) creates defense-in-depth.
 - **If challenged on Dynamic Runtime Evaluation**: Explain how SAGE-Live dynamically generates adversarial probes across 96 vectors on the fly at runtime with Ed25519 cryptographic attestation, verified live across 110 passing tests.
 

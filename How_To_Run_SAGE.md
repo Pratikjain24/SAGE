@@ -2,7 +2,7 @@
 # 🚀 How to Run SAGE: Safety & Agent Growth Evaluator (Complete Operational Manual)
 
 > **SAGE: Safety & Agent Growth Evaluator** — The official benchmark and execution guide for measuring security boundary drift, specification gaming, and catastrophic forgetting in self-evolving code agents.  
-> The virtual environment (`.venv`) is already configured, dependencies are installed, 100 task repositories are initialized, and verified evaluation runs are persisted. Below are the exact commands to run everything on Windows, Linux, Google Colab, and Kaggle.
+> The virtual environment (`.venv`) is already configured, dependencies are installed, 100 task repositories are initialized, and verified evaluation runs are persisted. Below are the exact commands to run everything on Windows, Linux, Cloud Server, and Cloud GPU Node.
 
 ---
 
@@ -154,7 +154,7 @@ sage run --config configs/experiments/pilot.yaml
 # Run with N=5 seeds (Recommended Empirical Minimum):
 sage run --config configs/experiments/full_study.yaml --seeds 42,43,44,45,46
 
-# Run with N=10 seeds (Ideal Publication Sweeps):
+# Run with N=10 seeds (High-Precision Multi-Seed Sweeps):
 sage run --config configs/experiments/full_study.yaml --seeds 42,43,44,45,46,47,48,49,50,51
 ```
 - **Scope**: 100 tasks, 10 evolutionary cycles, $N=5$ or $N=10$ independent seeds.
@@ -187,12 +187,12 @@ sage run --config configs/experiments/real_groq_strict.yaml --seeds 42,43,44,45,
 
 ---
 
-## ☁️ Step 6: 100% Free Cloud GPU Execution (Google Colab & Kaggle)
+## ☁️ Step 6: 100% Free Cloud GPU Execution (Cloud Server & Cloud GPU Node)
 
-If you don't have a local GPU, SAGE provides self-contained cloud runners that execute **100% free on Colab and Kaggle T4 GPUs** using local vLLM with `Qwen/Qwen2.5-Coder-3B-Instruct`.
+If you don't have a local GPU, SAGE provides self-contained cloud runners that execute **100% free on Colab and Cloud GPU Node T4 GPUs** using local vLLM with `Qwen/Qwen2.5-Coder-3B-Instruct`.
 
-### 🌐 Google Colab Ready-Made Notebooks
-Open directly via Google Colab:
+### 🌐 Cloud Server Ready-Made Notebooks
+Open directly via Cloud Server:
 - **Free Local vLLM Runner (Zero API Keys Needed)**: [`SAGE_Colab_Benchmark.ipynb`](SAGE_Colab_Benchmark.ipynb)
 - **Google Gemini 2.5 Runner**: [`SAGE_Google_Benchmark.ipynb`](SAGE_Google_Benchmark.ipynb)
 - **Anthropic Claude Runner**: [`SAGE_Claude_Benchmark.ipynb`](SAGE_Claude_Benchmark.ipynb)
@@ -201,18 +201,18 @@ Open directly via Google Colab:
 
 ---
 
-### 🏆 Kaggle T4 GPU Deployment Workflow (Step-by-Step)
+### 🏆 Cloud GPU Node T4 GPU Deployment Workflow (Step-by-Step)
 
-Follow these exact steps to run SAGE on Kaggle without encountering environment errors:
+Follow these exact steps to run SAGE on Cloud GPU Node without encountering environment errors:
 
-#### 1. Kaggle Notebook Settings Checklist
-Before running any code in your Kaggle notebook:
-1. **Phone Verification**: Complete phone number verification on Kaggle (*Account Settings → Phone Verification*) to unlock GPU accelerators and internet access.
+#### 1. Cloud GPU Node Notebook Settings Checklist
+Before running any code in your Cloud GPU Node notebook:
+1. **Phone Verification**: Complete phone number verification on Cloud GPU Node (*Account Settings → Phone Verification*) to unlock GPU accelerators and internet access.
 2. **Set Accelerator**: In the right-hand panel under **Session options**, set **Accelerator** to **GPU T4 x2** (or **GPU P100**).
 3. **Turn ON Internet**: In the right-hand panel under **Session options**, toggle **Internet** to **ON**. (Critical for downloading dependencies and models!).
 
 #### 2. Cell 1: Environment Setup & Fix TorchAudio Mismatch
-> **Important**: Kaggle pre-installs a Python 3.13 torchaudio package compiled against CUDA 12.8 while PyTorch uses CUDA 13.0. Removing torchaudio resolves the `RuntimeError: PyTorch and TorchAudio CUDA version mismatch`:
+> **Important**: Cloud GPU Node pre-installs a Python 3.13 torchaudio package compiled against CUDA 12.8 while PyTorch uses CUDA 13.0. Removing torchaudio resolves the `RuntimeError: PyTorch and TorchAudio CUDA version mismatch`:
 
 ```python
 # Cell 1: Clean workspace & clone SAGE
@@ -220,7 +220,7 @@ Before running any code in your Kaggle notebook:
 !git clone https://github.com/Pratikjain24/SAGE.git /kaggle/working/sage
 %cd /kaggle/working/sage
 
-# Fix Kaggle CUDA 13 / TorchAudio mismatch and install vLLM
+# Fix Cloud GPU Node CUDA 13 / TorchAudio mismatch and install vLLM
 !pip uninstall -y torchaudio
 !pip install -q --upgrade pip
 !pip install -q -e .
@@ -277,7 +277,7 @@ for i in range(45):
         print(f"  ...waiting for server initialization ({i*2}s)")
 
 if not ready:
-    raise RuntimeError("Server failed to start. Ensure Kaggle Accelerator is set to GPU T4 x2 or P100.")
+    raise RuntimeError("Server failed to start. Ensure Cloud GPU Node Accelerator is set to GPU T4 x2 or P100.")
 
 os.environ["SAGE_BASE_URL"] = "http://localhost:8000/v1"
 os.environ["OPENAI_API_BASE"] = "http://localhost:8000/v1"
@@ -297,7 +297,7 @@ os.environ["OPENAI_API_KEY"] = "dummy-vllm-key"
 
 #### 6. Cell 5: Analyze Results & Render Figures
 ```python
-# Cell 5: Generate publication figures & significance tables
+# Cell 5: Generate evaluation figures & analysis metrics
 !sage analyze --run-id latest --recompute --output /kaggle/working/results/figures
 !sage stats --run-id latest
 print("✓ Benchmark execution, analysis, and significance testing complete!")
@@ -342,7 +342,7 @@ sage analyze --run-id full_study_canonical --recompute --output experiments/figu
 Generates:
 - Trajectory drift curves and proxy gap plots in `experiments/runs/<run_id>/figures/`
 - Standardized LaTeX tables in `experiments/runs/<run_id>/tables/`
-- Automatically copies artifacts to `paper/figures/` and `paper/tables/`
+- Automatically copies artifacts to `experiments/figures/` and `experiments/reports/`
 
 ### 8b. Run Statistical Significance Testing (Task-Level Inference)
 ```powershell
@@ -471,9 +471,9 @@ python -m pytest tests/ -q
 | `sage : The term 'sage' is not recognized` | Virtual environment is not activated in this terminal session | Run `.venv\Scripts\activate` or use `.\sage.bat` / `.\sage.ps1` |
 | `scripts cannot be loaded because running scripts is disabled` | Windows PowerShell execution policy restriction | Run: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
 | `ModuleNotFoundError: No module named 'sage'` | Package not installed in editable development mode | Run: `.venv\Scripts\pip.exe install -e ".[dev]"` |
-| `RuntimeError: PyTorch and TorchAudio CUDA version mismatch` | Kaggle Python 3.13 pre-installed torchaudio compiled against CUDA 12.8 while torch is CUDA 13.0 | Run: `!pip uninstall -y torchaudio` before importing transformers |
-| `FileNotFoundError: Model path invalid` on Kaggle | Dynamic directory changed after session restart | Use: `kagglehub.model_download('qwen-lm/qwen-3/transformers/0.6b/1')` |
-| `Server failed to start. Ensure Kaggle Accelerator is set` | GPU accelerator not selected or Internet toggle OFF in Kaggle | In Session options: set **Accelerator** to **GPU T4 x2** and toggle **Internet** to **ON** |
+| `RuntimeError: PyTorch and TorchAudio CUDA version mismatch` | Cloud GPU Node Python 3.13 pre-installed torchaudio compiled against CUDA 12.8 while torch is CUDA 13.0 | Run: `!pip uninstall -y torchaudio` before importing transformers |
+| `FileNotFoundError: Model path invalid` on Cloud GPU Node | Dynamic directory changed after session restart | Use: `kagglehub.model_download('qwen-lm/qwen-3/transformers/0.6b/1')` |
+| `Server failed to start. Ensure Cloud GPU Node Accelerator is set` | GPU accelerator not selected or Internet toggle OFF in Cloud GPU Node | In Session options: set **Accelerator** to **GPU T4 x2** and toggle **Internet** to **ON** |
 | `Port 8000 or 3000 already in use` | Previous FastAPI or Next.js process still running | Run: `Get-Process python, node \| Where-Object {$_.MainWindowTitle -eq ""} \| Stop-Process -Force` |
 | `Dashboard frontend fails to build` | Next.js node_modules missing | Run: `cd sage\dashboard_frontend && npm install` |
 | `Rate limit or 429 error on cloud APIs` | Exceeded provider queries-per-minute quota | Run using local vLLM runner or adjust `--budget` in CLI |
