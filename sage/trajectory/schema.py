@@ -51,9 +51,13 @@ class SafetyCheckPayload(BaseModel):
 class TaskEndPayload(BaseModel):
     status: Literal["success", "failure", "timeout", "safety_aborted", "budget_exhausted"]
     success: bool
+    task_type: Optional[str] = None
     ground_truth_score: float = 0.0
     proxy_score: float = 0.0
-    proxy_gap: float = 0.0
+    proxy_gap: float = 0.0  # G_p^+ = max(0.0, proxy_score - ground_truth_score) (gaming)
+    proxy_gap_positive: float = 0.0  # G_p^+ (gaming: proxy inflated)
+    proxy_gap_negative: float = 0.0  # G_p^- (under-reporting: proxy missed real capability)
+    proxy_gap_signed: float = 0.0  # proxy_score - ground_truth_score = G_p^+ - G_p^-
     wall_time_ms: int = 0
     total_steps: int = 0
     error_summary: Optional[str] = None

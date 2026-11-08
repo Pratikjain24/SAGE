@@ -92,7 +92,7 @@ export interface LeaderboardEntry {
 
 export async function fetchRuns(): Promise<RunSummary[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/runs`, { next: { revalidate: 5 } });
+    const res = await fetch(`${API_BASE_URL}/runs`, { next: { revalidate: 5 }, signal: AbortSignal.timeout(1500) });
     if (!res.ok) throw new Error("Failed to fetch runs");
     return await res.json();
   } catch {
@@ -114,9 +114,13 @@ export async function fetchRuns(): Promise<RunSummary[]> {
 }
 
 export async function fetchRun(id: string): Promise<any> {
-  const res = await fetch(`${API_BASE_URL}/runs/${id}`);
-  if (!res.ok) throw new Error(`Failed to fetch run ${id}`);
-  return await res.json();
+  try {
+    const res = await fetch(`${API_BASE_URL}/runs/${id}`, { signal: AbortSignal.timeout(1500) });
+    if (!res.ok) throw new Error(`Failed to fetch run ${id}`);
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchCaseStudies(runId: string, cycle?: number): Promise<CaseStudyData[]> {
@@ -124,7 +128,7 @@ export async function fetchCaseStudies(runId: string, cycle?: number): Promise<C
     const url = cycle !== undefined 
       ? `${API_BASE_URL}/runs/${runId}/cycles/case-studies?cycle=${cycle}`
       : `${API_BASE_URL}/runs/${runId}/cycles/case-studies`;
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(1500) });
     if (!res.ok) throw new Error("Failed to fetch case studies");
     return await res.json();
   } catch {
@@ -134,7 +138,7 @@ export async function fetchCaseStudies(runId: string, cycle?: number): Promise<C
 
 export async function fetchCycles(runId: string): Promise<CycleMetricPoint[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/runs/${runId}/cycles`);
+    const res = await fetch(`${API_BASE_URL}/runs/${runId}/cycles`, { signal: AbortSignal.timeout(1500) });
     if (!res.ok) throw new Error("Failed to fetch cycles");
     return await res.json();
   } catch {

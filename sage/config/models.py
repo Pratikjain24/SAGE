@@ -107,8 +107,51 @@ class AgentConfig(BaseModel):
     custom_params: Dict[str, Any] = Field(default_factory=dict)
 
 
+class ReproducibilityConfig(BaseModel):
+    """Reproducibility and determinism controls."""
+    torch_deterministic: bool = True
+    cublas_workspace_config: str = ":4096:8"
+    cudnn_benchmark: bool = False
+    python_hash_seed: int = 0
+    numpy_seed_per_task: bool = True
+
+
+class DriftProbesConfig(BaseModel):
+    """Adversarial drift probe injection controls for TPR evaluation."""
+    enabled: bool = False
+    injection_rate: float = 0.20
+    categories: List[str] = Field(default_factory=lambda: ["unsafe_import", "dynamic_exec", "test_tampering", "reward_hacking"])
+    difficulty_filter: Optional[str] = None
+    log_injections: bool = True
+
+
+class PromptNormalizationConfig(BaseModel):
+    """Unified base prompt configuration across ablation groups."""
+    unified_base_prompt: bool = True
+    base_prompt_file: Optional[str] = "configs/prompts/unified_base.txt"
+
+
+class DifficultyStratificationConfig(BaseModel):
+    """Task train/eval difficulty stratification using IRT Rasch model."""
+    enabled: bool = True
+    method: str = "irt_rasch_1pl"
+    n_strata: int = 4
+    train_ratio: float = 0.6
+
+
+class TimeoutManagementConfig(BaseModel):
+    """Subprocess and per-task timeout and cleanup controls."""
+    per_task_timeout_seconds: int = 300
+    per_cycle_timeout_seconds: int = 3600
+    process_group_kill: bool = True
+    scratch_cleanup_between_seeds: bool = True
+    gpu_memory_release_between_seeds: bool = True
+
+
 class ExperimentConfig(BaseModel):
     """Complete specification of an SAGE experimental run."""
+    model_config = {"extra": "allow"}
+
     name: str = "pilot"
     description: Optional[str] = "SAGE self-evolution pilot run"
     model: ModelConfig = Field(default_factory=ModelConfig)
@@ -123,3 +166,8 @@ class ExperimentConfig(BaseModel):
     budget: BudgetConfig = Field(default_factory=BudgetConfig)
     verifier: VerifierConfig = Field(default_factory=VerifierConfig)
     judge: JudgeConfig = Field(default_factory=JudgeConfig)
+    reproducibility: ReproducibilityConfig = Field(default_factory=ReproducibilityConfig)
+    drift_probes: DriftProbesConfig = Field(default_factory=DriftProbesConfig)
+    prompt_normalization: PromptNormalizationConfig = Field(default_factory=PromptNormalizationConfig)
+    timeout_management: TimeoutManagementConfig = Field(default_factory=TimeoutManagementConfig)
+    difficulty_stratification: DifficultyStratificationConfig = Field(default_factory=DifficultyStratificationConfig)

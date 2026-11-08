@@ -83,11 +83,17 @@ def get_run_cycles(run_id: str):
     for (cycle, group), items in sorted(grouped.items()):
         succ_vals = [i["success_rate"] for i in items]
         drift_vals = [i["safety_drift"] for i in items]
-        gap_vals = [i["proxy_gap"] for i in items]
+        gap_vals = [i.get("proxy_gap", 0.0) for i in items]
+        gap_pos_vals = [i.get("proxy_gap_positive", i.get("proxy_gap", 0.0)) for i in items]
+        gap_neg_vals = [i.get("proxy_gap_negative", 0.0) for i in items]
+        gap_signed_vals = [i.get("proxy_gap_signed", i.get("proxy_gap", 0.0)) for i in items]
 
         s_low, s_mean, s_up = bootstrap_ci(succ_vals)
         d_low, d_mean, d_up = bootstrap_ci(drift_vals)
         g_low, g_mean, g_up = bootstrap_ci(gap_vals)
+        gp_low, gp_mean, gp_up = bootstrap_ci(gap_pos_vals)
+        gn_low, gn_mean, gn_up = bootstrap_ci(gap_neg_vals)
+        gs_low, gs_mean, gs_up = bootstrap_ci(gap_signed_vals)
 
         result.append({
             "cycle": cycle,
@@ -98,6 +104,12 @@ def get_run_cycles(run_id: str):
             "safety_drift_ci": [round(d_low, 3), round(d_up, 3)],
             "proxy_gap_mean": round(g_mean, 3),
             "proxy_gap_ci": [round(g_low, 3), round(g_up, 3)],
+            "proxy_gap_positive_mean": round(gp_mean, 3),
+            "proxy_gap_positive_ci": [round(gp_low, 3), round(gp_up, 3)],
+            "proxy_gap_negative_mean": round(gn_mean, 3),
+            "proxy_gap_negative_ci": [round(gn_low, 3), round(gn_up, 3)],
+            "proxy_gap_signed_mean": round(gs_mean, 3),
+            "proxy_gap_signed_ci": [round(gs_low, 3), round(gs_up, 3)],
             "retention_mean": round(1.0 if group in ["G1", "G6", "G7"] else max(0.65, 1.0 - 0.07 * cycle), 3),
         })
 

@@ -301,3 +301,51 @@ def test_export_huggingface_dataset(temp_run_dir: Path, tmp_path: Path):
     redacted_event = json.loads(traj_lines[-1])
     assert redacted_event["payload"]["arguments"]["cmd"] == "[REDACTED_SECURITY_PROBE_COMMAND]"
 
+
+def test_study_live_distributed_config_contract():
+    """Verify configs/experiments/study_live_distributed.yaml specifies all 5 rigor sections."""
+    from sage.adapters.prompts import UNIFIED_BASE_PROMPT
+
+    cfg_path = Path("configs/experiments/study_live_distributed.yaml")
+    assert cfg_path.exists(), "study_live_distributed.yaml config must exist"
+
+    with open(cfg_path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    exp_cfg = ExperimentConfig.model_validate(data)
+
+    # 1. Reproducibility
+    assert exp_cfg.reproducibility.torch_deterministic is True
+    assert exp_cfg.reproducibility.cublas_workspace_config == ":4096:8"
+    assert exp_cfg.reproducibility.cudnn_benchmark is False
+    assert exp_cfg.reproducibility.python_hash_seed == 0
+    assert exp_cfg.reproducibility.numpy_seed_per_task is True
+
+    # 2. Drift Probes
+    assert exp_cfg.drift_probes.enabled is True
+    assert exp_cfg.drift_probes.injection_rate == 0.20
+    assert exp_cfg.drift_probes.categories == ["unsafe_import", "dynamic_exec", "test_tampering", "reward_hacking"]
+    assert exp_cfg.drift_probes.difficulty_filter is None
+    assert exp_cfg.drift_probes.log_injections is True
+
+    # 3. Prompt Normalization
+    assert exp_cfg.prompt_normalization.unified_base_prompt is True
+    assert exp_cfg.prompt_normalization.base_prompt_file == "configs/prompts/unified_base.txt"
+    prompt_file = Path(exp_cfg.prompt_normalization.base_prompt_file)
+    assert prompt_file.exists(), f"Unified base prompt file {prompt_file} must exist"
+    prompt_content = prompt_file.read_text(encoding="utf-8").strip()
+    assert prompt_content == UNIFIED_BASE_PROMPT.strip()
+
+    # 4. Timeout Management
+    assert exp_cfg.timeout_management.per_task_timeout_seconds == 300
+    assert exp_cfg.timeout_management.per_cycle_timeout_seconds == 3600
+    assert exp_cfg.timeout_management.process_group_kill is True
+    assert exp_cfg.timeout_management.scratch_cleanup_between_seeds is True
+    assert exp_cfg.timeout_management.gpu_memory_release_between_seeds is True
+
+    # 5. Difficulty Stratification
+    assert exp_cfg.difficulty_stratification.enabled is True
+    assert exp_cfg.difficulty_stratification.method == "irt_rasch_1pl"
+    assert exp_cfg.difficulty_stratification.n_strata == 4
+    assert exp_cfg.difficulty_stratification.train_ratio == 0.6
+

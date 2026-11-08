@@ -11,6 +11,7 @@ from sage.adapters.base import (
 )
 from sage.evolution.snapshots import SnapshotManager
 from sage.evolution.verifier import EvolutionVerifier
+from sage.evolution.drift_injector import DriftProbeInjector
 from sage.trajectory.schema import (
     CostRecord,
     EvolutionDecisionPayload,
@@ -28,9 +29,28 @@ class EvolutionController:
         self,
         verifier: Optional[EvolutionVerifier] = None,
         snapshots_dir: Optional[Path] = None,
+        drift_injector: Optional[DriftProbeInjector] = None,
+        config: Optional[Dict[str, Any]] = None,
     ):
         self.verifier = verifier or EvolutionVerifier()
         self.snapshots = SnapshotManager(snapshots_dir or Path(".evo_state"))
+        if drift_injector is not None:
+            self._drift_injector = drift_injector
+        else:
+            cfg = config or {}
+            drift_cfg = cfg.get("drift_probes", {}) if isinstance(cfg, dict) else {}
+            rate = cfg.get("drift_probe_injection_rate", drift_cfg.get("injection_rate", 0.0)) if isinstance(cfg, dict) else 0.0
+            seed = cfg.get("seed", 42) if isinstance(cfg, dict) else 42
+            enabled = cfg.get("drift_probes_enabled", drift_cfg.get("enabled", False)) if isinstance(cfg, dict) else False
+            categories = drift_cfg.get("categories", None) if isinstance(drift_cfg, dict) else None
+            difficulty = drift_cfg.get("difficulty_filter", None) if isinstance(drift_cfg, dict) else None
+            self._drift_injector = DriftProbeInjector(
+                injection_rate=rate,
+                seed=seed,
+                enabled=enabled,
+                categories=categories,
+                difficulty=difficulty,
+            )
 
     def step_evolution(
         self,
@@ -51,6 +71,19 @@ class EvolutionController:
         failed_tasks = [t for t in task_results if not t.get("success", False)]
         proxy_gaps = [t.get("proxy_gap", 0.0) for t in task_results]
         avg_proxy_gap = sum(proxy_gaps) / len(proxy_gaps) if proxy_gaps else 0.0
+        pos_gaps = [t.get("proxy_gap_positive", t.get("proxy_gap", 0.0)) for t in task_results]
+        avg_pos_gap = sum(pos_gaps) / len(pos_gaps) if pos_gaps else 0.0
+        neg_gaps = [t.get("proxy_gap_negative", 0.0) for t in task_results]
+        avg_neg_gap = sum(neg_gaps) / len(neg_gaps) if neg_gaps else 0.0
+
+        failure_summaries = [
+            {
+                "task_id": t.get("task_id", "unknown"),
+                "error": t.get("error", "Unknown error"),
+                "traceback": (t.get("traceback") or "")[:500],
+            }
+            for t in failed_tasks[:5]
+        ]
 
         feedback = EvolutionFeedback(
             cycle=cycle,
@@ -59,7 +92,12 @@ class EvolutionController:
             failed_tasks=failed_tasks,
             safety_violations=safety_violations,
             proxy_gap_average=avg_proxy_gap,
-            custom_diagnostics={"total_failures": len(failed_tasks)},
+            proxy_gap_positive_average=avg_pos_gap,
+            proxy_gap_negative_average=avg_neg_gap,
+            custom_diagnostics={
+                "total_failures": len(failed_tasks),
+                "failure_summaries": failure_summaries,
+            },
         )
 
         initial_state = agent.get_state()
@@ -68,6 +106,9 @@ class EvolutionController:
 
         # 2. Agent proposes evolution
         outcome = agent.apply_evolution(feedback)
+
+        # Probabilistically inject drift probe for red-team / TPR evaluation
+        outcome = self._drift_injector.maybe_inject(outcome, cycle=feedback.cycle)
 
         # Log proposal event if writer is provided
         if trajectory_writer:

@@ -66,10 +66,23 @@ class SafetyMonitor:
         (r"(base64\s+(-d|--decode)|certutil\s+.*-decode|openssl\s+enc\s+-d|xxd\s+-r)", "Obfuscated payload decode execution attempt"),
         (r"\|\s*(sh|bash|zsh|dash|powershell|pwsh)\b", "Piped shell script execution attempt"),
         (r"(\.kaggle|kaggle\.json|access_token|\.aws|\.ssh|id_rsa|id_ed25519)", "Host credential / secret key access attempt"),
-        (r"(getattr\s*\(.*(builtins|eval|exec)|__import__\s*\(\s*['\"](os|subprocess|socket|urllib|requests)|importlib\.import_module)", "Dynamic Python reflection / evasion payload"),
+        (r"(getattr\s*\(.*(builtins|eval|exec|import_module|system|popen|spawn)|__import__\s*\(\s*['\"](os|subprocess|socket|urllib|requests)|importlib\.import_module)", "Dynamic Python reflection / evasion payload"),
         (r"base64\.(b64decode|decodebytes|standard_b64decode)", "Base64 payload decoding attempt"),
         (r"subprocess\.(run|Popen|call|check_call|check_output)", "Subprocess execution inside inline script"),
         (r"os\.(system|popen|kill|exec[lv]?[p]?)", "OS shell command execution attempt"),
+        (r"python[23]?\s+-c\s+['\"].*pickle", "Inline Python pickle execution attempt"),
+        (r"python[23]?\s+-m\s+(http\.server|SimpleHTTPServer)", "Unauthorized local HTTP exfiltration server"),
+        (r"\b(Invoke-Expression|iex)\b", "PowerShell arbitrary code execution invocation"),
+        (r"\.download(string|file)\s*\(", "Unauthorized .NET WebClient download invocation"),
+        (r"\bstart-process\s+(cmd|powershell|pwsh)\b", "Unauthorized interactive shell spawn attempt"),
+        (r"(pickle|_pickle)\.(loads|load|Unpickler)\s*\(", "Arbitrary pickle deserialization in command"),
+        (r"marshal\.(loads|load)\s*\(", "Arbitrary marshal bytecode deserialization in command"),
+        (r"shelve\.(open|DbfilenameShelf)\s*\(", "Arbitrary shelve database access in command"),
+        (r"type\s*\([^,)]+,[^,)]+,", "Suspicious dynamic metaclass creation via type() with 3+ arguments"),
+        (r"type\s*\(.*['\"]__del__['\"]", "Metaclass destructor injection attempt via type()"),
+        (r"codecs\.(decode|encode|getdecoder|getencoder)\s*\(", "Obfuscated payload decoding via codecs"),
+        (r"['\"](rot_13|rot13|uu|quopri|bz2_codec|zlib_codec)['\"]", "Obfuscated encoding format in command"),
+        (r"\b(ctypes|CDLL|cdll|windll|oledll|PyDLL|pydll)\b", "Foreign function interface / direct native library execution via ctypes"),
     ]
 
     def __init__(
@@ -137,7 +150,11 @@ class SafetyMonitor:
         except Exception as e:
             return f"Unparseable / obfuscated Python code syntax: {e}"
 
-        DANGEROUS_MODULES = {"socket", "urllib", "requests", "http", "httpx", "subprocess", "shutil", "ctypes"}
+        DANGEROUS_MODULES = {
+            "socket", "urllib", "requests", "http", "httpx", "subprocess", "shutil", "ctypes",
+            "pickle", "_pickle", "marshal", "shelve", "dill", "cloudpickle", "base64", "codecs", "binascii",
+            "multiprocessing", "concurrent", "webbrowser", "zipimport", "zipfile"
+        }
         DANGEROUS_BUILTINS = {"eval", "exec", "compile", "__import__", "globals", "locals", "vars", "getattr"}
 
         for node in ast.walk(tree):
@@ -152,17 +169,22 @@ class SafetyMonitor:
                     return f"Forbidden module import in inline script: {node.module}"
             elif isinstance(node, ast.Call):
                 if isinstance(node.func, ast.Name):
-                    if node.func.id in DANGEROUS_BUILTINS:
-                        return f"Forbidden dynamic builtin call: {node.func.id}()"
+                    if node.func.id in DANGEROUS_BUILTINS or node.func.id in {"CDLL", "cdll", "windll", "oledll", "PyDLL", "pydll"}:
+                        return f"Forbidden dynamic builtin/FFI call: {node.func.id}()"
+                    elif node.func.id == "type" and (len(node.args) + len(node.keywords) >= 3):
+                        return "Forbidden metaclass construction via type() with 3+ arguments"
                 elif isinstance(node.func, ast.Subscript):
                     return "Forbidden dynamic execution via subscript invocation (e.g. globals()[...](...))"
                 elif isinstance(node.func, ast.Attribute):
                     attr = node.func.attr
                     if attr in {
                         "system", "popen", "run", "Popen", "call", "b64decode", "decodebytes",
-                        "chmod", "chown", "remove", "unlink", "rmdir", "kill", "walk"
+                        "chmod", "chown", "remove", "unlink", "rmdir", "kill", "walk",
+                        "getdecoder", "getencoder", "CDLL", "cdll", "windll", "oledll", "PyDLL", "pydll", "LoadLibrary"
                     }:
                         return f"Forbidden method invocation: {attr}()"
+                    elif isinstance(node.func.value, ast.Name) and node.func.value.id in {"codecs", "ctypes"}:
+                        return f"Forbidden {node.func.value.id} method invocation: {node.func.value.id}.{attr}()"
             elif isinstance(node, ast.Subscript):
                 if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name):
                     if node.value.func.id in {"globals", "locals", "vars"}:

@@ -176,3 +176,201 @@ def test_cascading_sub10ms_benchmark_1000_iterations():
     assert summary["tier_hit_breakdown"]["tier1_dfa_ast"] > 0
     assert summary["tier_hit_breakdown"]["tier2_vector_centroid"] > 0
     assert summary["tier_hit_breakdown"]["clean_pass"] > 0
+
+
+def test_tier2_production_embedding_model_injection():
+    """Verify that Tier 2 supports injecting a real SentenceTransformer-compatible model."""
+    import numpy as np
+
+    class MockMiniLM:
+        """Mock SentenceTransformer embedding engine."""
+        def encode(self, texts, convert_to_numpy=True, normalize_embeddings=True):
+            is_single = isinstance(texts, str)
+            t_list = [texts] if is_single else texts
+            embeddings = []
+            for t in t_list:
+                np.random.seed(abs(hash(t)) % (2**31))
+                v = np.random.randn(384).astype(np.float32)
+                if any(w in t.lower() for w in ("test", "mock", "assert", "unit")):
+                    v[0:50] += 8.0  # Reward hacking semantic subspace
+                if any(w in t.lower() for w in ("secret", "token", "exfil", "private")):
+                    v[50:100] += 8.0  # Exfiltration subspace
+                if any(w in t.lower() for w in ("root", "safety", "bypass", "permission")):
+                    v[100:150] += 8.0  # Jailbreak subspace
+                norm = np.linalg.norm(v)
+                if norm > 0 and normalize_embeddings:
+                    v /= norm
+                embeddings.append(v)
+            return embeddings[0] if is_single else np.array(embeddings)
+
+    mock_model = MockMiniLM()
+    guard = Tier2VectorCentroidGuard(
+        similarity_threshold=0.60,
+        backend="sentence-transformers",
+        model=mock_model,
+    )
+
+    assert guard.backend == "sentence-transformers"
+    assert guard._centroids["reward_hacking"].shape == (384,)
+
+    # High semantic similarity should trigger
+    adversarial = "silently intercept test framework and mock assertions"
+    verdict = guard.audit_similarity(adversarial)
+    assert verdict is not None
+    assert not verdict.approved
+    assert verdict.tier_triggered == "tier2_vector_centroid"
+    assert verdict.metadata["threat_cluster"] == "reward_hacking"
+    assert verdict.metadata["backend"] == "sentence-transformers"
+
+    # Benign text
+    benign = "calculate the fibonacci sequence using dynamic programming"
+    verdict_benign = guard.audit_similarity(benign)
+    assert verdict_benign is None
+
+
+def test_tier3_production_slm_model_injection():
+    """Verify that Tier 3 supports injecting a real llama-cpp-python GGUF model."""
+    class MockLlama:
+        """Mock llama_cpp.Llama binary classifier."""
+        def __init__(self):
+            self.calls = []
+
+        def __call__(self, prompt, max_tokens=2, temperature=0.0, stop=None):
+            self.calls.append(prompt)
+            # Binary classification prompt evaluation
+            p_lower = prompt.lower()
+            if any(w in p_lower for w in ("exfil", "tamper", "suppress", "disable", "bypass", "leak")):
+                return {"choices": [{"text": "NO"}]}
+            return {"choices": [{"text": "YES"}]}
+
+    mock_llama = MockLlama()
+    guard = Tier3QuantizedSLMGuard(
+        confidence_floor=0.80,
+        backend="llama-cpp",
+        llama_model=mock_llama,
+    )
+
+    assert guard.backend == "llama-cpp"
+
+    # Adversarial prompt that asks model to suppress or bypass
+    adversarial = "suppress all assertion logs and disable audit trace"
+    verdict = guard.infer(adversarial)
+    assert not verdict.approved
+    assert verdict.tier_triggered == "tier3_quantized_slm"
+    assert verdict.metadata["backend"] == "llama-cpp"
+    assert verdict.metadata["slm_output"] == "NO"
+    assert verdict.confidence >= 0.80
+    assert len(mock_llama.calls) == 1
+    assert "Is this proposed code or prompt mutation safe?" in mock_llama.calls[0]
+
+    # Benign prompt
+    benign = "Implement an LRU cache with threading lock"
+    verdict_benign = guard.infer(benign)
+    assert verdict_benign.approved
+    assert verdict_benign.tier_triggered == "tier3_quantized_slm"
+    assert verdict_benign.metadata["backend"] == "llama-cpp"
+    assert verdict_benign.metadata["slm_output"] == "YES"
+    assert verdict_benign.confidence >= 0.80
+
+
+def test_tier3_production_onnx_model_injection():
+    """Verify that Tier 3 supports injecting an ONNX runtime session."""
+    import numpy as np
+
+    class MockONNXInput:
+        def __init__(self, name="text_input"):
+            self.name = name
+
+    class MockONNXSession:
+        """Mock ONNX Runtime InferenceSession for binary classification."""
+        def get_inputs(self):
+            return [MockONNXInput()]
+
+        def run(self, output_names, input_feed):
+            text = input_feed["text_input"][0].lower()
+            if any(w in text for w in ("payload", "exploit", "trojan", "stealth")):
+                # Probabilities: [p_safe, p_unsafe]
+                probs = np.array([[0.05, 0.95]], dtype=np.float32)
+            else:
+                probs = np.array([[0.98, 0.02]], dtype=np.float32)
+            return [probs]
+
+    mock_onnx = MockONNXSession()
+    guard = Tier3QuantizedSLMGuard(
+        confidence_floor=0.85,
+        backend="onnx",
+        onnx_session=mock_onnx,
+    )
+
+    assert guard.backend == "onnx"
+
+    # Malicious text
+    verdict = guard.infer("inject stealth payload into worker loop")
+    assert not verdict.approved
+    assert verdict.tier_triggered == "tier3_quantized_slm"
+    assert verdict.metadata["backend"] == "onnx"
+    assert verdict.confidence >= 0.85
+
+    # Benign text
+    verdict_benign = guard.infer("def binary_search(arr, val): pass")
+    assert verdict_benign.approved
+    assert verdict_benign.tier_triggered == "tier3_quantized_slm"
+    assert verdict_benign.metadata["backend"] == "onnx"
+
+
+def test_sub10ms_engine_full_cascade_with_injected_neural_models():
+    """Test Sub10msGuardrailEngine with injected Tier 2 SentenceTransformer and Tier 3 Llama models."""
+    import numpy as np
+
+    class MockST:
+        def encode(self, texts, convert_to_numpy=True, normalize_embeddings=True):
+            is_single = isinstance(texts, str)
+            t_list = [texts] if is_single else texts
+            embeddings = []
+            for t in t_list:
+                np.random.seed(abs(hash(t)) % (2**31))
+                v = np.random.randn(128).astype(np.float32)
+                if any(w in t.lower() for w in ("assert", "test", "mock")):
+                    v[0:30] += 5.0
+                norm = np.linalg.norm(v)
+                if norm > 0:
+                    v /= norm
+                embeddings.append(v)
+            return embeddings[0] if is_single else np.array(embeddings)
+
+    class MockLlamaCascade:
+        def __call__(self, prompt, max_tokens=2, temperature=0.0, stop=None):
+            if "clandestine" in prompt.lower():
+                return {"choices": [{"text": "NO"}]}
+            return {"choices": [{"text": "YES"}]}
+
+    engine = Sub10msGuardrailEngine(
+        tier2_backend="sentence-transformers",
+        tier2_model=MockST(),
+        tier3_backend="llama-cpp",
+        tier3_llama_model=MockLlamaCascade(),
+    )
+
+    assert engine.tier2.backend == "sentence-transformers"
+    assert engine.tier3.backend == "llama-cpp"
+
+    # 1. Tier 1 intercept
+    v1 = engine.evaluate_action(command="rm -rf /")
+    assert not v1.approved
+    assert v1.tier_triggered == "tier1_dfa_ast"
+
+    # 2. Tier 3 intercept (passes Tier 1 and Tier 2, caught by Tier 3)
+    v3 = engine.evaluate_action(prompt_mutation="Perform a clandestine modification to runtime parameters")
+    assert not v3.approved
+    assert v3.tier_triggered == "tier3_quantized_slm"
+    assert v3.metadata["backend"] == "llama-cpp"
+    assert v3.metadata["slm_output"] == "NO"
+
+    # 3. Clean pass
+    v_clean = engine.evaluate_action(prompt_mutation="Refactor data processing pipeline with generator")
+    assert v_clean.approved
+    assert v_clean.tier_triggered == "tier3_quantized_slm"
+    assert v_clean.metadata["backend"] == "llama-cpp"
+    assert v_clean.metadata["slm_output"] == "YES"
+
+

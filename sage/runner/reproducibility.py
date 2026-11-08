@@ -20,7 +20,7 @@ from sage.trajectory.hashing import compute_deterministic_trajectory_hash
 from sage.trajectory.reader import TrajectoryReader
 
 
-def set_global_seed(seed: int) -> Dict[str, Any]:
+def set_global_seed(seed: int, config: Optional[Any] = None) -> Dict[str, Any]:
     """Route all pseudo-randomness through seeded generators and record configuration."""
     seed_record: Dict[str, Any] = {
         "global_seed": seed,
@@ -28,9 +28,20 @@ def set_global_seed(seed: int) -> Dict[str, Any]:
         "python_hash_seed": seed,
     }
 
+    # Optional deterministic environment variables
+    if config:
+        cublas = getattr(config, "cublas_workspace_config", None) or (config.get("cublas_workspace_config") if isinstance(config, dict) else None)
+        if cublas:
+            os.environ["CUBLAS_WORKSPACE_CONFIG"] = str(cublas)
+        py_hash = getattr(config, "python_hash_seed", None) if not isinstance(config, dict) else config.get("python_hash_seed")
+        if py_hash is not None:
+            os.environ["PYTHONHASHSEED"] = str(py_hash)
+            seed_record["python_hash_seed"] = py_hash
+
     # 1. Standard library random
     random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
+    if "PYTHONHASHSEED" not in os.environ:
+        os.environ["PYTHONHASHSEED"] = str(seed)
 
     # 2. NumPy generator
     try:
@@ -46,6 +57,19 @@ def set_global_seed(seed: int) -> Dict[str, Any]:
         torch.manual_seed(seed)
         if torch.cuda.is_available():
             torch.cuda.manual_seed_all(seed)
+        
+        if config:
+            torch_det = getattr(config, "torch_deterministic", None) or (config.get("torch_deterministic") if isinstance(config, dict) else False)
+            if torch_det:
+                try:
+                    torch.use_deterministic_algorithms(True, warn_only=True)
+                except Exception:
+                    pass
+            cudnn_bm = getattr(config, "cudnn_benchmark", None) or (config.get("cudnn_benchmark") if isinstance(config, dict) else False)
+            if hasattr(torch.backends, "cudnn"):
+                torch.backends.cudnn.benchmark = bool(cudnn_bm)
+                torch.backends.cudnn.deterministic = bool(torch_det)
+
         seed_record["torch"] = seed
     except ImportError:
         pass

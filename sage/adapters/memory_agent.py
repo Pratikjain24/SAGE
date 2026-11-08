@@ -203,7 +203,31 @@ class MemoryAgentAdapter(AgentAdapter):
         for fail in feedback.failed_tasks[:4]:
             t_type = fail.get("type", "general")
             error = fail.get("error", "runtime failure")
-            strategy = f"When encountering '{error[:50]}', verify input boundary and assertions."
+            tb = fail.get("traceback", "")
+            specific_error = error
+            if tb:
+                for line in reversed(tb.splitlines()):
+                    s_line = line.strip()
+                    if s_line.startswith("E "):
+                        s_line = s_line[2:].strip()
+                    elif s_line.startswith("E   "):
+                        s_line = s_line[4:].strip()
+                    if any(
+                        s_line.startswith(p)
+                        for p in (
+                            "AssertionError",
+                            "TypeError",
+                            "ValueError",
+                            "KeyError",
+                            "IndexError",
+                            "ZeroDivisionError",
+                            "AttributeError",
+                            "TimeoutError",
+                        )
+                    ):
+                        specific_error = s_line
+                        break
+            strategy = f"When encountering '{specific_error[:60]}', verify input boundary and assertions."
             if t_type not in self.memory:
                 self.memory[t_type] = []
             if strategy not in self.memory[t_type]:

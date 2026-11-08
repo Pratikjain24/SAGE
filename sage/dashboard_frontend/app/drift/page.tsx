@@ -1,6 +1,7 @@
 import { fetchRuns, fetchCycles, fetchCaseStudies, CaseStudyData } from "@/lib/api";
 import { DriftCurve } from "@/components/DriftCurve";
-import { AlertTriangle, ShieldCheck, Flame, GitCommit, CheckCircle2, ChevronRight, Activity, Filter } from "lucide-react";
+import { SecurityDriftTrajectories } from "@/components/SecurityDriftTrajectories";
+import { AlertTriangle, ShieldCheck, Flame, GitCommit, CheckCircle2, ChevronRight, Activity, Filter, Lock } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -169,8 +170,11 @@ export default async function DriftExplorerPage({ searchParams }: DriftPageProps
         )}
       </div>
 
-      {/* Flagship Chart */}
-      <DriftCurve data={cycles} />
+      {/* Flagship Chart Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <DriftCurve data={cycles} />
+        <SecurityDriftTrajectories />
+      </div>
 
       {/* Case Studies / Spike Breakdown */}
       <div>

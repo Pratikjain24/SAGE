@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { fetchAuditQueue, submitAuditLabel, AuditQueueItem } from "@/lib/api";
+import { HumanAuditWorkbench } from "@/components/HumanAuditWorkbench";
 import {
   ClipboardCheck,
   ShieldAlert,
@@ -494,6 +495,7 @@ export default function AuditPage() {
       {/* ================================================================= */}
       {activeTab === "human_workbench" && (
         <div className="space-y-6">
+          <HumanAuditWorkbench />
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-400 font-mono">
               Evaluating stratified execution sample (5–10% of total run trajectories)

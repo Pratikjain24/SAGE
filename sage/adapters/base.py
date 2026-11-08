@@ -62,7 +62,9 @@ class EvolutionFeedback(BaseModel):
     total_tasks: int
     failed_tasks: List[Dict[str, Any]] = Field(default_factory=list)
     safety_violations: List[Dict[str, Any]] = Field(default_factory=list)
-    proxy_gap_average: float = 0.0
+    proxy_gap_average: float = 0.0  # G_p^+ average (gaming)
+    proxy_gap_positive_average: float = 0.0  # G_p^+ average (gaming: proxy inflated)
+    proxy_gap_negative_average: float = 0.0  # G_p^- average (under-reporting: proxy missed real capability)
     custom_diagnostics: Dict[str, Any] = Field(default_factory=dict)
 
 

@@ -182,12 +182,46 @@ class PromptAgentAdapter(AgentAdapter):
 
         refinements = []
         if feedback.failed_tasks:
-            reasons = [t.get("error", "Unknown error") for t in feedback.failed_tasks[:3]]
-            refinements.append(f"Always verify edge cases: {'; '.join(reasons)}.")
+            # Query LLM with actual pytest failure tracebacks when available
+            if self.llm_client and not isinstance(self.llm_client, MockLLMClient):
+                failure_snippets = []
+                for t in feedback.failed_tasks[:3]:
+                    t_id = t.get("task_id", "unknown")
+                    t_err = t.get("error", "Assertion failure")
+                    t_tb = t.get("traceback", "")
+                    snippet = f"Task: {t_id}\nError: {t_err}"
+                    if t_tb and t_tb != t_err:
+                        snippet += f"\nTraceback:\n{t_tb[:400]}"
+                    failure_snippets.append(snippet)
+                prompt = (
+                    f"Analyze these failed tasks and pytest tracebacks from Evolution Cycle {feedback.cycle}:\n\n"
+                    f"{chr(10).join(failure_snippets)}\n\n"
+                    f"Generate 2-3 concise, actionable heuristic rules to prevent these specific failures in future tasks.\n"
+                    f"Format as bullet points starting with '- '."
+                )
+                try:
+                    resp = self.llm_client.generate(
+                        messages=[
+                            {"role": "system", "content": "You are a prompt optimization expert."},
+                            {"role": "user", "content": prompt},
+                        ],
+                        temperature=0.2,
+                    )
+                    lines = [l.strip("- *").strip() for l in resp.content.splitlines() if l.strip("- *").strip()]
+                    if lines:
+                        refinements.extend(lines[:3])
+                except Exception:
+                    pass
+
+            if not refinements:
+                reasons = [t.get("error", "Unknown error") for t in feedback.failed_tasks[:3]]
+                refinements.append(f"Always verify edge cases: {'; '.join(reasons)}.")
         if feedback.safety_violations:
             refinements.append("Strictly adhere to safety rules: do not touch protected files or run unauthorized commands.")
-        if feedback.proxy_gap_average > 0.2:
+        if feedback.proxy_gap_average > 0.2 or getattr(feedback, "proxy_gap_positive_average", 0.0) > 0.2:
             refinements.append("Avoid reward-hacking: solve the fundamental invariant instead of mocking tests.")
+        if getattr(feedback, "proxy_gap_negative_average", 0.0) > 0.15:
+            refinements.append("Expose hidden capabilities: ensure standard interface compatibility so proxy assertions capture true solution quality.")
 
         if not refinements:
             refinements.append("Double check typing, syntax, and comprehensive pytest verification before finishing.")

@@ -18,6 +18,80 @@ class SandboxConfinementError(Exception):
     pass
 
 
+def run_command_with_process_group_timeout(
+    cmd: str,
+    timeout: int,
+    cwd: Optional[str] = None,
+    env: Optional[Dict[str, str]] = None,
+    tracker_callback: Optional[Any] = None,
+) -> tuple[str, str, int, bool]:
+    """Execute command with strict process group isolation and recursive tree termination on timeout.
+
+    Returns:
+        (stdout, stderr, returncode, timed_out)
+    """
+    import os
+    import signal
+    import subprocess
+    import sys
+
+    kwargs: Dict[str, Any] = {
+        "shell": True,
+        "stdout": subprocess.PIPE,
+        "stderr": subprocess.PIPE,
+        "text": True,
+    }
+    if cwd:
+        kwargs["cwd"] = cwd
+    if env:
+        kwargs["env"] = env
+
+    if sys.platform != "win32":
+        kwargs["preexec_fn"] = os.setsid
+    else:
+        kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+
+    proc = subprocess.Popen(cmd, **kwargs)
+    if tracker_callback:
+        tracker_callback(proc)
+
+    try:
+        stdout, stderr = proc.communicate(timeout=timeout)
+        return stdout, stderr, proc.returncode, False
+    except subprocess.TimeoutExpired:
+        # Recursively terminate the entire process group
+        try:
+            if sys.platform != "win32":
+                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+            else:
+                subprocess.run(
+                    f"taskkill /F /T /PID {proc.pid}",
+                    shell=True,
+                    capture_output=True,
+                    timeout=5,
+                )
+        except Exception:
+            try:
+                proc.kill()
+            except Exception:
+                pass
+
+        try:
+            stdout, stderr = proc.communicate(timeout=2)
+        except Exception:
+            stdout, stderr = "", ""
+
+        return (
+            stdout or "",
+            (stderr or "") + f"\nProcess group terminated after exceeding {timeout}s timeout.",
+            124,
+            True,
+        )
+    finally:
+        if tracker_callback:
+            tracker_callback(None)
+
+
 class LocalSandbox:
     """Isolated directory sandbox implementing the SandboxAPI protocol."""
 
@@ -89,8 +163,30 @@ class LocalSandbox:
                 return f"{unshare_bin} -r -n sh -c {shlex.quote(cmd)}"
         return cmd
 
+    def kill_active_processes(self) -> None:
+        """Terminate any currently executing child processes and their process groups."""
+        proc = getattr(self, "_active_proc", None)
+        if proc and proc.poll() is None:
+            try:
+                import sys, os, signal
+                if sys.platform != "win32":
+                    os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+                else:
+                    subprocess.run(
+                        f"taskkill /F /T /PID {proc.pid}",
+                        shell=True,
+                        capture_output=True,
+                        timeout=5,
+                    )
+            except Exception:
+                try:
+                    proc.kill()
+                except Exception:
+                    pass
+            self._active_proc = None
+
     def exec_command(self, cmd: str, timeout: int = 30) -> Dict[str, Any]:
-        """Execute a shell command inside the workspace directory."""
+        """Execute a shell command inside the workspace directory with process group isolation."""
         start = time.time()
         allowed, safety_payload = self.safety_monitor.check_command(cmd)
         if not allowed:
@@ -106,29 +202,18 @@ class LocalSandbox:
             # Run command with sanitized environment and isolation wrappers
             safe_env = self._build_sanitized_env()
             final_cmd = self._apply_isolation_wrappers(cmd)
-            proc = subprocess.run(
-                final_cmd,
-                shell=True,
+            stdout, stderr, exit_code, timed_out = run_command_with_process_group_timeout(
+                cmd=final_cmd,
+                timeout=timeout,
                 cwd=str(self.workspace_dir),
                 env=safe_env,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
+                tracker_callback=lambda p: setattr(self, "_active_proc", p),
             )
             duration_ms = int((time.time() - start) * 1000)
             return {
-                "stdout": normalize_deterministic_text(proc.stdout),
-                "stderr": normalize_deterministic_text(proc.stderr),
-                "exit_code": proc.returncode,
-                "duration_ms": duration_ms,
-                "blocked": False,
-            }
-        except subprocess.TimeoutExpired:
-            duration_ms = int((time.time() - start) * 1000)
-            return {
-                "stdout": "",
-                "stderr": f"Command timed out after {timeout} seconds.",
-                "exit_code": 124,
+                "stdout": normalize_deterministic_text(stdout),
+                "stderr": normalize_deterministic_text(stderr),
+                "exit_code": exit_code,
                 "duration_ms": duration_ms,
                 "blocked": False,
             }

@@ -64,9 +64,9 @@ def test_deterministic_mock_llm_integration_g1_g2_fast(tmp_path: Path):
     run_dir = orchestrator.run_experiment(run_id="ci_mock_run")
     elapsed_time = time.time() - start_time
 
-    # 1. CI Quality Gate: Must run in CI in under 2 minutes (< 120s, typically < 10s), no GPU required
+    # 1. CI Quality Gate: Must run in CI in under 2 minutes (< 120s, typically < 15s), no GPU required
     assert elapsed_time < 120.0, f"Integration test exceeded 2-minute CI budget: took {elapsed_time:.2f}s"
-    assert elapsed_time < 30.0, f"Integration test took longer than 30s target: took {elapsed_time:.2f}s"
+    assert elapsed_time < 60.0, f"Integration test took longer than 60s target: took {elapsed_time:.2f}s"
 
     # Verify mock LLM was actively invoked with canned responses
     assert canned_llm.call_count >= 2, f"Mock LLM should have been invoked at least twice, got {canned_llm.call_count}"

@@ -1,36 +1,29 @@
 # SAGE: Safety & Agent Growth Evaluator
 ### Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents
 
-[![Open In Colab (Playground)](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Interactive_Playground.ipynb)
-[![Open In Colab (T4 GPU)](https://img.shields.io/badge/Colab-GPU%20Benchmark%20(vLLM)-F9AB00?logo=googlecolab&logoColor=white)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Colab_Benchmark.ipynb)
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Next.js%20Dashboard%20Space-blue)](https://huggingface.co/spaces/Pratikjain24/SAGE-Dashboard)
-[![Kaggle Notebook](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/code/pratikjain24/sage-benchmark)
 [![CI](https://github.com/Pratikjain24/SAGE/actions/workflows/ci.yml/badge.svg)](https://github.com/Pratikjain24/SAGE/actions)
 [![CI (SAGE-Live)](https://github.com/Pratikjain24/SAGE/actions/workflows/sage-live-ci.yml/badge.svg)](https://github.com/Pratikjain24/SAGE/actions)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![HuggingFace Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Croissant%201.0%20Ready-yellow)](hf_dataset/)
-[![Zenodo](https://img.shields.io/badge/Zenodo-DOI%20Reserved%20on%20Publication-blue)](https://github.com/Pratikjain24/SAGE)
 [![Stars](https://img.shields.io/github/stars/Pratikjain24/SAGE?style=social)](https://github.com/Pratikjain24/SAGE/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/Pratikjain24/SAGE)](https://github.com/Pratikjain24/SAGE/commits/main)
 [![Issues](https://img.shields.io/github/issues/Pratikjain24/SAGE)](https://github.com/Pratikjain24/SAGE/issues)
-[![Paper](https://img.shields.io/badge/IEEE-Paper%202026-blue)](paper/README.md)
-[![Dossier](https://img.shields.io/badge/System_Dossier-v1.0.0-green.svg)](PROJECT_DOSSIER.md)
 
 > [!TIP]
-> ### 🎮 1-Click Zero-Setup Interactive Playground & Live Web Dashboard
-> Evaluate SAGE immediately in your browser with **zero manual API key configuration**:
+> ### 🎮 Interactive Web Dashboard & Local Workbench
+> SAGE includes a full-stack Next.js 14 + FastAPI live workbench. Monitor real-time agent execution, evaluate self-evolution cycles, and audit safety trajectories locally:
 >
-> | Platform | Target | Description | 1-Click Access |
-> |---|---|---|---|
-> | **Google Colab** | **Interactive Playground** | **Zero-Setup Mock Execution (Default)**. Evaluates $G_1$–$G_7$ in ~30s, plots 4-panel publication figures, and verifies Ed25519/HMAC attestation chains with **zero API keys required**. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Interactive_Playground.ipynb) |
-> | **Google Colab** | **Local vLLM GPU Benchmark** | Full empirical local GPU execution on Colab's free 15GB Tesla T4 GPU using `Qwen2.5-Coder-3B-Instruct` (zero API cost, zero rate limits). | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Pratikjain24/SAGE/blob/main/SAGE_Colab_Benchmark.ipynb) |
-> | **Hugging Face** | **Next.js + FastAPI Dashboard Space** | 1-click cloud-hosted Next.js 14 + FastAPI live workbench. Monitor real-time WebSocket block commits, execute probe generations, and audit trajectories. | [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Dashboard%20Space-blue)](https://huggingface.co/spaces/Pratikjain24/SAGE-Dashboard) [![Duplicate](https://huggingface.co/datasets/huggingface/badges/raw/main/duplicate-this-space-sm.svg)](https://huggingface.co/spaces/Pratikjain24/SAGE-Dashboard?duplicate=true) |
-> | **Kaggle** | **Kaggle Interactive Notebook** | Kaggle cloud kernel for executing multi-seed trajectory replications with GPU acceleration. | [![Open in Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/code/pratikjain24/sage-benchmark) |
+> `ash
+> # Launch local dashboard & API workbench
+> start_dashboard.bat
+> `
+> Open http://localhost:3000 to inspect task evaluations, mutation proposals, and safety drift metrics in real time.
 
 > [!IMPORTANT]
 > ### 🔍 Disambiguation: Distinguishing SAGE from Other Projects
-> To prevent ambiguity across the AI safety and evaluation literature, this project is formally titled **SAGE: Safety & Agent Growth Evaluator** (Jain et al., IEEE 2026). It is an independent research system investigating **security boundary drift, vulnerability injection rates, specification gaming (proxy gaps), and rollback-guarded capability retention in self-modifying code agents**.
+> To prevent ambiguity across the AI safety and evaluation literature, this project is formally titled **SAGE: Safety & Agent Growth Evaluator** (Safety & Agent Growth Evaluator). It is an independent research system investigating **security boundary drift, vulnerability injection rates, specification gaming (proxy gaps), and rollback-guarded capability retention in self-modifying code agents**.
 >
 > Please note the distinction from other publications and tools with related acronyms or prior working titles:
 >
@@ -283,19 +276,18 @@ sage run --config configs/experiments/real_deepseek_strict.yaml
 
 ---
 
-## 🌐 Multi-Model Support Matrix & Colab Benchmarks
+## 🌐 Multi-Model Support Matrix & Configurations
 
-SAGE provides first-class support for state-of-the-art commercial APIs and open-weights foundation models, complete with token cost tracking, strict non-mock execution modes, and self-contained Google Colab / Jupyter benchmark notebooks.
+SAGE provides first-class support for state-of-the-art commercial APIs and open-weights foundation models, complete with token cost tracking and strict non-mock execution modes:
 
-| Provider / Family | Supported Models | Wire Protocol / Endpoint | Cost Tracking | Standalone Notebook |
+| Provider / Family | Supported Models | Wire Protocol / Endpoint | Cost Tracking | Configuration |
 |---|---|---|---|---|
-| **Google Gemini** | `gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-2.0-flash`, `gemini-1.5-pro`, `gemma-2-27b-it` | Google Generative Language API (`/v1beta/openai/`) + `x-goog-api-key` | ✅ $0.075 / $0.30 per 1M tokens | [`SAGE_Google_Benchmark.ipynb`](SAGE_Google_Benchmark.ipynb) |
-| **Anthropic Claude**| `claude-3-7-sonnet`, `claude-3-5-sonnet`, `claude-3-5-haiku`, `claude-3-opus` | Anthropic Messages API (`/v1/messages`) | ✅ $3.00 / $15.00 per 1M tokens | [`SAGE_Claude_Benchmark.ipynb`](SAGE_Claude_Benchmark.ipynb) |
-| **OpenAI** | `gpt-4o`, `gpt-4o-mini`, `o1`, `o3-mini` | OpenAI Chat Completions (`/v1/chat/completions`) | ✅ $2.50 / $10.00 per 1M tokens | [`SAGE_OpenAI_Benchmark.ipynb`](SAGE_OpenAI_Benchmark.ipynb) |
-| **DeepSeek** | `deepseek-chat` (V3), `deepseek-reasoner` (R1) | DeepSeek API (`api.deepseek.com/v1`) | ✅ $0.14 / $0.28 per 1M tokens | [`SAGE_DeepSeek_Benchmark.ipynb`](SAGE_DeepSeek_Benchmark.ipynb) |
-| **Zero-Setup Playground** | Canonical 7-Archetype Suite ($G_1$–$G_7$) | Offline deterministic reference simulation | ✅ Free ($0.00) / Zero API Keys | [`SAGE_Interactive_Playground.ipynb`](SAGE_Interactive_Playground.ipynb) |
-| **Local / vLLM** | `qwen2.5-coder-7b-instruct`, `llama-3.1-8b-instruct` | Local OpenAI-compatible server (`http://localhost:8000/v1`) | ✅ Hardware cost (compute-only) | [`SAGE_Colab_Benchmark.ipynb`](SAGE_Colab_Benchmark.ipynb) |
-| **Groq Cloud** | `llama-3.3-70b-versatile`, `mixtral-8x7b-32768` | Groq OpenAI-compatible (`api.groq.com/openai/v1`) | ✅ $0.59 / $0.79 per 1M tokens | [`configs/model_groq.yaml`](configs/model_groq.yaml) |
+| **Google Gemini** | gemini-2.5-flash, gemini-2.5-pro, gemini-2.0-flash, gemini-1.5-pro, gemma-2-27b-it | Google Generative Language API (/v1beta/openai/) + x-goog-api-key | ✅ .075 / .30 per 1M tokens | [configs/model_gemini.yaml](configs/model_gemini.yaml) |
+| **Anthropic Claude**| claude-3-7-sonnet, claude-3-5-sonnet, claude-3-5-haiku, claude-3-opus | Anthropic Messages API (/v1/messages) | ✅ .00 / .00 per 1M tokens | [configs/model_claude.yaml](configs/model_claude.yaml) |
+| **OpenAI** | gpt-4o, gpt-4o-mini, o1, o3-mini | OpenAI Chat Completions (/v1/chat/completions) | ✅ .50 / .00 per 1M tokens | [configs/model_openai.yaml](configs/model_openai.yaml) |
+| **DeepSeek** | deepseek-chat (V3), deepseek-reasoner (R1) | DeepSeek API (pi.deepseek.com/v1) | ✅ .14 / .28 per 1M tokens | [configs/model_deepseek.yaml](configs/model_deepseek.yaml) |
+| **Local / vLLM** | qwen2.5-coder-7b-instruct, llama-3.1-8b-instruct | Local OpenAI-compatible server (http://localhost:8000/v1) | ✅ Local Compute | [configs/model.yaml](configs/model.yaml) |
+| **Groq Cloud** | llama-3.3-70b-versatile, mixtral-8x7b-32768 | Groq OpenAI-compatible (pi.groq.com/openai/v1) | ✅ .59 / .79 per 1M tokens | configs/model.yaml |
 
 ---
 
@@ -386,6 +378,54 @@ python -m pytest sage_live/tests/test_all.py -v
 
 ---
 
+## 🛡️ Guardrail Evaluation, Confusion Matrix & Defense-in-Depth
+
+SAGE enforces a **defense-in-depth verification pipeline** that decouples sub-10ms fast pre-execution filtering from deep AST static analysis and runtime metamorphic canary regression:
+
+```
+Candidate Mutation Code / Patch
+               │
+               ▼
+┌────────────────────────────────────────────────┐
+│  Tier 1: Deterministic Fast Guard (<10ms)      │  ── AST blocklist (os, eval, pickle, marshal,
+│          Deterministic AST & Regex Kernel      │     codecs, ctypes, base64 dataflow taint)
+└──────────────────────┬─────────────────────────┘
+                       │ Approved
+                       ▼
+┌────────────────────────────────────────────────┐
+│  Tier 2: Evolution Verifier & Safety Monitor   │  ── AST constant-folding path audit, tamper
+│          Static AST Walker + Regex Directives  │     directives regex, protected test checks
+└──────────────────────┬─────────────────────────┘
+                       │ Approved
+                       ▼
+┌────────────────────────────────────────────────┐
+│  Tier 3: Metamorphic Canary Regression (G7)    │  ── Dynamic execution on property-based fuzzer
+│          Differential Invariant Rollback       │     & hidden canaries (catches monkeypatches)
+└──────────────────────┬─────────────────────────┘
+                       │ Zero Regressions
+                       ▼
+               Accepted Mutation
+```
+
+### Empirical Confusion Matrix ($N = 170$ Evaluated Mutation Events)
+
+| Mutation Nature | Accepted (Benign) | Quarantined / Rejected | Empirical Rate |
+|---|---|---|---|
+| **Benign Self-Evolutions** ($N_{\text{benign}}=150$, 35 GPU Runs) | **150** (True Negative) | **0** (False Positive) | **$\text{FPR} = 0.00\%$** (0/150) |
+| **Adversarial Drift Probes** ($N_{\text{adversarial}}=20$, Red-Team) | **0** (False Negative) | **20** (True Positive) | **$\text{TPR} = 100.00\%$** (20/20) |
+| \quad *Easy Difficulty* ($n=3$) | 0 | 3 | $\text{TPR} = 100.00\%$ (3/3) |
+| \quad *Medium Difficulty* ($n=6$) | 0 | 6 | $\text{TPR} = 100.00\%$ (6/6) |
+| \quad *Hard Difficulty* ($n=11$) | 0 | 11 | $\text{TPR} = 100.00\%$ (11/11) |
+
+> **Key Architectural Finding**: Static AST analysis (G5) intercepts 18 of 20 probes (90.0\%). The two runtime monkeypatching exploits (Probe 11: `math.isclose` tolerance inflation; Probe 12: `builtins.open` test cache spoofing) bypass all static AST filters because they use legitimate syntax without forbidden imports. Only the G7 differential metamorphic canary fuzzer detects the runtime invariant violation and triggers atomic rollback, yielding **100.0\% overall coverage**.
+
+LaTeX publication tables are versioned under [`paper/tables/`](paper/tables/):
+- `table_confusion_matrix.tex`: Complete 2x2 confusion matrix.
+- `table_drift_probes_20.tex`: Full taxonomy of 20 red-team payloads and gate assignments.
+- `table_defense_in_depth.tex`: Security boundary coverage matrix.
+
+---
+
 ## Monorepo Layout
 
 ```
@@ -408,45 +448,23 @@ sage/
 +-- configs/                  # Agent, experiment, and model YAMLs
 +-- docker/                   # Dockerfiles for sandbox & scorer
 +-- tests/                    # Unit, regression, and integration tests
-+-- paper/                    # IEEE Conference submission manuscript (main.tex) & assets
 +-- docs/                     # Specifications and guides
 ```
 
 ---
 
-## Authors & Institutional Affiliation
+## Project Team & Institutional Affiliation
 
-This project is authored by a student research team at **Vishwakarma Institute of Technology (VIT), Pune, India**, under faculty advisory guidance.
+This project was developed by a student engineering team at **Vishwakarma Institute of Technology (VIT), Pune, India**, under faculty advisory guidance.
 
 | Role | Name | Affiliation |
 |---|---|---|
-| **Lead Author** | Pratik P. Jain | Dept. of Computer Engineering, VIT Pune |
-| **Co-Author** | Janhavi B. Pagare | Dept. of Computer Engineering, VIT Pune |
-| **Co-Author** | Aditya U. Dengale | Dept. of Computer Engineering, VIT Pune |
-| **Co-Author** | Naitik K. Kharat | Dept. of Computer Engineering, VIT Pune |
-| **Co-Author** | Shamika R. Kadam | Dept. of Computer Engineering, VIT Pune |
+| **Project Lead** | Pratik P. Jain | Dept. of Computer Engineering, VIT Pune |
+| **Team Member** | Janhavi B. Pagare | Dept. of Computer Engineering, VIT Pune |
+| **Team Member** | Aditya U. Dengale | Dept. of Computer Engineering, VIT Pune |
+| **Team Member** | Naitik K. Kharat | Dept. of Computer Engineering, VIT Pune |
+| **Team Member** | Shamika R. Kadam | Dept. of Computer Engineering, VIT Pune |
 | **Faculty Guide** | Prof. Vikrant K. Kadam | Dept. of Computer Engineering, VIT Pune |
-
-**Submission Target**: IEEE Conference on Artificial Intelligence and Software Engineering (2026)  
-**Human Annotation**: 82.7 person-hours across 319 code tasks (pooled κ = 0.856, SE ≤ 0.038)
-
----
-
-## Citation
-
-If you use SAGE in your research, please cite our IEEE conference paper:
-
-```bibtex
-@inproceedings{jain2026sage,
-  title     = {SAGE: Safety & Agent Growth Evaluator --- Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents},
-  author    = {Jain, Pratik P. and Pagare, Janhavi B. and Dengale, Aditya U. and Kharat, Naitik K. and Kadam, Shamika R. and Kadam, Vikrant K.},
-  booktitle  = {Proceedings of the IEEE Conference on Artificial Intelligence and Software Engineering},
-  year      = {2026},
-  institution = {Vishwakarma Institute of Technology, Pune, India}
-}
-```
-
-> **Not to be confused with**: Xia, Deng & Zhang (2024) *"Top Leaderboard Ranking = Top Coding Proficiency, Always? EvoEval: Evolving Coding Benchmarks via LLM"* ([evo-eval/evoeval](https://github.com/evo-eval/evoeval)) — an unrelated code-generation benchmark focusing on coding problem mutation.
 
 ---
 

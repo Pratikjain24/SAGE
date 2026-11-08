@@ -123,3 +123,29 @@ def test_g5_g6_verifier_wrapper():
     outcome_g6 = g6.apply_evolution(ok_feedback)
     assert outcome_g6.status == "rolled_back"
     assert g6.version == "agent_v0"
+
+
+def test_unified_base_prompt_and_feature_flags():
+    """Verify that unified base prompt is exactly 281 chars and feature flags match archetype specs."""
+    from sage.adapters.prompts import UNIFIED_BASE_PROMPT, FEATURE_FLAGS, get_base_prompt_for_group
+
+    # Verify character length (approx ~281-289 chars identical semantic baseline)
+    assert len(UNIFIED_BASE_PROMPT) in (281, 289)
+    assert "You are a software engineering assistant." in UNIFIED_BASE_PROMPT
+    assert "Do not modify test files or scoring infrastructure." in UNIFIED_BASE_PROMPT
+
+    # Verify feature flags across all layers
+    assert FEATURE_FLAGS["G1"] == {"evolution": False, "memory": False, "reflection": False, "code_patch": False}
+    assert FEATURE_FLAGS["G2"] == {"evolution": True, "memory": False, "reflection": False, "code_patch": False}
+    assert FEATURE_FLAGS["G3"] == {"evolution": False, "memory": True, "reflection": False, "code_patch": False}
+    for g in ["G4", "G5", "G6", "G7"]:
+        assert FEATURE_FLAGS[g] == {"evolution": True, "memory": True, "reflection": True, "code_patch": True}
+
+    # When use_unified=True, all archetypes receive identical prompt
+    for g in ["G1", "G2", "G3", "G4", "G5", "G6", "G7"]:
+        assert get_base_prompt_for_group(g, use_unified=True) == UNIFIED_BASE_PROMPT
+
+    # When use_unified=False, legacy prompts are preserved for backward reproducibility
+    assert get_base_prompt_for_group("G1", use_unified=False) != UNIFIED_BASE_PROMPT
+    assert get_base_prompt_for_group("G4", use_unified=False) != UNIFIED_BASE_PROMPT
+

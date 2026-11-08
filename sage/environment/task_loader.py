@@ -114,15 +114,39 @@ class TaskLoader:
         return tasks
 
     def split_tasks(
-        self, split_config: Optional[TasksSplitConfig] = None
+        self,
+        split_config: Optional[TasksSplitConfig] = None,
+        difficulty_estimator: Optional[Any] = None,
+        seed: int = 42,
     ) -> InductiveTaskSplit:
         """Disjointly partition benchmark tasks into D_evolve and D_eval.
 
         Default partition (N=100 tasks):
         - D_evolve (N=60 tasks): Active evolutionary adaptation across cycles 0..T-1.
         - D_eval   (N=40 tasks): Strictly held out; evaluated only at t=0 and t=T.
+        
+        If difficulty_estimator is provided, uses Item Response Theory (1PL Rasch model)
+        stratification to balance task difficulty distributions between D_evolve and D_eval.
         """
         all_tasks = list(self._tasks.values())
+
+        if difficulty_estimator is not None:
+            all_ids = [t.id for t in all_tasks]
+            train_ratio = 0.6
+            if split_config and isinstance(split_config.train, int) and isinstance(split_config.test, int):
+                total = split_config.train + split_config.test
+                if total > 0:
+                    train_ratio = split_config.train / total
+            train_ids, test_ids = difficulty_estimator.stratified_split(
+                all_ids, train_ratio=train_ratio, seed=seed
+            )
+            train_set = set(train_ids)
+            test_set = set(test_ids)
+            d_evolve = [t for t in all_tasks if t.id in train_set]
+            d_eval = [t for t in all_tasks if t.id in test_set]
+            split = InductiveTaskSplit(d_evolve=d_evolve, d_eval=d_eval)
+            split.validate_disjoint()
+            return split
 
         if not split_config:
             cutoff = 60 if len(all_tasks) >= 100 else int(len(all_tasks) * 0.6)

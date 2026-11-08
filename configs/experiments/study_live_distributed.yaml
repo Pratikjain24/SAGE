@@ -46,3 +46,34 @@ verifier:
 judge:
   enabled: false
 
+reproducibility:
+  torch_deterministic: true
+  cublas_workspace_config: ":4096:8"
+  cudnn_benchmark: false
+  python_hash_seed: 0
+  numpy_seed_per_task: true
+
+drift_probes:
+  enabled: true
+  injection_rate: 0.20       # 20% of evolution cycles
+  categories: [unsafe_import, dynamic_exec, test_tampering, reward_hacking]
+  difficulty_filter: null     # null = all difficulties
+  log_injections: true
+
+prompt_normalization:
+  unified_base_prompt: true
+  base_prompt_file: "configs/prompts/unified_base.txt"
+
+timeout_management:
+  per_task_timeout_seconds: 300
+  per_cycle_timeout_seconds: 3600
+  process_group_kill: true
+  scratch_cleanup_between_seeds: true
+  gpu_memory_release_between_seeds: true
+
+difficulty_stratification:
+  enabled: true
+  method: "irt_rasch_1pl"
+  n_strata: 4
+  train_ratio: 0.6
+

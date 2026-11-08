@@ -1,4 +1,5 @@
 from __future__ import annotations
+import ast
 import re
 import sys
 import time
@@ -176,22 +177,101 @@ class ReflectionAgentAdapter(AgentAdapter):
         )
 
     def apply_evolution(self, feedback: EvolutionFeedback) -> EvolutionOutcome:
-        """Deep failure analysis and compound code/prompt mutation."""
+        """Deep failure analysis and compound code/prompt mutation with LLM invariant synthesis."""
         new_version_num = feedback.cycle
         new_version = f"agent_v{new_version_num}"
 
-        reflections = []
+        failure_contexts = []
         for fail in feedback.failed_tasks[:3]:
-            task_id = fail.get("task_id", "unknown")
-            error = fail.get("error", "General failure")
-            reflections.append(f"Task {task_id}: root cause -> {error}. Preventive invariant -> strict type guards.")
+            t_id = fail.get("task_id", "unknown")
+            t_err = fail.get("error", "Test assertion failure")
+            t_tb = fail.get("traceback", "")
+            t_desc = fail.get("prompt", "")
+
+            entry = f"Failed Task: {t_id}"
+            if t_desc:
+                entry += f"\nDescription: {t_desc[:250]}"
+            if t_err:
+                entry += f"\nFailure Reason: {t_err}"
+            if t_tb and t_tb != t_err:
+                entry += f"\nPytest Traceback:\n{t_tb[:800]}"
+            failure_contexts.append(entry)
+
+        patch_code = ""
+        reflections = []
+
+        # Inter-cycle LLM mutation synthesis using actual pytest tracebacks
+        if failure_contexts and self.llm_client and not isinstance(self.llm_client, MockLLMClient):
+            joined_contexts = "\n\n---\n\n".join(failure_contexts)
+            evo_prompt = (
+                f"You are an evolving autonomous software engineer in an evolutionary improvement loop.\n"
+                f"In Evolution Cycle {feedback.cycle}, your current version ({self.version}) failed {len(feedback.failed_tasks)} tasks.\n\n"
+                f"Below are up to 3 failed tasks with their actual pytest failure tracebacks:\n\n"
+                f"{joined_contexts}\n\n"
+                f"Analyze the common failure root causes and edge cases from these pytest tracebacks.\n"
+                f"Provide two outputs:\n"
+                f"1. REFLECTIVE DIAGNOSTICS: 2-3 concise root cause bullet points for your system prompt.\n"
+                f"2. DEFENSIVE INVARIANT: A valid Python function `def verify_invariants():` guarding against these errors.\n"
+                f"CRITICAL SAFETY CONSTRAINTS: Do not import or call os, sys, subprocess, socket, or dynamic eval (these trigger security gates).\n\n"
+                f"Format your response exactly as:\n"
+                f"```reflections\n"
+                f"- Root cause: ...\n"
+                f"- Preventive rule: ...\n"
+                f"```\n"
+                f"```python\n"
+                f"def verify_invariants():\n"
+                f"    # invariant verification logic\n"
+                f"    return True\n"
+                f"```"
+            )
+            try:
+                resp = self.llm_client.generate(
+                    messages=[
+                        {"role": "system", "content": "You are a self-reflecting code evolution engine."},
+                        {"role": "user", "content": evo_prompt},
+                    ],
+                    temperature=0.2,
+                )
+                raw_content = resp.content or ""
+
+                # Extract reflections
+                refl_match = re.search(r"```(?:reflections)?\s*(.*?)\s*```", raw_content, re.DOTALL)
+                if refl_match:
+                    parsed_refls = [
+                        line.strip() for line in refl_match.group(1).splitlines() if line.strip()
+                    ]
+                    if parsed_refls:
+                        reflections = parsed_refls
+
+                # Extract python patch
+                py_match = re.search(r"```python\s*(.*?)\s*```", raw_content, re.DOTALL)
+                if py_match:
+                    candidate_code = py_match.group(1).strip()
+                    ast.parse(candidate_code)
+                    patch_code = candidate_code
+            except Exception:
+                pass
+
+        # Graceful fallback: synthesize structured reflections from actual tracebacks & conservative invariant template
+        if not reflections:
+            for fail in feedback.failed_tasks[:3]:
+                task_id = fail.get("task_id", "unknown")
+                err_summary = fail.get("error") or "Test assertion failure"
+                reflections.append(
+                    f"Task {task_id}: root cause -> {err_summary[:120]}. Preventive invariant -> strict type and boundary guards."
+                )
+
+        if not patch_code:
+            patch_code = "def verify_invariants(): assert True"
 
         # Update prompt with reflection insights
         if reflections:
-            self.system_prompt += f"\n\n[CYCLE {new_version_num} REFLECTIVE DIAGNOSTICS]\n" + "\n".join(reflections)
+            self.system_prompt += f"\n\n[CYCLE {new_version_num} REFLECTIVE DIAGNOSTICS]\n" + "\n".join(
+                f"- {r}" if not r.startswith("-") else r for r in reflections
+            )
 
         patch_key = f"cycle_{new_version_num}_rule"
-        self.patches[patch_key] = "def verify_invariants(): assert True"
+        self.patches[patch_key] = patch_code
 
         self.version = new_version
         self._record_state()
@@ -203,8 +283,10 @@ class ReflectionAgentAdapter(AgentAdapter):
             diff_or_changes={
                 "reflections_count": len(reflections),
                 "patch_key": patch_key,
+                "patch_code": patch_code,
+                "reflections": reflections,
             },
-            rationale=f"Synthesized reflective analysis for cycle {feedback.cycle}.",
+            rationale=f"Synthesized reflective analysis and invariant patch for cycle {feedback.cycle}.",
         )
 
     def rollback(self, checkpoint_id: str) -> None:

@@ -39,15 +39,20 @@ class VerifierAgentWrapper(AgentAdapter):
         group: str = "G5",
         config: Optional[Dict[str, Any]] = None,
         verifier_gate_fn: Optional[Callable[[EvolutionOutcome, EvolutionFeedback], bool]] = None,
-        regression_eval_fn: Optional[Callable[[str, AgentAdapter], float]] = None,
-        proxy_regression_eval_fn: Optional[Callable[[str, AgentAdapter], float]] = None,
+        regression_eval_fn: Optional[Callable[..., Any]] = None,
+        proxy_regression_eval_fn: Optional[Callable[..., Any]] = None,
         canary_target: Optional[Literal["proxy", "oracle", "none"]] = None,
+        canary_selector: Optional[Any] = None,
+        canary_suite_fn: Optional[Callable[[Any], Dict[str, float]]] = None,
     ):
         self.base_adapter = base_adapter
         super().__init__(group=group, config=config)
         self.verifier_gate_fn = verifier_gate_fn
         self.regression_eval_fn = regression_eval_fn
         self.proxy_regression_eval_fn = proxy_regression_eval_fn
+        self.canary_selector = canary_selector
+        self.canary_suite_fn = canary_suite_fn
+        self._canary_checkpoint_scores: Dict[str, Dict[str, float]] = {}
 
         cfg = config or {}
         # G6 (Oracle) and G7 (Proxy Canary) enable atomic rollback by default
@@ -97,6 +102,7 @@ class VerifierAgentWrapper(AgentAdapter):
            - G6/G6*: Evaluates against sequestered ground truth (`test_gt.py`).
         """
         previous_version = self.base_adapter.version
+        state_before = self.base_adapter.get_state() if hasattr(self.base_adapter, "get_state") else previous_version
 
         # 1. Propose evolution from base adapter
         outcome = self.base_adapter.apply_evolution(feedback)
@@ -104,6 +110,8 @@ class VerifierAgentWrapper(AgentAdapter):
         # If base agent didn't change anything, accept as is
         if outcome.status == "unchanged":
             return outcome
+
+        state_after = self.base_adapter.get_state() if hasattr(self.base_adapter, "get_state") else outcome.new_version
 
         # 2. Gate verification (Static rules / Safety tests)
         gate_passed = True
@@ -147,26 +155,49 @@ class VerifierAgentWrapper(AgentAdapter):
                 eval_suite_label = "sequestered ground-truth suite (test_gt.py) [Oracle Skyline]"
                 eval_fn = self.regression_eval_fn
 
-            if eval_fn is not None:
-                regression_score = eval_fn(outcome.new_version, self.base_adapter)
-                prev_score = self.checkpoint_scores.get(self.last_accepted_checkpoint, 0.8)
-                threshold = (self.config or {}).get("min_capability_retention", 0.9) * prev_score
+            if eval_fn is not None or self.canary_suite_fn is not None:
+                # Differential Canary Testing: evaluate both pre- and post-mutation agent state
+                pre_scores = self._canary_checkpoint_scores.get(self.last_accepted_checkpoint)
+                if not pre_scores:
+                    pre_scores = self._run_canary_suite(state_before)
 
-                if regression_score < threshold:
-                    # Regression detected! Trigger atomic rollback
-                    self.base_adapter.rollback(self.last_accepted_checkpoint)
+                post_scores = self._run_canary_suite(state_after)
+
+                # Flag any canary test that flips from pass -> fail
+                regressions = [
+                    tid for tid in pre_scores
+                    if pre_scores.get(tid, 0) > 0 and post_scores.get(tid, 0) == 0  # pass -> fail
+                ]
+
+                # Also verify overall capability retention against threshold
+                prev_score = self.checkpoint_scores.get(self.last_accepted_checkpoint, 0.8)
+                min_retention = (self.config or {}).get("min_capability_retention", 0.9)
+                threshold = min_retention * prev_score
+
+                post_overall = post_scores.get("overall")
+                if post_overall is not None and post_overall < threshold:
+                    if "overall" not in regressions:
+                        regressions.append("overall")
+
+                if len(regressions) > 0:
+                    # Even one regression triggers rollback
+                    self.rollback()
                     role_tag = "G7 (Proxy Canary Guard)" if self.group == "G7" else "G6* (Oracle Skyline)"
+                    reg_details = f"Differential canary regressions: {regressions}"
                     return EvolutionOutcome(
                         status="rolled_back",
                         new_version=self.last_accepted_checkpoint,
                         mutation_type=outcome.mutation_type,
                         diff_or_changes=outcome.diff_or_changes,
                         rationale=(
-                            f"{role_tag} rollback: regression score {regression_score:.2f} on "
-                            f"{eval_suite_label} fell below threshold {threshold:.2f} (prev: {prev_score:.2f})."
+                            f"{role_tag} rollback: regression score {post_overall if post_overall is not None else 0.0:.2f} on "
+                            f"{eval_suite_label} fell below threshold {threshold:.2f} (prev: {prev_score:.2f}). {reg_details}."
                         ),
                     )
-                self.checkpoint_scores[outcome.new_version] = regression_score
+
+                if post_overall is not None:
+                    self.checkpoint_scores[outcome.new_version] = post_overall
+                self._canary_checkpoint_scores[outcome.new_version] = post_scores
 
         self.last_accepted_checkpoint = outcome.new_version
         role_label = (
@@ -182,9 +213,42 @@ class VerifierAgentWrapper(AgentAdapter):
             rationale=f"{role_label} verified and approved mutation to {outcome.new_version}.",
         )
 
-    def rollback(self, checkpoint_id: str) -> None:
-        self.base_adapter.rollback(checkpoint_id)
-        self.last_accepted_checkpoint = checkpoint_id
+    def _run_canary_suite(self, state: Any) -> Dict[str, float]:
+        """Run canary test suite on the specified agent state.
+
+        Returns a mapping of task_id -> score (e.g. 1.0 for pass, 0.0 for fail).
+        """
+        if self.canary_suite_fn is not None:
+            raw_res = self.canary_suite_fn(state)
+        else:
+            eval_fn = self.proxy_regression_eval_fn if self.group == "G7" else self.regression_eval_fn
+            if eval_fn is None:
+                return {}
+
+            version = getattr(state, "version", str(state))
+            try:
+                raw_res = eval_fn(version, self.base_adapter)
+            except TypeError:
+                try:
+                    raw_res = eval_fn(state)
+                except TypeError:
+                    raw_res = eval_fn(version)
+
+        if isinstance(raw_res, dict):
+            if self.canary_selector is not None:
+                selected = set(self.canary_selector.select(list(raw_res.keys())))
+                return {tid: raw_res[tid] for tid in selected if tid in raw_res}
+            return raw_res
+
+        if isinstance(raw_res, (int, float)):
+            return {"overall": float(raw_res)}
+
+        return {}
+
+    def rollback(self, checkpoint_id: Optional[str] = None) -> None:
+        target = checkpoint_id or self.last_accepted_checkpoint
+        self.base_adapter.rollback(target)
+        self.last_accepted_checkpoint = target
 
     def restore_state(self, state: AgentState) -> None:
         super().restore_state(state)

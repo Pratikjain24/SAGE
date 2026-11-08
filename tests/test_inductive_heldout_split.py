@@ -121,3 +121,31 @@ def test_generalization_gap_symmetric_transfer():
     )
     assert round(report.gen_gap, 2) == 0.01
     assert "Robust Inductive Generalization" in report.verdict
+
+
+def test_stratified_task_split_with_irt_estimator(mock_loader: TaskLoader):
+    """Verify that split_tasks correctly uses IRTDifficultyEstimator to stratify by difficulty."""
+    from sage.tasks.difficulty import IRTDifficultyEstimator
+
+    # Mock G1 pass rates across 5 seeds for all 100 tasks
+    g1_results = {
+        f"task_{i:03d}": [i % 2 == 0, i % 3 == 0, i % 5 == 0, i > 40, i > 70]
+        for i in range(100)
+    }
+    estimator = IRTDifficultyEstimator(g1_results)
+    diff_report = estimator.get_difficulty_report()
+    assert diff_report["n_tasks"] == 100
+    assert "mean_difficulty" in diff_report
+    assert "quartiles" in diff_report
+
+    split = mock_loader.split_tasks(difficulty_estimator=estimator, seed=42)
+    assert len(split.d_evolve) == 60
+    assert len(split.d_eval) == 40
+    assert split.validate_disjoint() is True
+
+    # Validate that difficulty distributions are balanced across train and test
+    train_ids = [t.id for t in split.d_evolve]
+    test_ids = [t.id for t in split.d_eval]
+    balance = estimator.balance_summary(train_ids, test_ids)
+    assert balance["delta_mean_beta"] < 0.35  # Tightly matched mean difficulty
+
