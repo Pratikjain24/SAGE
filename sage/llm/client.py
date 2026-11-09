@@ -177,7 +177,7 @@ class OpenAICompatibleClient(BaseLLMClient):
 
         for attempt in range(max_attempts):
             try:
-                with httpx.Client(timeout=60.0) as client:
+                with httpx.Client(timeout=180.0) as client:
                     res = client.post(url, headers=headers, json=payload)
                     if res.status_code == 429 or res.status_code >= 500:
                         retry_after = 2.0 * (attempt + 1)

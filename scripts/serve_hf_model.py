@@ -30,6 +30,14 @@ MODEL = None
 TOKENIZER = None
 MODEL_NAME = "Qwen/Qwen2.5-Coder-7B-Instruct"
 IS_MOCK = False
+GEN_LOCK: Optional[Any] = None
+
+
+@app.on_event("startup")
+async def startup_event():
+    global GEN_LOCK
+    import asyncio
+    GEN_LOCK = asyncio.Lock()
 
 
 class ChatMessage(BaseModel):
@@ -102,6 +110,7 @@ async def chat_completions(req: ChatCompletionRequest):
             },
         }
 
+    import asyncio, anyio
     import torch
 
     # Prepare message dicts
@@ -124,15 +133,27 @@ async def chat_completions(req: ChatCompletionRequest):
     input_ids = inputs.input_ids.to(MODEL.device)
     prompt_tokens = input_ids.shape[1]
 
-    # Generation kwargs
+    # Stop tokens: include standard EOS, <|im_end|>, and <|endoftext|>
+    eos_ids = [TOKENIZER.eos_token_id]
+    for sp_tok in ["<|im_end|>", "<|endoftext|>"]:
+        try:
+            tid = TOKENIZER.convert_tokens_to_ids(sp_tok)
+            if isinstance(tid, int) and tid not in eos_ids:
+                eos_ids.append(tid)
+        except Exception:
+            pass
+
+    # Cap max new tokens: coding tasks in SAGE need 150-600 tokens max
+    # Capping prevents runaway generation and 5-minute per-task stalls
     temp = req.temperature if req.temperature is not None else 0.2
     top_p = req.top_p if req.top_p is not None else 0.95
-    max_new_tokens = req.max_tokens or 2048
+    max_new_tokens = min(req.max_tokens or 1024, 1024)
 
     gen_kwargs: Dict[str, Any] = {
         "max_new_tokens": max_new_tokens,
-        "pad_token_id": TOKENIZER.pad_token_id or TOKENIZER.eos_token_id,
-        "eos_token_id": TOKENIZER.eos_token_id,
+        "pad_token_id": TOKENIZER.pad_token_id or eos_ids[0],
+        "eos_token_id": eos_ids if len(eos_ids) > 1 else eos_ids[0],
+        "use_cache": True,
     }
     if temp > 0.01:
         gen_kwargs["do_sample"] = True
@@ -141,8 +162,14 @@ async def chat_completions(req: ChatCompletionRequest):
     else:
         gen_kwargs["do_sample"] = False
 
-    with torch.no_grad():
-        output_ids = MODEL.generate(input_ids, **gen_kwargs)
+    def _sync_generate():
+        with torch.inference_mode():
+            return MODEL.generate(input_ids, **gen_kwargs)
+
+    # Serialize generation to prevent GPU memory thrashing and thread lock contention
+    lock = GEN_LOCK or asyncio.Lock()
+    async with lock:
+        output_ids = await anyio.to_thread.run_sync(_sync_generate)
 
     # Slice out generated completion tokens
     completion_ids = output_ids[0][prompt_tokens:]
@@ -242,3 +269,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

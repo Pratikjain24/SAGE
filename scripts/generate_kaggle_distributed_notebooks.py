@@ -105,7 +105,7 @@ model:
   api_base: "http://localhost:8001/v1"
   api_key: "EMPTY"
   context_window: 32768
-  max_tokens: 4096
+  max_tokens: 1024
 
 sandbox:
   image: sage-sandbox:1.0
@@ -495,6 +495,7 @@ def build_notebook(contributor: dict) -> dict:
         "        '--seeds', str(seed),\n",
         "        '--run-id', run_id,\n",
         "        '--cycles', '5',\n",
+        "        '--workers', '1',\n",
         "        '--runs-dir', '/kaggle/working/SAGE/experiments/runs'\n",
         "    ]\n",
         "    res = subprocess.run(cmd, env=env, cwd=sage_dir)\n",
@@ -528,6 +529,7 @@ def build_notebook(contributor: dict) -> dict:
             "        '--seeds', str(cross_seed),\n",
             "        '--run-id', run_id,\n",
             "        '--cycles', '5',\n",
+            "        '--workers', '1',\n",
             "        '--runs-dir', '/kaggle/working/SAGE/experiments/runs'\n",
             "    ]\n",
             "    res = subprocess.run(cmd, env=env, cwd=sage_dir)\n",
