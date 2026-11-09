@@ -102,7 +102,7 @@ class MemoryAgentAdapter(AgentAdapter):
                     f"Prompt: {task.prompt}\n"
                     f"Procedural Memory Strategies:\n{memory_context}\n"
                     f"Current code in {entry}:\n```python\n{content}\n```\n"
-                    "Please provide the corrected implementation."
+                    "Provide the complete corrected implementation inside a single ```python ... ``` code block. Do not include verbose explanations."
                 ),
             },
         ]

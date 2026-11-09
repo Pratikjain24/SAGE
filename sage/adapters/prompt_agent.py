@@ -84,7 +84,7 @@ class PromptAgentAdapter(AgentAdapter):
                     f"Task ID: {task.task_id}\n"
                     f"Prompt: {task.prompt}\n"
                     f"Current code in {entry}:\n```python\n{content}\n```\n"
-                    "Please provide the corrected implementation."
+                    "Provide the complete corrected implementation inside a single ```python ... ``` code block. Do not include verbose explanations."
                 ),
             },
         ]

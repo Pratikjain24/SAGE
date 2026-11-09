@@ -184,3 +184,4 @@ def run_separation_audit():
 if __name__ == "__main__":
     success = run_separation_audit()
     sys.exit(0 if success else 1)
+

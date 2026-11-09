@@ -101,7 +101,7 @@ class StaticAgentAdapter(AgentAdapter):
                     f"Prompt: {task.prompt}\n"
                     f"Workspace files: {dir_names}\n"
                     f"Current code in {entry}:\n```python\n{entry_content}\n```\n"
-                    f"Please provide the corrected implementation."
+                    f"Provide the complete corrected implementation inside a single ```python ... ``` code block. Do not include verbose explanations."
                 ),
             },
         ]

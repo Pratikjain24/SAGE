@@ -34,19 +34,30 @@ class DockerRunner:
             safety_monitor=self.safety_monitor,
         )
 
+    _DOCKER_AVAILABLE_CACHE: Optional[bool] = None
+
     def _check_docker(self) -> bool:
         """Check if Docker CLI is installed and responsive."""
+        if DockerRunner._DOCKER_AVAILABLE_CACHE is not None:
+            return DockerRunner._DOCKER_AVAILABLE_CACHE
         if not shutil.which("docker"):
+            DockerRunner._DOCKER_AVAILABLE_CACHE = False
+            return False
+        # On Linux / Kaggle, verify the docker daemon socket exists before running docker info
+        import os
+        if os.name == "posix" and not os.path.exists("/var/run/docker.sock"):
+            DockerRunner._DOCKER_AVAILABLE_CACHE = False
             return False
         try:
             res = subprocess.run(
                 ["docker", "info"],
                 capture_output=True,
-                timeout=5,
+                timeout=2,
             )
-            return res.returncode == 0
+            DockerRunner._DOCKER_AVAILABLE_CACHE = (res.returncode == 0)
         except Exception:
-            return False
+            DockerRunner._DOCKER_AVAILABLE_CACHE = False
+        return DockerRunner._DOCKER_AVAILABLE_CACHE
 
     @property
     def is_docker_active(self) -> bool:
