@@ -489,6 +489,13 @@ To respect the fundamental empirical bootstrap resolution floor $1 / (B + 1) = 1
 
 \input{tables/table_appendix_significance_full.tex}
 
+\section{Task Contamination and Solution Memorization Audit}
+\label{app:task_contamination}
+
+To audit potential pre-training memorization following recent benchmark contamination findings~\cite{openai2026swebenchleakage}, we conducted zero-shot completion probes across all 100 tasks using evaluated open-weights models (Qwen2.5-Coder-7B and Llama-3.1-8B). Prompts contained only task specifications $\mathcal{P}_t$, evaluating candidate completions $\hat{S}_t$ against sequestered ground-truth implementations and test suites $S^*_t$ across 4-gram/8-gram Jaccard overlap, longest common subsequence (LCS) ratio, verbatim line overlap, and longest contiguous token runs. Table~\ref{tab:task_contamination} presents the complete audit results across all task categories.
+
+\input{tables/table_appendix_contamination.tex}
+
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
