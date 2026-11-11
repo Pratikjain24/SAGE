@@ -25,6 +25,7 @@ authors:
     affiliation: "Vishwakarma Institute of Technology, Pune"
 repository-code: "https://github.com/Pratikjain24/SAGE"
 url: "https://github.com/Pratikjain24/SAGE"
+doi: "10.5281/zenodo.14982104"
 abstract: >
   SAGE is a hardened benchmark and formal evaluation framework that measures
   security boundary drift (vulnerability injection rate), specification gaming
@@ -65,5 +66,6 @@ preferred-citation:
   conference:
     name: "IEEE Conference on Artificial Intelligence and Software Engineering"
   year: 2026
+  doi: "10.5281/zenodo.14982104"
   institution:
     name: "Vishwakarma Institute of Technology, Pune"
