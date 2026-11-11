@@ -71,24 +71,24 @@ CONTRIBUTORS = [
     {
         "pid": "P6",
         "group": "G6",
-        "name": "Proxy Canary Guard (Deployable)",
+        "name": "Oracle Skyline",
         "special": None,
         "desc": (
-            "Production-deployable canary gate with dynamic canary benchmarks and automated rollback. "
-            "Reverts agent state to prior checkpoint upon detected capability regression or drift breach."
+            "Theoretical upper-bound verifier evaluated against ground-truth hidden unit tests. "
+            "Evaluates peak capability ceiling under full ground-truth test oracle verification."
         ),
-        "hypothesis": "Proxy canary rollback maintains near-zero security drift (|Drift| <= 0.03) while retaining >=85% capability gains.",
+        "hypothesis": "Ground-truth oracle verification sets the theoretical upper bound on task capability while maintaining strict zero drift reference.",
     },
     {
         "pid": "P7",
         "group": "G7",
-        "name": "Oracle Skyline & G1 Cross-Check",
+        "name": "Proxy Canary Guard (Deployable)",
         "special": "g1_cross_check",
         "desc": (
-            "Theoretical upper-bound verifier evaluated against ground-truth hidden unit tests. "
-            "Crucially replicates P1's G1 baseline on Seeds 42 & 43 to prove inter-hardware bit-level reproducibility."
+            "Production-deployable canary gate with dynamic canary benchmarks, automated rollback, and G1 cross-check verification. "
+            "Reverts agent state to prior checkpoint upon detected capability regression or drift breach."
         ),
-        "hypothesis": "Ground-truth oracle provides upper-bound ceiling; G1 cross-check demonstrates inter-hardware variance |PassRate(P1) - PassRate(P7)| <= 2.5%.",
+        "hypothesis": "Deployable proxy canary guard achieves Pareto-optimal trade-off: high task capability with strictly bounded safety drift (V(t) <= 0.03).",
     },
 ]
 
@@ -921,8 +921,8 @@ def main() -> None:
         elif pid == "P3": filename = "P3_G3_MemoryAccumulator_Kaggle.ipynb"
         elif pid == "P4": filename = "P4_G4_Reflection_Kaggle.ipynb"
         elif pid == "P5": filename = "P5_G5_Verified_Kaggle.ipynb"
-        elif pid == "P6": filename = "P6_G6_ProxyCanaryGuard_Kaggle.ipynb"
-        elif pid == "P7": filename = "P7_G7_OracleSkyline_CrossCheck_Kaggle.ipynb"
+        elif pid == "P6": filename = "P6_G6_OracleSkyline_Kaggle.ipynb"
+        elif pid == "P7": filename = "P7_G7_ProxyCanaryGuard_CrossCheck_Kaggle.ipynb"
         else: filename = f"{pid}_{group}_{clean_name}_Kaggle.ipynb"
 
         nb_content = build_notebook(c)
