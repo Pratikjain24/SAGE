@@ -933,20 +933,6 @@ def main() -> None:
         with open(p_dist, "w", encoding="utf-8") as f:
             json.dump(nb_content, f, indent=2)
 
-        # Write to root for convenience
-        p_root = ROOT / filename
-        with open(p_root, "w", encoding="utf-8") as f:
-            json.dump(nb_content, f, indent=2)
-
-        # Also write to parent workspace root for convenience
-        if ROOT.parent != ROOT:
-            try:
-                p_parent = ROOT.parent / filename
-                with open(p_parent, "w", encoding="utf-8") as f:
-                    json.dump(nb_content, f, indent=2)
-            except Exception:
-                pass
-
         print(f"  [OK] Generated {filename} ({len(nb_content['cells'])} cells)")
 
     print("All 7 distributed notebooks generated successfully.")
