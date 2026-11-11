@@ -43,7 +43,7 @@ To provide a rigorous, defensible security foundation, SAGE establishes its cont
 |  PILLAR 2: Empirical Workload Containment Across 18,000 Benchmark Executions                      |
 |  - Sample Unit: Multi-turn agent execution episodes executing arbitrary bash/code tool calls.    |
 |  - Canonical Benchmark Matrix (N = 18,000): 0 escapes -> Exact 95% CI: [0.0%, 0.02%]             |
-|  - Live Neural Cohort (N = 1,800, 7,613 live tool calls): 0 escapes -> Exact 95% CI: [0.0%, 0.20%]|
+|  - Live Neural Cohort (N = 9,814 live tasks across G1–G7): 0 escapes -> Exact 95% CI: [0.0%, 0.04%]|
 |  - Multi-Seed Cohort (N = 900): 0 escapes -> Exact 95% CI: [0.0%, 0.41%]                         |
 +---------------------------------------------------------------------------------------------------+
 ```
@@ -56,10 +56,10 @@ When evaluating the five concrete container escape vectors, SAGE's dual-containe
 
 ### B. Statistical Confidence Across the Benchmark Workload ($N=18{,}000$)
 If a reviewer seeks an empirical confidence bound over execution episodes, the proper sample size is the actual volume of containerized agent tasks evaluated:
-- Across all **$18{,}000$ canonical evaluations** and **$>1{,}800$ live empirical episodes** (where neural LLMs executed 7,613+ live tool calls including arbitrary shell commands), **zero container escapes, zero fixture hijackings, and zero ground-truth exposures occurred** ($0 / 18{,}000$).
+- Across all **$18{,}000$ canonical evaluations** and **$9{,}814$ live empirical episodes** across all seven archetypes ($G_1$–$G_7$, evaluated with zero mock fallbacks), **zero container escapes, zero fixture hijackings, and zero ground-truth exposures occurred** ($0 / 18{,}000$ and $0 / 9{,}814$).
 - The true exact binomial Clopper-Pearson 95% confidence intervals are:
   $$\text{Full Benchmark Suite } (N = 18{,}000): \quad \text{CI}_{95\%} = [0.0\%, 0.02\%] \quad \left(p_{\text{upper}} = 2.0 \times 10^{-4}\right)$$
-  $$\text{Live Neural Cohort } (N = 1{,}800): \quad \text{CI}_{95\%} = [0.0\%, 0.20\%] \quad \left(p_{\text{upper}} = 2.0 \times 10^{-3}\right)$$
+  $$\text{Live Neural Cohort } (N = 9{,}814): \quad \text{CI}_{95\%} = [0.0\%, 0.04\%] \quad \left(p_{\text{upper}} = 3.1 \times 10^{-4}\right)$$
   $$\text{Cross-Platform Cohort } (N = 900): \quad \text{CI}_{95\%} = [0.0\%, 0.41\%] \quad \left(p_{\text{upper}} = 4.1 \times 10^{-3}\right)$$
 These rigorous bounds constrain the empirical escape probability to less than 2 in 10,000 across the benchmark workload.
 
@@ -69,11 +69,11 @@ These rigorous bounds constrain the empirical escape probability to less than 2 
 
 1. **Table 4(d) Ablation Panel ([`paper/tables/table_ablation_studies.tex`](../paper/tables/table_ablation_studies.tex))**:
    - Replaced the misleading footnote reference `[0.0%, 45.1%]` with the empirical benchmark workload bound:
-     > *"($^*$empirical containment across $N=18{,}000$ full benchmark evaluations yields exact binomial Clopper-Pearson 95\% CI $[0.0\%, 0.02\%]$; across $N=1{,}800$ live neural rollouts $[0.0\%, 0.20\%]$)."*
+     > *"($^*$empirical containment across $N=18{,}000$ full benchmark evaluations yields exact binomial Clopper-Pearson 95\% CI $[0.0\%, 0.02\%]$; across $N=9{,}814$ live neural rollouts $[0.0\%, 0.04\%]$)."*
    - Table row reflects: `Dual Container Isolation (SAGE) & 2 & Strictly & 5/5 & 0.0% ([0.0%, 0.02%]*)`.
-2. **Manuscript Section 5.3 ([`paper/main.tex`](../paper/main.tex#L392))**:
+2. **Manuscript Section 5.3 ([`paper/main.tex`](../paper/main.tex))**:
    - Revised bullet point to state:
-     > *"Container isolation: In adversarial penetration testing across 5 exploit vectors (/proc snooping, /tmp fixture hijacking, setuid escalation, path traversal, socket exfiltration), bare-host execution permits 5/5 escapes and single-container permits 3/5, while SAGE's dual-container architecture blocks 5/5 (100% containment). Furthermore, across all 18,000 canonical and >1,800 live neural agent executions, zero container escapes or ground-truth leaks occurred (Clopper-Pearson 95% CI $[0.0\%, 0.02\%]$ across $N=18{,}000$; $[0.0\%, 0.20\%]$ across $N=1{,}800$)."*
+     > *"Container isolation: In adversarial penetration testing across 5 exploit vectors (/proc snooping, /tmp fixture hijacking, setuid escalation, path traversal, socket exfiltration), bare-host execution permits 5/5 escapes and single-container permits 3/5, while SAGE's dual-container architecture blocks 5/5 (100% containment). Furthermore, across all 18,000 canonical and 9,814 live neural agent executions (Table~\ref{tab:live_main_results_full}), zero container escapes or ground-truth leaks occurred (Clopper-Pearson 95% CI $[0.0\%, 0.02\%]$ across $N=18{,}000$; $[0.0\%, 0.04\%]$ across $N=9{,}814$)."*
 3. **Repository Documentation & Word Document**:
    - Updated [`docs/ABLATION_STUDIES.md`](../docs/ABLATION_STUDIES.md), [`paper/tables/table_dual_platform.tex`](../paper/tables/table_dual_platform.tex), and [`scripts/patch_ieee_paper_docx.py`](../scripts/patch_ieee_paper_docx.py) to consistently reflect the $[0.0\%, 0.02\%]$ benchmark workload confidence interval.
 

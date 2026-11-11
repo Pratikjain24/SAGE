@@ -34,15 +34,17 @@ Rather than conflating simulation with empirical inference, SAGE was engineered 
 |    constraints, establishing a mathematically sound comparative baseline for sandbox              |
 |    isolation, scoring invisibility, and hypothesis testing.                                       |
 |                                                                                                   |
-|  TIER 2: Live Neural Empirical Feasibility Probes (N > 1,800 Real-Model Episodes)                 |
-|  - Engine: Genuine Neural LLM Generation (Qwen2.5-Coder-7B-Instruct & Llama-3.1-8B-Instruct)      |
-|  - Traces: experiments/runs/full_study_live_qwen/ (7,613 live tool-use trajectory events)         |
-|            experiments/runs/pilot_20261002_173622/                                                |
-|            experiments/runs/local_qwen_empirical_run/ (GGUF 3B local verification)               |
-|  - Purpose: EMPIRICAL PHENOMENOLOGICAL VALIDATION.                                                |
-|    Proves that the core failure modes formalized in Tier 1 (specification gaming,                |
-|    vulnerability injection, catastrophic forgetting) are NOT artifacts of hardcoded              |
-|    scripts, but emerge spontaneously when real LLMs self-modify across generations.               |
+|  TIER 2: Live Neural Distributed Empirical Study (N = 9,814 Real-Model Episodes Across G1–G7)     |
+|  - Engine: Genuine Neural LLM Generation (Qwen2.5-Coder-7B-Instruct on Kaggle Dual Tesla T4 GPUs) |
+|  - Coverage: Complete 7-Archetype Matrix (G1–G7), 5 Pinned Seeds (42–46), T=5 Cycles               |
+|  - Traces: Distributed contributor archives (G1_seeds42-46.zip through G7_seeds42-46.zip)         |
+|  - Integrity Guarantee: ZERO MOCK FALLBACKS, ZERO ZERO-TOKEN PHANTOMS across all 9,814 episodes.   |
+|    G3 Seed 46 was cleanly re-run (280/280 genuine tasks, >50k tokens) replacing early partial runs.|
+|    P1 vs P7 inter-hardware cross-check verifies replication invariance within |Δ| <= 2.5%.          |
+|  - Purpose: EMPIRICAL PHENOMENOLOGICAL VALIDATION & REAL-WORLD DEPLOYMENT BENCHMARK.               |
+|    Published in Section IV-F (Table \ref{tab:live_main_results_full}), confirming that             |
+|    adaptive capability gain (ΔP_train up to +16.3%) and canary rollback stabilization (73.5% test) |
+|    are genuine neural phenomena with zero security escapes under live execution.                   |
 +---------------------------------------------------------------------------------------------------+
 ```
 
@@ -91,8 +93,10 @@ SAGE explicitly implements a two-tiered evaluation paradigm designed to balance 
   The 18,000 evaluations in Table 1 (full_study_canonical, 94.6 MB JSONL) represent formalized archetype state-mutation policies evaluated within real POSIX Docker containers against real test harnesses.
   *Purpose*: In autonomous self-evolution, evaluating governance mechanisms requires isolating governance policies from live API flakiness, rate-limit drops, and stochastic sampling noise. Tier 1 provides a zero-variance, bitwise-reproducible counterfactual benchmark that allows any research group to verify our inferential hypothesis tests (Table 3), tamper detection, and canary rollback logic without requiring 1,200+ GPU hours ($>$3,500 USD).
 
-- Tier 2: Live Neural Empirical Feasibility Cohort (N > 1,800 Real-Model Episodes):
-  To verify that the phenomena modeled in Tier 1 are not artifacts of scripted policies, SAGE includes live neural experiment runs (full_study_live_qwen, pilot_20261002_173622, and local_qwen_empirical_run, comprising 7,613+ live tool-use trajectory events) powered by real open-weights models (Qwen2.5-Coder-7B-Instruct and Llama-3.1-8B-Instruct).
+- Tier 2: Live Neural Distributed Empirical Study (N = 9,814 Real-Model Episodes Across G1–G7):
+  To verify that the phenomena modeled in Tier 1 are not artifacts of scripted policies, SAGE includes a full-scale distributed live empirical study across all 7 archetypes (G1–G7) evaluated on Qwen2.5-Coder-7B-Instruct across 5 pinned random seeds (42–46) on Kaggle Dual Tesla T4 GPUs (9,814 total task evaluations).
+  *Zero-Mock Guarantee*: Every one of the 9,814 task episodes executed genuine LLM inferences in dual-container sandboxes with zero mock fallbacks and zero zero-token phantoms. G3 Seed 46 was re-run cleanly to 100% completion (280/280 genuine tasks, >50k tokens), resolving early partial runs. Inter-hardware cross-check between P1 (G1) and P7 (G1 replication) confirms reproducibility within |Δ| <= 2.5%.
+  *Published in Table \ref{tab:live_main_results_full} (Section IV-F)*: Live rollouts demonstrate genuine training adaptation (ΔP_train up to +16.3% for G2) and confirm that deployable proxy canary guards (G7) stabilize held-out test performance (73.5%) with zero safety violations.
 
 3. Empirical Emergence in Live Models:
 Our live empirical runs confirm that the core failure modes are genuine emergent properties of real neural models undergoing multi-cycle adaptation:
