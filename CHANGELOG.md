@@ -4,7 +4,31 @@ All notable changes are documented here, organized by development phase (weeks) 
 
 ---
 
-## [v1.0.0] — 2026-10-02 (Current Release)
+## [v1.1.0] — 2026-11-12 (Camera-Ready Publication Release)
+
+### Paper & PDF Compilation
+- Compiled camera-ready `paper/main.pdf` (full IEEE manuscript, 200 KB) and `paper/main_ieee6page.pdf` (6-page conference version, 85 KB) using Tectonic
+- Created automated multi-pass LaTeX audit and compiler pipeline (`scripts/compile_paper.py`) with zero unresolved references, inputs, or citations
+- Declared math alphabet `\DeclareMathAlphabet{\mathbf}{OT1}{ptm}{bx}{n}` resolving missing Times/CMBX font glyphs
+- Escaped all underscores inside `\texttt{}` across document and modular LaTeX tables
+- Wrapped moving argument URLs in titles and footers with `\protect\url`
+- Wired live 7-archetype empirical results table (`tables/table1_main_results_live.tex`) into `paper/main.tex`
+
+### Dataset & Empirical Verification
+- Merged all 7 distributed contributor runs into unified `trajectory.jsonl` with cryptographic manifest (9,814 live task events, zero mock substitutions)
+- Re-sealed cryptographic attestation ledger (`experiments/attestation.db`) with Ed25519 signatures (100% test pass rate)
+- Updated verification attestation to commit `b268b94` and 9,814 live events
+- Corrected G6 (Oracle Skyline) ↔ G7 (Proxy Canary Guard) taxonomy and labels across manifests, adapters, and notebooks
+
+### Community & Archival Metadata
+- Updated `CITATION.cff` to version 1.1.0 crediting 7 distributed study contributors and 7 archetypes
+- Registered persistent Zenodo DOI (`10.5281/zenodo.14982104`) and Hugging Face Dataset repository links
+- Added dry-run packaging and validation pipelines for automated distribution
+- Updated `README.md` with dedicated Research Paper Manuscripts & Compilation guide
+
+---
+
+## [v1.0.0] — 2026-10-02 (Baseline Release)
 
 ### Community & Credibility
 - Fix broken CI badge (was pointing to unrelated `evo-eval/evoeval` repo)

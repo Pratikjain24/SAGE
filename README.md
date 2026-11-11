@@ -426,6 +426,29 @@ LaTeX publication tables are versioned under [`paper/tables/`](paper/tables/):
 
 ---
 
+## 📄 Research Paper Manuscripts & Compilation
+
+The SAGE manuscript is formatted for IEEE Conference publication and compiled reproducibly via [Tectonic](https://tectonic-typesetting.github.io/):
+
+| File | Type | Description |
+|---|---|---|
+| [`paper/main.pdf`](paper/main.pdf) | PDF (200 KB) | **Full IEEE Manuscript** (complete 12 sections, all tables & appendices) |
+| [`paper/main_ieee6page.pdf`](paper/main_ieee6page.pdf) | PDF (85 KB) | **Condensed 6-Page IEEE Conference Submission** |
+| [`paper/main.tex`](paper/main.tex) | LaTeX | Primary IEEE LaTeX source (`\documentclass[conference]{IEEEtran}`) |
+| [`paper/SAGE_paper_additions.tex`](paper/SAGE_paper_additions.tex) | LaTeX | Section II-F Related Work & concurrent 2025–2026 benchmark taxonomy |
+| [`paper/references.bib`](paper/references.bib) | BibTeX | Unified 49-entry verified bibliography (0 missing citations) |
+| [`paper/tables/`](paper/tables/) | Directory | Versioned publication tables (including live 7-archetype results) |
+| [`paper/figures/`](paper/figures/) | Directory | 13 high-resolution publication figures (PNG) |
+
+### 🛠️ One-Command Paper Compilation
+To audit all `\input{}`, `\ref{}`, and `\cite{}` dependencies and compile both camera-ready PDFs locally:
+```powershell
+python scripts/compile_paper.py
+```
+*(Uses self-contained Tectonic engine or fallback `pdflatex`).*
+
+---
+
 ## Monorepo Layout
 
 ```
