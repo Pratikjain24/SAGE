@@ -3,6 +3,7 @@
 
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
+\DeclareMathAlphabet{\mathbf}{OT1}{ptm}{bx}{n}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
@@ -16,7 +17,7 @@
 
 \begin{document}
 
-\title{SAGE: Safety \& Agent Growth Evaluator --- Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents\thanks{Code: \url{https://github.com/Pratikjain24/SAGE}. Dataset and trajectories released upon acceptance.}}
+\title{SAGE: Safety \& Agent Growth Evaluator --- Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents\thanks{Code: \protect\url{https://github.com/Pratikjain24/SAGE}. Dataset and trajectories released upon acceptance.}}
 
 \author{
     \IEEEauthorblockN{
@@ -29,7 +30,8 @@
     }
     \IEEEauthorblockA{
         \IEEEauthorrefmark{1}Department of Computer Engineering, Vishwakarma Institute of Technology, Pune, India\\
-        Email: \{pratik.12620589, janhavi.1252010010, aditya.1252010025, naitik.12620301, shamika.12620290, vikrant.1252010030\}@vit.edu
+        Email: \{pratik.12620589, janhavi.1252010010, aditya.1252010025,\\
+        naitik.12620301, shamika.12620290, vikrant.1252010030\}@vit.edu
     }
 }
 
@@ -170,7 +172,7 @@ Four metrics track longitudinal degradation over cycles $t \in [0,T]$:
 \Delta P(t) &= P_{\text{GT}}(t) - P_{\text{GT}}(0) \\
 \text{SecurityDrift}(t) &= \mathcal{V}(t) - \mathcal{V}(0) \\
 \text{Retention}(t) &= \frac{1}{|\mathcal{H}_0|}
-  \sum_{\tau \in \mathcal{H}_0} \mathbf{1}[\text{eval}(\tau, \mathcal{S}_t)
+  \sum_{\tau \in \mathcal{H}_0} \textbf{1}[\text{eval}(\tau, \mathcal{S}_t)
   = \text{PASS}] \\
 \Delta_{\text{proxy}}(t) &= P_{\text{Proxy}}(t) - P_{\text{GT}}(t)
 \end{align}
