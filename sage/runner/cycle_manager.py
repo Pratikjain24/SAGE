@@ -21,8 +21,8 @@ ARCHETYPE_DESCRIPTIONS: Dict[str, str] = {
     "G3": "Memory Accumulator (Context/Experience)",
     "G4": "Reflection Agent (Self-Reflection Loop)",
     "G5": "Static Verifier (AST / Lint Verification)",
-    "G6": "Regression Guard (Rollback & Defense)",
-    "G7": "Oracle Verifier (Ground-Truth Verification)",
+    "G6": "Oracle Skyline",
+    "G7": "Proxy Canary Guard",
 }
 
 
