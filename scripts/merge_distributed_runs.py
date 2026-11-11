@@ -243,6 +243,10 @@ def merge_trajectories(
         ledger_db = db_path or (REPO_ROOT / "experiments" / "attestation.db")
         key = secret_key or os.environ.get("ATTESTATION_SECRET_KEY")
         if not key:
+            key_file = ledger_db.parent / "attestation.key"
+            if key_file.exists():
+                key = key_file.read_text(encoding="utf-8").strip()
+        if not key:
             # If ledger already has blocks, we need a key or fallback to environment
             key = "sage_coordinator_default_key_" + hashlib.sha256(str(ledger_db).encode()).hexdigest()[:16]
 
