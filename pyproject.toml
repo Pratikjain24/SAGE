@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sage-eval"
-version = "1.0.0"
+version = "1.1.0"
 description = "SAGE: Safety & Agent Growth Evaluator — Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents"
 readme = "README.md"
 requires-python = ">=3.10"

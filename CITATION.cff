@@ -44,8 +44,8 @@ keywords:
   - capability retention
   - reward hacking
 license: Apache-2.0
-version: "1.0.0"
-date-released: "2026-10-01"
+version: "1.1.0"
+date-released: "2026-11-12"
 preferred-citation:
   type: conference-paper
   title: "SAGE: Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents"
