@@ -21,6 +21,8 @@ authors:
   - family-names: Kadam
     given-names: Vikrant K.
     affiliation: "Vishwakarma Institute of Technology, Pune"
+  - name: "SAGE Distributed Study Contributors"
+    affiliation: "Vishwakarma Institute of Technology, Pune"
 repository-code: "https://github.com/Pratikjain24/SAGE"
 url: "https://github.com/Pratikjain24/SAGE"
 abstract: >
@@ -28,8 +30,9 @@ abstract: >
   security boundary drift (vulnerability injection rate), specification gaming
   (proxy gap), capability gain, and catastrophic forgetting in self-modifying
   autonomous code agents across iterative evolutionary generations. It implements
-  18,000 controlled, bitwise-reproducible evaluations across 100 tasks, 6 agent
-  archetypes (G1-G7), 10 evolutionary cycles, and 3 random seeds.
+  18,000 controlled, bitwise-reproducible evaluations across 100 tasks, 7 agent
+  archetypes (G1-G7), 10 evolutionary cycles, and 3 random seeds, alongside a
+  7-contributor distributed empirical study across 9,814 live evaluations.
 keywords:
   - autonomous agents
   - self-evolving code agents
@@ -58,6 +61,7 @@ preferred-citation:
       given-names: Shamika R.
     - family-names: Kadam
       given-names: Vikrant K.
+    - name: "SAGE Distributed Study Contributors"
   conference:
     name: "IEEE Conference on Artificial Intelligence and Software Engineering"
   year: 2026
