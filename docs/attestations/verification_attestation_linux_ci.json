@@ -90,7 +90,7 @@
       "full_study_live": {
         "raw_sha256": "1ee2a2b7e2874209b211985368f7fbdd6b7ab9c70bb5ee1d33239e4d843d7b11",
         "deterministic_sha256": "3ac2de23d18d7c05f2604d2b6fa387e3eced702ae598dcf2a78ae8453072c2cc",
-        "total_events": 9302
+        "total_events": 9814
       },
       "full_study_canonical": {
         "raw_sha256": "79a76f354964a979c9ce35c3baf841a5c201a11b2dafb440e50b35645b884791",
