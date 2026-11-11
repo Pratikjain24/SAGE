@@ -152,7 +152,7 @@ def merge_trajectories(
 
     for rdir in run_dirs:
         tfile = rdir / "trajectory.jsonl"
-        is_cross_check = "cross" in rdir.name.lower()
+        is_cross_check = "cross" in rdir.name.lower() or "check" in rdir.name.lower()
 
         with open(tfile, "r", encoding="utf-8") as f:
             for line in f:
