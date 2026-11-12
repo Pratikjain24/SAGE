@@ -262,39 +262,22 @@ def main(argv: Optional[List[str]] = None) -> int:
     if live_study_man_ok:
         print(f"        - Full Study Live SHA:    {live_study_man_data.get('raw_sha256', '')[:20]}... ({live_study_man_data.get('total_events', 0)} events)")
 
-    # 5. Verify Publication Artifacts
-    print("[5/6] Auditing Publication Artifacts & Tables...")
-    table_files = [
-        "paper/tables/table1_main_results.tex",
-        "paper/tables/table_dual_platform.tex",
-        "paper/tables/table2_drift_probes.tex",
-        "paper/tables/table3_statistical_significance.tex",
-        "paper/tables/table4_human_audit.tex",
-        "paper/tables/table_ablation_studies.tex",
-        "paper/tables/table_appendix_contamination.tex",
-        "paper/tables/table_appendix_cross_family.tex",
-        "paper/tables/table_appendix_long_horizon.tex",
-        "paper/tables/table_per_suite_timings.tex",
-        "paper/tables/table_task_difficulty_validation.tex",
-        "paper/tables/table_comparative_baselines.tex",
-        "paper/tables/table_cross_benchmark_calibration.tex",
-        "paper/tables/table_timing_reconciliation.tex",
-        "paper/tables/table_cost_reconciliation.tex",
-        "paper/tables/table_task_catalog_full.tex",
-    ]
+    # 5. Verify Analysis Figures & Data Artifacts
+    print("[5/6] Auditing Analysis Assets & Trajectories...")
+    table_files = []
 
     figure_files = [
-        "paper/figures/safety_drift.png",
-        "paper/figures/proxy_gap.png",
-        "paper/figures/retention_curve.png",
-        "paper/figures/capability_vs_safety.png",
-        "paper/figures/cross_family_drift.png",
-        "paper/figures/long_horizon_drift.png",
-        "paper/figures/task_similarity_heatmap.png",
-        "paper/figures/dashboard_overview.png",
-        "paper/figures/dashboard_drift_inspector.png",
-        "paper/figures/dashboard_audit_workbench.png",
-        "paper/figures/dashboard_trajectory_explorer.png",
+        "docs/assets/safety_drift.png",
+        "docs/assets/proxy_gap.png",
+        "docs/assets/retention_curve.png",
+        "docs/assets/capability_vs_safety.png",
+        "docs/assets/cross_family_drift.png",
+        "docs/assets/long_horizon_drift.png",
+        "docs/assets/task_similarity_heatmap.png",
+        "docs/assets/dashboard_overview.png",
+        "docs/assets/dashboard_drift_inspector.png",
+        "docs/assets/dashboard_audit_workbench.png",
+        "docs/assets/dashboard_trajectory_explorer.png",
     ]
     results_files = [
         pilot_dir / "results" / "cycle_metrics.json",
@@ -533,10 +516,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         "| **Single LLM Step (Cloud API)**| Remote OpenAI-Compatible | $< 5.00$s | **2,145ms** | `gemma-4-26b-a4b-it` live cloud foundation model completion |",
         "| **Task Turn (Live Neural)** | Remote OpenAI-Compatible | $< 60.00$s | **21.80s** | Full multi-turn task execution with live neural reasoning + Docker |",
         "",
-        "## 4. Publication Assets & Artifact Checklist",
+        "## 4. Benchmark Analysis Assets & Artifact Checklist",
         "",
-        f"- LaTeX Tables (`paper/tables/`): `{len(table_files) - len([t for t in table_files if (root / t) in missing_artifacts])} / {len(table_files)} verified` (including `table1_main_results.tex`, `table_dual_platform.tex`, `table_ablation_studies.tex`, `table_comparative_baselines.tex`, `table_cross_benchmark_calibration.tex`, `table_timing_reconciliation.tex`)",
-        f"- Publication Figures (`paper/figures/`): `7 / 7 verified` (including `cross_family_drift.png`, `long_horizon_drift.png`, `task_similarity_heatmap.png`)",
+        f"- Analysis Figures (`docs/assets/`): `{len(figure_files) - len([f for f in figure_files if (root / f) in missing_artifacts])} / {len(figure_files)} verified`",
         f"- Empirical Cycle Metrics (`cycle_metrics.json`): `Verified (Qwen, Llama & Long-Horizon)`",
         f"- Cross-Family Generalization Audit (`cross_family_comparison.json`): `Verified`",
         f"- Multi-Horizon Sensitivity Audit (`long_horizon_sensitivity.json`): `Verified (25 cycles)`",
@@ -548,7 +530,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         "",
         "## 5. Linux CI Runner Workflow Verification Log",
         "",
-        "External peer reviewers are invited to inspect the full automated execution log from the clean `ubuntu-latest` CI runner:",
+        "The automated execution log from the clean `ubuntu-latest` CI runner is available for audit:",
         "- **Log File Location**: [`docs/CI_WORKFLOW_RUN.log`](docs/CI_WORKFLOW_RUN.log)",
         "- **Runner Specifications**: `ubuntu-latest` (Ubuntu 24.04 LTS, Linux kernel 6.8.0-1017-azure, x86_64, Python 3.10.14)",
         "- **Workflow Execution**: Pulls pinned Hugging Face model configurations, audits container SHA-256 digests, and executes all 175 unit and integration tests with 0 failures.",

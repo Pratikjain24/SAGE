@@ -1,9 +1,7 @@
 # SAGE Benchmark Replication & Reproduction Guide
 
-This guide provides end-to-end instructions for reproducing all empirical claims, cryptographic manifests, regression tests, and publication artifacts reported in:
+This guide provides end-to-end instructions for reproducing all empirical benchmarks, cryptographic manifests, regression tests, and verification artifacts for the **SAGE (Safety & Agent Growth Evaluator)** framework:
 
-> **"SAGE: Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents"**  
-> *IEEE Conference on Artificial Intelligence and Software Engineering (CAISE 2026)*  
 > Permanent DOI: [10.5281/zenodo.14982104](https://doi.org/10.5281/zenodo.14982104)  
 > Interactive Dashboard: [Hugging Face Space](https://huggingface.co/spaces/Pratikjain24/SAGE-Dashboard)
 
@@ -11,19 +9,19 @@ This guide provides end-to-end instructions for reproducing all empirical claims
 
 ## Reproducibility Architecture at a Glance
 
-SAGE is structured across four distinct replication pathways, from zero-GPU laptop verification up to multi-GPU cloud execution:
+SAGE is structured across four distinct replication pathways, from zero-GPU workstation verification up to multi-GPU cloud execution:
 
 ```mermaid
 flowchart TD
-    A["Reviewer Goal"] --> B{"Hardware / Time Budget?"}
+    A["Verification Goal"] --> B{"Hardware / Time Budget?"}
     B -->|"< 2 Minutes, Zero GPU"| C["Pathway 1: Quick Verification<br/>(pytest + CLI Attestation)"]
     B -->|"Docker Container Isolation"| D["Pathway 2: Hardened Docker Stack<br/>(sandbox + scorer + backend + frontend)"]
     B -->|"Full Live Neural GPU Run"| E["Pathway 3: Live Distributed Study<br/>(Qwen2.5-Coder-7B on Kaggle Dual T4)"]
-    B -->|"Dataset & Reviewer Audit"| F["Pathway 4: Data & Manifest Audit<br/>(SHA-256 Trajectories + Croissant 1.0)"]
+    B -->|"Dataset & Audit"| F["Pathway 4: Data & Manifest Audit<br/>(SHA-256 Trajectories + Croissant 1.0)"]
 
     C --> G["Passed Tests (313/314)<br/>Δ_platform = 0.000<br/>57 Ledger Blocks Valid"]
     D --> G
-    E --> H["9,814 Live Episodes<br/>0 Mock Fallbacks<br/>Compiled Paper Manuscripts"]
+    E --> H["9,800 Canonical Episodes<br/>0 Mock Fallbacks<br/>Empirical Ground Truth"]
     F --> I["Bitwise-Identical Trajectories<br/>Hugging Face Export"]
 ```
 
@@ -169,15 +167,14 @@ python validate_kaggle_import.py
 🎉 Organization complete!
 ```
 
-### 3.3 Run Empirical Analysis & Re-Compile Research Papers
-Generate all publication figures, statistical significance tests ($B=10{,}000$ bootstraps), and re-compile both IEEE manuscripts:
+### 3.3 Run Empirical Analysis & Generate Benchmark Deliverables
+Generate all analytical figures and statistical significance tests ($B=10{,}000$ bootstraps):
 ```bash
 python scripts/analyze_kaggle_study.py
 ```
 *Generated Deliverables*:
 * **Figures**: `fig_live_learning_curves.png`, `fig_live_pareto_frontier.png`, `fig_live_generalization_gap.png`, `fig_live_cross_check_replication.png`
-* **LaTeX Tables**: `table1_main_results_live.tex`, `table_cost_efficiency_live.tex`
-* **Compiled Manuscripts**: `paper/main.pdf` and `paper/main_ieee6page.pdf` (compiled with 0 LaTeX errors).
+* **JSON Metrics**: `cycle_metrics.json`, `statistical_significance.json`, `human_audit_results.json`
 
 ---
 

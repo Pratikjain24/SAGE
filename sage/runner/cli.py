@@ -207,18 +207,12 @@ def analyze(
     for k, p in tables.items():
         console.print(f"  - {k}: {p.name}")
 
-    # Copy publication figures and tables into paper/ directory if present
-    paper_fig_dir = Path("paper/figures")
-    paper_fig_dir.mkdir(parents=True, exist_ok=True)
-    for f in figs:
-        shutil.copy2(f, paper_fig_dir / f.name)
-
-    paper_tbl_dir = Path("paper/tables")
-    paper_tbl_dir.mkdir(parents=True, exist_ok=True)
-    for k, p in tables.items():
-        shutil.copy2(p, paper_tbl_dir / p.name)
-
-    console.print("[bold cyan]Copied publication assets to paper/figures/ and paper/tables/[/bold cyan]")
+    # Sync analysis figures to docs/assets if directory exists
+    docs_fig_dir = Path("docs/assets")
+    if docs_fig_dir.exists():
+        for f in figs:
+            shutil.copy2(f, docs_fig_dir / f.name)
+        console.print("[bold cyan]Synced analysis assets to docs/assets/[/bold cyan]")
 
 
 @app.command()
@@ -641,7 +635,7 @@ def audit_contamination(
     threshold: float = typer.Option(0.50, "--threshold", "-t", help="Leakage overlap flag threshold (default: 0.50)"),
     api_base: Optional[str] = typer.Option(None, "--api-base", help="Optional live vLLM endpoint"),
     output: Path = typer.Option(Path("tasks/contamination_audit_results.json"), "--output", "-o", help="Output JSON path"),
-    table_output: Path = typer.Option(Path("paper/tables/table_appendix_contamination.tex"), "--table-output", help="Output LaTeX table path"),
+    table_output: Optional[Path] = typer.Option(None, "--table-output", help="Optional output LaTeX table path"),
 ):
     """Run pre-training task contamination & solution leakage audit across benchmark tasks."""
     import json

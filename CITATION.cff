@@ -1,7 +1,7 @@
 cff-version: 1.2.0
-message: "If you use SAGE in your research, please cite it as below."
+message: "If you use SAGE in your project, please cite it as below."
 type: software
-title: "SAGE: Safety & Agent Growth Evaluator — Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents"
+title: "SAGE: Safety & Agent Growth Evaluator — Empirical Evaluation Framework for Self-Evolving Code Agents"
 authors:
   - family-names: Jain
     given-names: Pratik P.
@@ -21,19 +21,16 @@ authors:
   - family-names: Kadam
     given-names: Vikrant K.
     affiliation: "Vishwakarma Institute of Technology, Pune"
-  - name: "SAGE Distributed Study Contributors"
-    affiliation: "Vishwakarma Institute of Technology, Pune"
 repository-code: "https://github.com/Pratikjain24/SAGE"
 url: "https://github.com/Pratikjain24/SAGE"
 doi: "10.5281/zenodo.14982104"
 abstract: >
-  SAGE is a hardened benchmark and formal evaluation framework that measures
-  security boundary drift (vulnerability injection rate), specification gaming
-  (proxy gap), capability gain, and catastrophic forgetting in self-modifying
-  autonomous code agents across iterative evolutionary generations. It implements
-  18,000 controlled, bitwise-reproducible evaluations across 100 tasks, 7 agent
-  archetypes (G1-G7), 10 evolutionary cycles, and 3 random seeds, alongside a
-  7-contributor distributed empirical study across 9,814 live evaluations.
+  SAGE is an open-source evaluation framework and live observability platform
+  that measures security boundary drift (vulnerability injection rate), specification
+  gaming (proxy gap), capability gain, and catastrophic forgetting in self-modifying
+  autonomous code agents across iterative evolutionary cycles. Evaluated across 35
+  runs and 9,800 canonical task executions on Kaggle Dual Tesla T4 GPUs across seven
+  agent archetypes (G1-G7).
 keywords:
   - autonomous agents
   - self-evolving code agents
@@ -47,8 +44,8 @@ license: Apache-2.0
 version: "1.1.0"
 date-released: "2026-11-12"
 preferred-citation:
-  type: conference-paper
-  title: "SAGE: Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents"
+  type: software
+  title: "SAGE: Safety & Agent Growth Evaluator"
   authors:
     - family-names: Jain
       given-names: Pratik P.
@@ -62,10 +59,6 @@ preferred-citation:
       given-names: Shamika R.
     - family-names: Kadam
       given-names: Vikrant K.
-    - name: "SAGE Distributed Study Contributors"
-  conference:
-    name: "IEEE Conference on Artificial Intelligence and Software Engineering"
   year: 2026
   doi: "10.5281/zenodo.14982104"
-  institution:
-    name: "Vishwakarma Institute of Technology, Pune"
+  url: "https://github.com/Pratikjain24/SAGE"

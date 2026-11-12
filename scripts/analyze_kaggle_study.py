@@ -48,9 +48,8 @@ if str(REPO_ROOT) not in sys.path:
 
 from sage.metrics.significance import StatisticalSignificanceAnalyzer
 
-PAPER_DIR = REPO_ROOT / "paper"
-FIGURES_DIR = PAPER_DIR / "figures"
-TABLES_DIR = PAPER_DIR / "tables"
+FIGURES_DIR = REPO_ROOT / "docs" / "assets"
+TABLES_DIR = REPO_ROOT / "experiments" / "runs" / "kaggle_study" / "tables"
 STUDY_DIR = REPO_ROOT / "experiments" / "runs" / "kaggle_study"
 
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -517,8 +516,10 @@ def main() -> None:
     generate_table1_latex(group_summary, tab1)
     generate_cost_reconciliation_latex(token_stats, tab_cost)
 
-    shutil.copy2(tab1, STUDY_DIR / "tables" / tab1.name)
-    shutil.copy2(tab_cost, STUDY_DIR / "tables" / tab_cost.name)
+    if tab1 != STUDY_DIR / "tables" / tab1.name:
+        shutil.copy2(tab1, STUDY_DIR / "tables" / tab1.name)
+    if tab_cost != STUDY_DIR / "tables" / tab_cost.name:
+        shutil.copy2(tab_cost, STUDY_DIR / "tables" / tab_cost.name)
 
     # 5. Execute Sanity & Reasonableness Checks
     print("\n--- Executing Sanity & Reasonableness Verification (Zero-Bug Audit) ---")
@@ -530,14 +531,8 @@ def main() -> None:
         if not passed:
             all_passed = False
 
-    # 6. Re-verify LaTeX Manuscript Compilation
-    print("\n--- Compiling SAGE Research Manuscripts with Live Tables ---")
-    res = subprocess.run([sys.executable, str(REPO_ROOT / "scripts" / "compile_paper.py")], capture_output=True, text=True)
-    if res.returncode == 0:
-        print("  ✓ SAGE Research Manuscripts (main.pdf & main_ieee6page.pdf) compiled successfully with 0 errors!")
-    else:
-        print("  ❌ Compilation issue detected:\n", res.stderr or res.stdout)
-        all_passed = False
+    print("\n--- Benchmark Analysis & Figure Generation Complete ---")
+    print("  ✓ All analytical figures synced to docs/assets/ and tables generated successfully.")
 
     print("\n" + "=" * 80)
     print("DAY 3-4 VERIFY & ANALYZE COMPLETE")
