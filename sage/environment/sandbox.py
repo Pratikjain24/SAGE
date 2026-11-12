@@ -18,6 +18,29 @@ class SandboxConfinementError(Exception):
     pass
 
 
+_unshare_supported: Optional[bool] = None
+
+
+def is_unshare_supported() -> bool:
+    """Check if Linux unshare with user/network namespaces is actually functional on host."""
+    global _unshare_supported
+    if _unshare_supported is not None:
+        return _unshare_supported
+    if os.name != "posix":
+        _unshare_supported = False
+        return False
+    unshare_bin = shutil.which("unshare")
+    if not unshare_bin:
+        _unshare_supported = False
+        return False
+    try:
+        res = subprocess.run([unshare_bin, "-r", "-n", "true"], capture_output=True, timeout=2)
+        _unshare_supported = (res.returncode == 0)
+    except Exception:
+        _unshare_supported = False
+    return _unshare_supported
+
+
 def run_command_with_process_group_timeout(
     cmd: str,
     timeout: int,
@@ -156,8 +179,8 @@ class LocalSandbox:
         return safe_env
 
     def _apply_isolation_wrappers(self, cmd: str) -> str:
-        """On Linux, wrap command in network namespace unshare if available."""
-        if os.name == "posix":
+        """On Linux, wrap command in network namespace unshare if available and supported."""
+        if is_unshare_supported():
             unshare_bin = shutil.which("unshare")
             if unshare_bin:
                 return f"{unshare_bin} -r -n sh -c {shlex.quote(cmd)}"

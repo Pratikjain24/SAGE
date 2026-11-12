@@ -27,7 +27,7 @@ export default function RootLayout({
         <ObservatoryNavbar />
 
         {/* Cinematic Full-Widescreen Canvas (No cramped 260px sidebar!) */}
-        <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-20 animate-fade-in">
+        <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-20">
           {children}
         </main>
       </body>

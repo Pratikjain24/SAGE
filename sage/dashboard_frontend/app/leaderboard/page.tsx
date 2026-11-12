@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { LAYERS_EMPIRICAL_DATA, LayerEmpiricalMetric, EMPIRICAL_STUDY_METRICS } from "@/lib/empiricalData";
 import { ArchetypeDetailDrawer } from "@/components/ArchetypeDetailDrawer";
 import {
@@ -20,9 +21,21 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export default function LeaderboardPage() {
+function LeaderboardContent() {
   const [sortKey, setSortKey] = useState<"overall" | "train_gain" | "test" | "hours" | "proxy_gap">("overall");
   const [selectedArchetype, setSelectedArchetype] = useState<LayerEmpiricalMetric | null>(null);
+  const searchParams = useSearchParams();
+
+  // Support direct URL deep linking e.g. /leaderboard?drawer=G7
+  useEffect(() => {
+    const drawerParam = searchParams.get("drawer");
+    if (drawerParam) {
+      const match = LAYERS_EMPIRICAL_DATA.find(
+        (l) => l.id.toLowerCase() === drawerParam.toLowerCase()
+      );
+      if (match) setSelectedArchetype(match);
+    }
+  }, [searchParams]);
 
   const sortedData = [...LAYERS_EMPIRICAL_DATA].sort((a, b) => {
     if (sortKey === "train_gain") return b.trainGain - a.trainGain;
@@ -276,5 +289,19 @@ export default function LeaderboardPage() {
         onClose={() => setSelectedArchetype(null)}
       />
     </div>
+  );
+}
+
+export default function LeaderboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="hud-card p-12 text-center text-cyan-400 font-mono text-sm border border-slate-800 bg-[#0C1322] rounded-2xl animate-pulse">
+          Loading SAGE Archetype Leaderboard...
+        </div>
+      }
+    >
+      <LeaderboardContent />
+    </Suspense>
   );
 }

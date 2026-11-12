@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { LayerEmpiricalMetric } from "@/lib/empiricalData";
 import {
   X,
@@ -140,18 +141,18 @@ def execute_safe_ping(host: str) -> str:
     <>
       {/* Dimmed Backdrop with Blur */}
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-40 transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-black/80 backdrop-blur-md z-[80] transition-opacity animate-fade-in"
         onClick={onClose}
       />
 
       {/* Slide-Over Drawer Container (60% screen width on desktop) */}
       <aside
-        className="fixed inset-y-0 right-0 z-50 w-full lg:w-[60%] max-w-5xl bg-[#0F172A] border-l border-slate-700/80 shadow-2xl flex flex-col transform transition-transform duration-300 ease-out translate-x-0 overflow-hidden font-sans"
+        className="fixed inset-y-0 right-0 z-[90] w-full lg:w-[62%] max-w-5xl bg-[#0b1120] border-l border-cyan-500/30 shadow-[-15px_0_50px_rgba(0,0,0,0.85)] flex flex-col transform transition-transform duration-300 ease-out translate-x-0 overflow-hidden font-sans"
         aria-modal="true"
         role="dialog"
       >
         {/* Drawer Header */}
-        <div className="p-6 bg-[#131C31] border-b border-slate-700/80 flex items-start justify-between gap-4 relative">
+        <div className="p-6 bg-[#0f172a] border-b border-slate-800 flex items-start justify-between gap-4 relative">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span
@@ -191,13 +192,13 @@ def execute_safe_ping(host: str) -> str:
           </div>
 
           {/* Close & Utility Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={onClose}
-              className="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors border border-slate-700/80 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="px-3 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white transition-all border border-rose-500/30 flex items-center gap-1.5 text-xs font-mono font-bold shadow-sm"
               title="Close Drawer (Esc)"
             >
-              <X size={18} />
+              <X size={15} /> Close (Esc)
             </button>
           </div>
         </div>
@@ -340,32 +341,32 @@ def execute_safe_ping(host: str) -> str:
               </div>
 
               {/* Side-by-Side Code Diff Viewer */}
-              <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950 shadow-inner">
+              <div className="border border-slate-800 rounded-xl overflow-hidden bg-[#070c18] shadow-2xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-800 font-mono text-xs">
                   {/* Left Column: Original Base Implementation */}
-                  <div className="p-4 bg-slate-950/60">
-                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-800/80 text-[11px] text-slate-400 font-bold">
+                  <div className="p-4 bg-[#0a0f1d]">
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-800 text-[11px] text-slate-400 font-bold">
                       <span className="flex items-center gap-1.5 text-rose-400">
-                        <span className="w-2 h-2 rounded-full bg-rose-500" />
+                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
                         Original Sequestered Code
                       </span>
-                      <span className="text-slate-600">Base commit</span>
+                      <span className="text-slate-500 font-mono">Base Commit (Clean)</span>
                     </div>
-                    <pre className="text-slate-300 leading-relaxed overflow-x-auto whitespace-pre-wrap selection:bg-rose-500/20">
+                    <pre className="text-slate-200 font-mono text-[12px] leading-relaxed p-3 rounded-lg bg-rose-950/20 border border-rose-900/40 overflow-x-auto whitespace-pre-wrap selection:bg-rose-500/30">
                       <code>{currentDiff.originalCode}</code>
                     </pre>
                   </div>
 
                   {/* Right Column: Agent's Mutated Solution */}
-                  <div className="p-4 bg-slate-950/90">
-                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-800/80 text-[11px] text-slate-400 font-bold">
+                  <div className="p-4 bg-[#091122]">
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-800 text-[11px] text-slate-400 font-bold">
                       <span className="flex items-center gap-1.5 text-emerald-400">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                         Agent Solution ({archetype.id}: {archetype.name})
                       </span>
-                      <span className="text-cyan-400 font-bold">Evaluated Patch</span>
+                      <span className="text-cyan-400 font-mono font-bold">Evaluated Patch</span>
                     </div>
-                    <pre className="text-emerald-300 leading-relaxed overflow-x-auto whitespace-pre-wrap selection:bg-emerald-500/20">
+                    <pre className="text-emerald-300 font-mono text-[12px] leading-relaxed p-3 rounded-lg bg-emerald-950/20 border border-emerald-900/40 overflow-x-auto whitespace-pre-wrap selection:bg-emerald-500/30">
                       <code>{currentDiff.mutatedCode}</code>
                     </pre>
                   </div>
@@ -373,14 +374,14 @@ def execute_safe_ping(host: str) -> str:
               </div>
 
               {/* Pytest Execution Output Box */}
-              <div className="p-4 rounded-xl bg-black/60 border border-slate-800 font-mono text-xs">
+              <div className="p-4 rounded-xl bg-[#040812] border border-slate-800 font-mono text-xs shadow-inner">
                 <div className="flex items-center justify-between text-slate-400 pb-2 mb-2 border-b border-slate-800 text-[11px]">
-                  <span className="flex items-center gap-1 text-slate-300 font-bold">
-                    <Terminal size={13} /> Pytest Verification Output
+                  <span className="flex items-center gap-1 text-slate-200 font-bold">
+                    <Terminal size={14} className="text-cyan-400" /> Pytest Verification Output
                   </span>
-                  <span className="text-emerald-400">Exit Code: 0</span>
+                  <span className="text-emerald-400 font-bold">Exit Code: 0 (PASSED)</span>
                 </div>
-                <pre className="text-slate-300 whitespace-pre-wrap overflow-x-auto">
+                <pre className="text-slate-300 font-mono text-[11px] p-3 rounded bg-black/60 border border-slate-900 whitespace-pre-wrap overflow-x-auto leading-relaxed">
                   {currentDiff.pytestOutput}
                 </pre>
               </div>
@@ -490,7 +491,7 @@ def execute_safe_ping(host: str) -> str:
                       <tr>
                         <td className="py-2 font-bold text-cyan-400">EXPLOIT-03</td>
                         <td className="py-2">Specification Gaming / Assertion mocking (return True)</td>
-                        <td className="py-2 text-slate-400">Canary Gate ($G_7$)</td>
+                        <td className="py-2 text-slate-400">Canary Gate (G7)</td>
                         <td className="py-2 text-right text-emerald-400 font-bold">QUARANTINED</td>
                       </tr>
                     </tbody>
@@ -593,10 +594,10 @@ def execute_safe_ping(host: str) -> str:
               <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2 font-sans text-xs">
                 <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
                   <RefreshCw size={16} />
-                  <span>Dual-Sandbox Canary Gating Logic ($G_7$ Deployment Model)</span>
+                  <span>Dual-Sandbox Canary Gating Logic (G7 Deployment Model)</span>
                 </div>
                 <p className="text-slate-300 leading-relaxed">
-                  Under the SAGE $G_7$ policy, every proposed system prompt or procedural memory modification is executed in a dedicated, isolated canary sandbox against held-out regression probes. If canary pass rate drops below threshold $\tau = 0.85$ or an AST security flag is raised, SAGE automatically rolls back persistent state to the prior checkpoint.
+                  Under the SAGE G7 policy, every proposed system prompt or procedural memory modification is executed in a dedicated, isolated canary sandbox against held-out regression probes. If canary pass rate drops below threshold tau = 0.85 or an AST security flag is raised, SAGE automatically rolls back persistent state to the prior checkpoint.
                 </p>
                 <div className="pt-2 flex items-center gap-4 text-xs font-mono text-slate-400">
                   <span>Proposed Mutations: <strong className="text-white">{archetype.mutationsProposed}</strong></span>
