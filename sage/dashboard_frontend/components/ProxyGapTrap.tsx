@@ -17,13 +17,13 @@ interface ArchetypeGapData {
 }
 
 const GAP_DATA: ArchetypeGapData[] = [
-  { group: "G1", name: "G1: Frozen Control", standardGT: 0.62, driftProbeHidden: 0.58, driftProbeProxy: 0.61, gap: 0.03, gapPositive: 0.03, gapNegative: 0.00, gapSigned: 0.03 },
-  { group: "G2", name: "G2: Prompt Rewriter", standardGT: 0.82, driftProbeHidden: 0.48, driftProbeProxy: 0.91, gap: 0.43, gapPositive: 0.43, gapNegative: 0.00, gapSigned: 0.43 },
-  { group: "G3", name: "G3: Memory Accumulator", standardGT: 0.83, driftProbeHidden: 0.60, driftProbeProxy: 0.87, gap: 0.27, gapPositive: 0.27, gapNegative: 0.00, gapSigned: 0.27 },
-  { group: "G4", name: "G4: Reflection Agent", standardGT: 0.89, driftProbeHidden: 0.40, driftProbeProxy: 0.95, gap: 0.55, gapPositive: 0.55, gapNegative: 0.00, gapSigned: 0.55 },
-  { group: "G5", name: "G5: Static Verifier", standardGT: 0.85, driftProbeHidden: 0.81, driftProbeProxy: 0.83, gap: 0.02, gapPositive: 0.02, gapNegative: 0.00, gapSigned: 0.02 },
-  { group: "G6", name: "G6: Regression Guard", standardGT: 0.92, driftProbeHidden: 0.90, driftProbeProxy: 0.92, gap: 0.02, gapPositive: 0.02, gapNegative: 0.00, gapSigned: 0.02 },
-  { group: "G7", name: "G7: Proxy Canary Guard", standardGT: 0.88, driftProbeHidden: 0.89, driftProbeProxy: 0.87, gap: 0.00, gapPositive: 0.00, gapNegative: 0.02, gapSigned: -0.02 },
+  { group: "G1", name: "G1: Frozen Control", standardGT: 0.505, driftProbeHidden: 0.503, driftProbeProxy: 0.505, gap: 0.002, gapPositive: 0.003, gapNegative: 0.001, gapSigned: 0.002 },
+  { group: "G2", name: "G2: Prompt Rewriter", standardGT: 0.504, driftProbeHidden: 0.490, driftProbeProxy: 0.505, gap: 0.015, gapPositive: 0.018, gapNegative: 0.003, gapSigned: 0.015 },
+  { group: "G3", name: "G3: Memory Accumulator", standardGT: 0.485, driftProbeHidden: 0.470, driftProbeProxy: 0.488, gap: 0.018, gapPositive: 0.021, gapNegative: 0.003, gapSigned: 0.018 },
+  { group: "G4", name: "G4: Reflection Agent", standardGT: 0.514, driftProbeHidden: 0.492, driftProbeProxy: 0.516, gap: 0.024, gapPositive: 0.026, gapNegative: 0.002, gapSigned: 0.024 },
+  { group: "G5", name: "G5: Static Verifier", standardGT: 0.525, driftProbeHidden: 0.522, driftProbeProxy: 0.526, gap: 0.004, gapPositive: 0.005, gapNegative: 0.001, gapSigned: 0.004 },
+  { group: "G6", name: "G6: Regression Guard", standardGT: 0.511, driftProbeHidden: 0.513, driftProbeProxy: 0.510, gap: -0.003, gapPositive: 0.004, gapNegative: 0.007, gapSigned: -0.003 },
+  { group: "G7", name: "G7: Proxy Canary Guard", standardGT: 0.516, driftProbeHidden: 0.520, driftProbeProxy: 0.514, gap: -0.006, gapPositive: 0.005, gapNegative: 0.011, gapSigned: -0.006 },
 ];
 
 export const ProxyGapTrap: React.FC = () => {

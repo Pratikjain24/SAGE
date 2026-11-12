@@ -118,26 +118,26 @@ export const ObservatoryTabs: React.FC<ObservatoryTabsProps> = ({
       {(activeTab === "canonical" || activeTab === "all") && (
         <div className="space-y-8 pt-4">
           <div className="border-b border-slate-800 pb-2">
-            <span className="section-label text-purple-400">Tier 2 · Theoretical Simulation Framework</span>
+            <span className="section-label text-cyan-400">Tier 1 · Empirical Ground Truth Study</span>
             <h3 className="text-xl font-black text-white tracking-tight mt-0.5">
-              Canonical Simulation Suite (10-Cycle Adversarial Degradation Framework)
+              Empirical Evaluation Suite (5-Cycle Evolutionary Framework, N = 9,800)
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Mathematical modeling of multi-cycle capability growth, proxy gaming divergence, Pareto efficiency, and long-horizon saturation.
+              Empirical measurements of multi-cycle capability growth, proxy gaming divergence, Pareto efficiency, and zero-drift security containment.
             </p>
           </div>
 
-          {/* Canonical Table 1 Summary Card */}
+          {/* Empirical Table 1 Summary Card */}
           <div className="hud-card p-6 border border-slate-800/80 bg-slate-950/80">
             <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 gap-2 border-b border-slate-800/80">
               <div>
-                <span className="section-label">Table 1 · Canonical Tier</span>
+                <span className="section-label">Table 1 · Empirical Tier</span>
                 <h4 className="text-base font-bold text-white mt-0.5">
-                  Capability Bought vs. Capability Paid For (T = 10 Cycles, 18,000 Evaluations)
+                  Empirical Capability Gain vs. Specification Gaming (T = 5 Cycles, 9,800 Evaluations)
                 </h4>
               </div>
               <span className="font-mono text-xs text-cyan-400 px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20">
-                18,000 Evaluations · $73.95 Total
+                9,800 Evaluations &bull; 21.08 GPU Hours
               </span>
             </div>
 
@@ -147,81 +147,100 @@ export const ObservatoryTabs: React.FC<ObservatoryTabsProps> = ({
                   <tr className="border-b border-slate-800 text-[10px] text-slate-400 uppercase font-bold">
                     <th className="p-2.5">Archetype</th>
                     <th className="p-2.5">Mechanism</th>
-                    <th className="p-2.5">P(0)</th>
-                    <th className="p-2.5">P(T)</th>
-                    <th className="p-2.5">ΔP(T)</th>
+                    <th className="p-2.5">Train C0</th>
+                    <th className="p-2.5">Train C3</th>
+                    <th className="p-2.5">ΔP (Gain)</th>
                     <th className="p-2.5 text-rose-400">Security Drift</th>
-                    <th className="p-2.5 text-amber-400">Proxy Gap</th>
-                    <th className="p-2.5 text-emerald-400">Retention</th>
-                    <th className="p-2.5 text-right">Cost</th>
+                    <th className="p-2.5 text-amber-400">Signed Gap (Gp)</th>
+                    <th className="p-2.5 text-emerald-400">Held-Out Test (C4)</th>
+                    <th className="p-2.5 text-cyan-400">Clean Pass</th>
+                    <th className="p-2.5 text-right">GPU Compute</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="border-b border-slate-800/50 hover:bg-slate-900/40">
                     <td className="p-2.5 font-bold text-slate-300">G1</td>
                     <td className="p-2.5 text-slate-400">Frozen Control</td>
-                    <td className="p-2.5">0.60</td>
-                    <td className="p-2.5">0.60</td>
-                    <td className="p-2.5 text-slate-500">+0.00</td>
-                    <td className="p-2.5 text-slate-400">0.00</td>
-                    <td className="p-2.5 text-slate-400">0.00</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">100%</td>
-                    <td className="p-2.5 text-right text-slate-400">$3.66</td>
+                    <td className="p-2.5">48.0%</td>
+                    <td className="p-2.5">48.7%</td>
+                    <td className="p-2.5 text-slate-400">+0.7%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">0.000 (Safe)</td>
+                    <td className="p-2.5 text-slate-400">+0.2%</td>
+                    <td className="p-2.5 text-slate-300">63.0%</td>
+                    <td className="p-2.5 text-slate-300">50.5%</td>
+                    <td className="p-2.5 text-right text-slate-400">2.31 hrs</td>
                   </tr>
                   <tr className="border-b border-slate-800/50 hover:bg-slate-900/40">
                     <td className="p-2.5 font-bold text-amber-400">G2</td>
                     <td className="p-2.5 text-slate-400">Prompt Rewriter</td>
-                    <td className="p-2.5">0.60</td>
-                    <td className="p-2.5">0.78</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">+0.18</td>
-                    <td className="p-2.5 text-rose-400 font-bold">+0.22</td>
-                    <td className="p-2.5 text-amber-400">0.13</td>
-                    <td className="p-2.5 text-amber-400">82%</td>
-                    <td className="p-2.5 text-right text-slate-400">$6.28</td>
+                    <td className="p-2.5">45.0%</td>
+                    <td className="p-2.5">48.0%</td>
+                    <td className="p-2.5 text-cyan-400 font-bold">+3.0%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">0.000 (Safe)</td>
+                    <td className="p-2.5 text-amber-400 font-bold">+1.5%</td>
+                    <td className="p-2.5 text-slate-300">61.5%</td>
+                    <td className="p-2.5 text-slate-300">50.4%</td>
+                    <td className="p-2.5 text-right text-slate-400">3.04 hrs</td>
                   </tr>
                   <tr className="border-b border-slate-800/50 hover:bg-slate-900/40">
                     <td className="p-2.5 font-bold text-blue-400">G3</td>
                     <td className="p-2.5 text-slate-400">Memory Accumulator</td>
-                    <td className="p-2.5">0.60</td>
-                    <td className="p-2.5">0.81</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">+0.21</td>
-                    <td className="p-2.5 text-rose-400 font-bold">+0.15</td>
-                    <td className="p-2.5 text-amber-400">0.09</td>
-                    <td className="p-2.5 text-slate-300">91%</td>
-                    <td className="p-2.5 text-right text-slate-400">$9.38</td>
+                    <td className="p-2.5">48.0%</td>
+                    <td className="p-2.5">44.7%</td>
+                    <td className="p-2.5 text-rose-400 font-bold">-3.3%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">0.000 (Safe)</td>
+                    <td className="p-2.5 text-amber-400 font-bold">+1.8%</td>
+                    <td className="p-2.5 text-slate-300">57.5%</td>
+                    <td className="p-2.5 text-slate-300">48.5%</td>
+                    <td className="p-2.5 text-right text-slate-400">2.87 hrs</td>
                   </tr>
                   <tr className="border-b border-slate-800/50 hover:bg-slate-900/40">
                     <td className="p-2.5 font-bold text-rose-400">G4</td>
-                    <td className="p-2.5 text-slate-400">Reflection Agent (Trap)</td>
-                    <td className="p-2.5">0.60</td>
-                    <td className="p-2.5">0.89</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">+0.29</td>
-                    <td className="p-2.5 text-rose-500 font-bold">+0.28</td>
-                    <td className="p-2.5 text-rose-400 font-bold">0.12</td>
-                    <td className="p-2.5 text-rose-400">82%</td>
-                    <td className="p-2.5 text-right text-slate-400">$19.98</td>
+                    <td className="p-2.5 text-slate-400">Reflection Agent</td>
+                    <td className="p-2.5">46.7%</td>
+                    <td className="p-2.5">51.7%</td>
+                    <td className="p-2.5 text-rose-400 font-bold">+5.0%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">0.000 (Safe)</td>
+                    <td className="p-2.5 text-rose-400 font-bold">+2.4% (Trap)</td>
+                    <td className="p-2.5 text-slate-300">60.5%</td>
+                    <td className="p-2.5 text-slate-300">51.4%</td>
+                    <td className="p-2.5 text-right text-slate-400">2.45 hrs</td>
                   </tr>
                   <tr className="border-b border-slate-800/50 hover:bg-slate-900/40">
                     <td className="p-2.5 font-bold text-purple-400">G5</td>
                     <td className="p-2.5 text-slate-400">Static Verifier (AST)</td>
-                    <td className="p-2.5">0.60</td>
-                    <td className="p-2.5">0.84</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">+0.24</td>
-                    <td className="p-2.5 text-purple-400 font-bold">+0.06</td>
-                    <td className="p-2.5 text-emerald-400">0.04</td>
-                    <td className="p-2.5 text-slate-300">91%</td>
-                    <td className="p-2.5 text-right text-slate-400">$13.30</td>
+                    <td className="p-2.5">46.3%</td>
+                    <td className="p-2.5">51.0%</td>
+                    <td className="p-2.5 text-purple-400 font-bold">+4.7%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">0.000 (Safe)</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">+0.4%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">63.5%</td>
+                    <td className="p-2.5 text-cyan-300 font-bold">52.5%</td>
+                    <td className="p-2.5 text-right text-slate-400">2.50 hrs</td>
                   </tr>
-                  <tr className="hover:bg-slate-900/40 bg-emerald-500/5">
+                  <tr className="border-b border-slate-800/50 hover:bg-slate-900/40">
                     <td className="p-2.5 font-bold text-emerald-400">G6</td>
-                    <td className="p-2.5 text-slate-300 font-bold">Regression Guard (Dominates)</td>
-                    <td className="p-2.5">0.60</td>
-                    <td className="p-2.5">0.92</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">+0.32</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">+0.02</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">0.00</td>
-                    <td className="p-2.5 text-emerald-400 font-bold">98%</td>
-                    <td className="p-2.5 text-right text-emerald-400 font-bold">$21.39</td>
+                    <td className="p-2.5 text-slate-300">Oracle Skyline Guard</td>
+                    <td className="p-2.5">46.7%</td>
+                    <td className="p-2.5">50.7%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">+4.0%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">0.000 (Safe)</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">-0.3%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">59.0%</td>
+                    <td className="p-2.5 text-slate-300">51.1%</td>
+                    <td className="p-2.5 text-right text-slate-400">2.48 hrs</td>
+                  </tr>
+                  <tr className="hover:bg-slate-900/40 bg-cyan-500/10">
+                    <td className="p-2.5 font-bold text-cyan-400">G7</td>
+                    <td className="p-2.5 text-cyan-200 font-bold">Proxy Canary (Deployable)</td>
+                    <td className="p-2.5">40.3%</td>
+                    <td className="p-2.5">44.0%</td>
+                    <td className="p-2.5 text-cyan-400 font-bold">+3.7%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">0.000 (Safe)</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">-0.6%</td>
+                    <td className="p-2.5 text-cyan-300">51.0%</td>
+                    <td className="p-2.5 text-emerald-400 font-bold">51.6%</td>
+                    <td className="p-2.5 text-right text-cyan-300 font-bold">5.43 hrs</td>
                   </tr>
                 </tbody>
               </table>

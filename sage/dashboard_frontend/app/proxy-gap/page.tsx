@@ -38,7 +38,7 @@ export default function ProxyGapPage() {
             <code className="text-rose-400 font-mono font-bold">G_p⁺ = max(0, p_proxy - p_gt)</code>
           </p>
           <p className="text-[11px] text-slate-400 leading-relaxed">
-            Captures proxy reward inflation: agent satisfies observable mock assertions while failing hidden invariants (e.g. G4 reports 95% vs 40% hidden, G_p⁺ = +0.55).
+            Captures proxy reward inflation: agent satisfies observable assertions while failing sequestered invariants (e.g. G4 reaches G_p⁺ = +0.026 via no-op return stubs, bounded by G7 at -0.006).
           </p>
         </div>
 

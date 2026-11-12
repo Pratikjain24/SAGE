@@ -135,7 +135,7 @@ export const HumanAuditWorkbench: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs font-bold text-white flex items-center gap-1.5 uppercase">
                 <UserCheck size={14} className="text-emerald-400" />
-                Inter-Annotator Concordance
+                Inter-Annotator Concordance (N = 79)
               </span>
               <span className="text-[10px] font-mono text-slate-500">Cohen&apos;s Kappa</span>
             </div>
@@ -144,30 +144,35 @@ export const HumanAuditWorkbench: React.FC = () => {
               <thead>
                 <tr className="border-b border-slate-800 text-[10px] text-slate-400 uppercase">
                   <th className="p-2">Dimension</th>
+                  <th className="p-2 text-center text-cyan-400">Agreement (Po)</th>
                   <th className="p-2 text-center text-cyan-400">Kappa (κ)</th>
-                  <th className="p-2 text-right text-emerald-400">F1 Score</th>
+                  <th className="p-2 text-right text-emerald-400">Monitor F1</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-slate-800/50">
-                  <td className="p-2 text-slate-300">Safety Violations</td>
-                  <td className="p-2 text-center font-bold text-cyan-400">0.93</td>
-                  <td className="p-2 text-right font-bold text-emerald-400">0.89</td>
+                  <td className="p-2 text-slate-300 font-bold">Safety Agreement</td>
+                  <td className="p-2 text-center text-slate-300">97.5%</td>
+                  <td className="p-2 text-center font-bold text-cyan-400">0.843</td>
+                  <td className="p-2 text-right font-bold text-emerald-400">0.857</td>
                 </tr>
                 <tr className="border-b border-slate-800/50">
-                  <td className="p-2 text-slate-300">Specification Gaming</td>
-                  <td className="p-2 text-center font-bold text-cyan-400">0.96</td>
-                  <td className="p-2 text-right font-bold text-emerald-400">0.94</td>
+                  <td className="p-2 text-slate-300 font-bold">Gaming Agreement</td>
+                  <td className="p-2 text-center text-slate-300">96.2%</td>
+                  <td className="p-2 text-center font-bold text-cyan-400">0.890</td>
+                  <td className="p-2 text-right font-bold text-emerald-400">0.944</td>
                 </tr>
                 <tr className="border-b border-slate-800/50">
-                  <td className="p-2 text-slate-300">Safety (Expanded Cohort)</td>
-                  <td className="p-2 text-center font-bold text-cyan-400">0.83</td>
-                  <td className="p-2 text-right font-bold text-emerald-400">0.90</td>
+                  <td className="p-2 text-slate-300">Safety False Positive Rate</td>
+                  <td className="p-2 text-center text-slate-400">—</td>
+                  <td className="p-2 text-center text-slate-400">—</td>
+                  <td className="p-2 text-right font-bold text-cyan-400">2.7%</td>
                 </tr>
                 <tr>
-                  <td className="p-2 text-slate-300">Gaming (Expanded Cohort)</td>
-                  <td className="p-2 text-center font-bold text-cyan-400">0.90</td>
-                  <td className="p-2 text-right font-bold text-emerald-400">0.95</td>
+                  <td className="p-2 text-slate-300">Gaming False Positive Rate</td>
+                  <td className="p-2 text-center text-slate-400">—</td>
+                  <td className="p-2 text-center text-slate-400">—</td>
+                  <td className="p-2 text-right font-bold text-cyan-400">1.6%</td>
                 </tr>
               </tbody>
             </table>
@@ -176,10 +181,10 @@ export const HumanAuditWorkbench: React.FC = () => {
           <div className="p-3.5 rounded-xl bg-slate-900/40 border border-slate-800 text-xs text-slate-300 space-y-1.5 leading-relaxed">
             <div className="font-bold text-emerald-400 flex items-center gap-1.5">
               <CheckCircle size={14} />
-              <span>100% Recall in Expanded Cohort</span>
+              <span>Double-Blind Stratified Protocol (79 Traces)</span>
             </div>
             <p className="text-[11px] text-slate-400">
-              Zero safety violations flagged by human annotators were missed by the automated AST and canary detectors. Precision ~90%, False Positive Rate 3–4%.
+              Double-blind review across 79 stratified task executions spanning all 7 archetypes. High agreement (κ &gt; 0.84) confirms that SAGE automated AST and proxy tripwires accurately reflect human safety consensus.
             </p>
           </div>
         </div>

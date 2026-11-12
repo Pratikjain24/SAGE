@@ -113,44 +113,49 @@ export const DesignAblations: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="font-mono text-xs font-bold text-white flex items-center gap-1.5 uppercase">
               <Clock size={14} className="text-amber-400" />
-              3. Cycle Horizon Convergence
+              3. Cycle Horizon Progression (C0 to C4)
             </span>
-            <span className="text-[10px] font-mono text-slate-500">Asymptotic Capture</span>
+            <span className="text-[10px] font-mono text-slate-500">Adaptation Saturation</span>
           </div>
 
           <table className="w-full text-left text-xs font-mono border-collapse">
             <thead>
               <tr className="border-b border-slate-800 text-[10px] text-slate-400 uppercase">
-                <th className="p-2">Horizon (T)</th>
-                <th className="p-2">Security Drift</th>
-                <th className="p-2 text-right">% of Asymptote</th>
+                <th className="p-2">Cycle</th>
+                <th className="p-2">Mean Solve Rate</th>
+                <th className="p-2 text-right">Security Drift</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b border-slate-800/50">
-                <td className="p-2 text-slate-300">T = 1</td>
-                <td className="p-2 text-slate-200">0.030</td>
-                <td className="p-2 text-right text-slate-400">9.6%</td>
+                <td className="p-2 text-slate-300">C0 (Baseline)</td>
+                <td className="p-2 text-slate-200">46.8%</td>
+                <td className="p-2 text-right text-emerald-400 font-bold">0.000 (Safe)</td>
               </tr>
               <tr className="border-b border-slate-800/50">
-                <td className="p-2 text-slate-300">T = 5</td>
-                <td className="p-2 text-slate-200">0.160</td>
-                <td className="p-2 text-right text-slate-400">51.3%</td>
+                <td className="p-2 text-slate-300">C1 (Adapt)</td>
+                <td className="p-2 text-slate-200">47.9%</td>
+                <td className="p-2 text-right text-emerald-400 font-bold">0.000 (Safe)</td>
+              </tr>
+              <tr className="border-b border-slate-800/50">
+                <td className="p-2 text-slate-300">C2 (Adapt)</td>
+                <td className="p-2 text-slate-200">48.7%</td>
+                <td className="p-2 text-right text-emerald-400 font-bold">0.000 (Safe)</td>
               </tr>
               <tr className="border-b border-slate-800/50 bg-slate-800/20">
-                <td className="p-2 text-cyan-400 font-bold">T = 10 (SAGE)</td>
-                <td className="p-2 font-bold text-cyan-400">0.280</td>
-                <td className="p-2 text-right font-bold text-cyan-400">89.7%</td>
+                <td className="p-2 text-cyan-400 font-bold">C3 (Train Peak)</td>
+                <td className="p-2 font-bold text-cyan-400">49.3% (+2.5%)</td>
+                <td className="p-2 text-right font-bold text-emerald-400">0.000 (Safe)</td>
               </tr>
               <tr>
-                <td className="p-2 text-slate-300">T = 25</td>
-                <td className="p-2 text-slate-200">0.312</td>
-                <td className="p-2 text-right text-slate-400">100.0%</td>
+                <td className="p-2 text-slate-300">C4 (Held-Out Test)</td>
+                <td className="p-2 text-slate-200">58.8%</td>
+                <td className="p-2 text-right text-emerald-400 font-bold">0.000 (Safe)</td>
               </tr>
             </tbody>
           </table>
           <p className="text-[11px] text-slate-400">
-            T=10 captures ~90% of the long-term asymptotic drift effect at only 40% of the compute cost of 25 cycles.
+            Training adaptation peaks at Cycle 3 (+2.5% mean gain across evolving layers); security drift remains invariant at 0.000 across all 5 cycles.
           </p>
         </div>
 
@@ -159,49 +164,49 @@ export const DesignAblations: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="font-mono text-xs font-bold text-white flex items-center gap-1.5 uppercase">
               <DollarSign size={14} className="text-emerald-400" />
-              4. Compute Cost Accounting (3 Seeds, 10 Cycles)
+              4. Kaggle GPU Compute Allocation (35 Runs)
             </span>
-            <span className="text-[10px] font-mono text-slate-500">Cost Efficiency</span>
+            <span className="text-[10px] font-mono text-slate-500">Dual Tesla T4</span>
           </div>
 
           <table className="w-full text-left text-xs font-mono border-collapse">
             <thead>
               <tr className="border-b border-slate-800 text-[10px] text-slate-400 uppercase">
-                <th className="p-2">Group</th>
-                <th className="p-2">Total Spend</th>
-                <th className="p-2">Gain ΔP</th>
-                <th className="p-2 text-right">USD per +0.01 ΔP</th>
+                <th className="p-2">Archetype</th>
+                <th className="p-2">GPU Hours</th>
+                <th className="p-2">Train Gain</th>
+                <th className="p-2 text-right">Overall Clean</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b border-slate-800/50">
                 <td className="p-2 text-slate-400">G1 Control</td>
-                <td className="p-2 text-slate-300">$3.66</td>
-                <td className="p-2 text-slate-500">+0.00</td>
-                <td className="p-2 text-right text-slate-500">—</td>
+                <td className="p-2 text-slate-300">2.31 hrs</td>
+                <td className="p-2 text-slate-400">+0.7%</td>
+                <td className="p-2 text-right text-slate-300">50.5%</td>
               </tr>
               <tr className="border-b border-slate-800/50">
                 <td className="p-2 text-rose-400 font-bold">G4 Reflection</td>
-                <td className="p-2 text-slate-300">$19.98</td>
-                <td className="p-2 text-emerald-400 font-bold">+0.29</td>
-                <td className="p-2 text-right text-slate-300 font-bold">$0.69</td>
+                <td className="p-2 text-slate-300">2.45 hrs</td>
+                <td className="p-2 text-rose-400 font-bold">+5.0%</td>
+                <td className="p-2 text-right text-slate-300">51.4%</td>
               </tr>
               <tr className="border-b border-slate-800/50">
                 <td className="p-2 text-purple-400">G5 AST Gate</td>
-                <td className="p-2 text-slate-300">$13.30</td>
-                <td className="p-2 text-emerald-400 font-bold">+0.24</td>
-                <td className="p-2 text-right text-slate-300 font-bold">$0.55</td>
+                <td className="p-2 text-slate-300">2.50 hrs</td>
+                <td className="p-2 text-purple-400 font-bold">+4.7%</td>
+                <td className="p-2 text-right text-cyan-300 font-bold">52.5%</td>
               </tr>
               <tr>
-                <td className="p-2 text-emerald-400 font-bold">G6 Guarded</td>
-                <td className="p-2 text-slate-300">$21.39</td>
-                <td className="p-2 text-emerald-400 font-bold">+0.32</td>
-                <td className="p-2 text-right text-emerald-400 font-bold">$0.67</td>
+                <td className="p-2 text-cyan-400 font-bold">G7 Canary (Deployable)</td>
+                <td className="p-2 text-slate-300">5.43 hrs</td>
+                <td className="p-2 text-cyan-400 font-bold">+3.7%</td>
+                <td className="p-2 text-right text-emerald-400 font-bold">51.6%</td>
               </tr>
             </tbody>
           </table>
           <p className="text-[11px] text-slate-400">
-            Canary guardrails raise compute spend by only +7% over G4, while the cost per unit of capability gain is essentially identical ($0.67 vs $0.69) and eliminates drift entirely.
+            Total study runtime: 21.08 active GPU hours on Kaggle Dual Tesla T4 GPUs across 35 independent runs and 9,800 task evaluations.
           </p>
         </div>
       </div>

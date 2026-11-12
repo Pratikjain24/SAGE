@@ -25,7 +25,7 @@ export default function CapabilityPage() {
         </p>
       </div>
 
-      {/* Flagship Interactive 10-Cycle Trajectory (Slide 35) */}
+      {/* Flagship Interactive 5-Cycle Trajectory (C0-C4) */}
       <CapabilityTrajectories />
 
       {/* Top Metric Cards */}
