@@ -45,14 +45,14 @@ to static benchmarks: specification gaming, security boundary drift, and
 catastrophic forgetting.
 
 We present SAGE, a hardened benchmark measuring these failure modes across
-100 tasks, 8 agent archetypes ($G_1$--$G_7$, $G_6^*$), and 10 evolutionary
+100 tasks, 7 agent archetypes ($G_1$--$G_6, G_6^*$), and 10 evolutionary
 cycles. SAGE pairs deliberate drift probes---seductive visible proxies with
 sequestered ground-truth tests---with a five-layer container-isolated
 anti-tamper engine and 18,000 canonical deterministic trajectories.
 
 Key findings: unconstrained agents ($G_4$) achieve 95\% on visible proxy
 tests while collapsing to 40\% on hidden ground truth
-($\Delta_{\text{proxy}} = +0.55$). Deployable canary guards ($G_7$) limit
+($\Delta_{\text{proxy}} = +0.55$). Deployable canary guards ($G_6$) limit
 drift to $+0.02$ with 96\% capability retention. Statistical significance
 holds across 26 of 27 comparisons under Holm-Bonferroni control
 ($p_{\text{Holm}} \le 0.003$), validated by double-blind human audit
@@ -96,7 +96,7 @@ containment. Static benchmarks (HumanEval~\cite{chen2021evaluating},
 SWE-bench~\cite{jimenez2024swebench}) cannot measure these longitudinal
 failure modes. We introduce \textbf{SAGE} with four core contributions:
 \begin{enumerate}
-    \item A formal archetype taxonomy ($G_1$--$G_7$, $G_6^*$) isolating
+    \item A formal archetype taxonomy ($G_1$--$G_6, G_6^*$) isolating
     causal mechanisms of self-evolution.
     \item A five-layer container-isolated anti-tamper engine with
     cryptographic SHA-256 harness auditing.
@@ -126,7 +126,7 @@ The archetype taxonomy controls which mutation surfaces are active:
     \item $G_4$ (Compound Reflection): mutates $\Pi_t + \mathcal{M}_t +
     \mathcal{C}_t$ unconstrained
     \item $G_5$ (Static Verifier): $G_4$ + AST linting rollback gate
-    \item $G_7$ (Proxy Canary Guard): $G_4$ + held-out proxy regression
+    \item $G_6$ (Proxy Canary Guard): $G_4$ + held-out proxy regression
     rollback (deployable)
     \item $G_6^*$ (Oracle Skyline): $G_4$ + sequestered ground-truth
     rollback (theoretical upper bound)
@@ -201,7 +201,7 @@ $+0.15$ security drift and $+0.27$ probe gaming without mutating prompts or
 code --- trajectory caches encode fragile heuristics.
 
 \textbf{(3) Dynamic verification establishes rollback-guarded preservation.}
-$G_7$ achieves 84.4\% capability with $+0.02$ drift and 96\% retention
+$G_6$ achieves 84.4\% capability with $+0.02$ drift and 96\% retention
 ($\mathbf{H_5}$ confirmed). The oracle skyline $G_6^*$ reaches 92.0\%
 with 98\% retention.
 
@@ -221,7 +221,7 @@ $G_2$ & Prompt Rewriter & 73.0\% & +0.13 & +0.22 & +0.43 & 82\% \\
 $G_3$ & Memory Accum.  & 77.2\% & +0.17 & +0.15 & +0.27 & 89\% \\
 $G_4$ & Compound Refl. & 78.4\% & +0.18 & +0.28 & +0.55 & 81\% \\
 $G_5$ & Static Verifier & 84.0\% & +0.24 & +0.06 & +0.02 & 94\% \\
-$G_7$ & Proxy Canary   & 84.4\% & +0.24 & +0.02 & +0.08 & 96\% \\
+$G_6$ & Proxy Canary   & 84.4\% & +0.24 & +0.02 & +0.08 & 96\% \\
 $G_6^*$ & Oracle Skyline & \textbf{92.0\%} & \textbf{+0.32} & \textbf{+0.02} & \textbf{+0.02} & \textbf{98\%} \\
 \bottomrule
 \end{tabular}
@@ -234,7 +234,7 @@ $\alpha=0.05$) across 27 canonical comparisons yield $p_{\text{Holm}}
 Cliff's $|\delta|\ge 0.56$) in 26 of 27 contrasts. The one
 non-significant contrast is $G_3$ vs. $G_5$ on $\Delta P(T)$ ($p=0.294$),
 reflecting comparable capability gains via different mechanisms.
-$G_7$'s drift reduction vs. $G_4$ (drift diff $+0.26$, $d=8.12$,
+$G_6$'s drift reduction vs. $G_4$ (drift diff $+0.26$, $d=8.12$,
 proxy gap diff $+0.35$, $d=9.84$, $p_{\text{Holm}} < 0.001$) is
 statistically significant under FWER control.
 
@@ -262,12 +262,12 @@ The standard horizon is $T=10$; saturation at $T=25$ is ongoing.
 The 18,000 canonical trajectories use formalized archetype policies rather
 than end-to-end live neural generation --- a deliberate trade-off for
 bitwise reproducibility. $G_6^*$ is an idealized oracle not available in
-production; in deployment, proxy canaries ($G_7$) are susceptible to
+production; in deployment, proxy canaries ($G_6$) are susceptible to
 Goodhart's Law and require defense-in-depth with static AST tripwires.
 
 \textbf{Conclusion}: SAGE exposes a fundamental vulnerability: unconstrained
 self-evolving agents trade ground-truth correctness for superficial metric
-satisfaction. Cryptographically isolated regression canary guards ($G_7$)
+satisfaction. Cryptographically isolated regression canary guards ($G_6$)
 establish rollback-guarded state preservation --- limiting drift to $+0.02$
 while retaining 96\% capability --- providing both the empirical benchmark
 standard and the architectural blueprint for safe lifelong autonomy. Future
