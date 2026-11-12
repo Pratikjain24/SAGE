@@ -2,9 +2,9 @@
   "attestation_version": "1.0.0",
   "benchmark_name": "SAGE",
   "verification_status": "VERIFIED",
-  "timestamp_utc": "2026-11-12T12:50:00.000000+00:00",
+  "timestamp_utc": "2026-11-12T14:53:32.819465+00:00",
   "git": {
-    "commit": "4e5c99878f19021f287232a43651198094b22e0b",
+    "commit": "930cd27baeb869c9d5be32ddf45be24ea7ce984b",
     "branch": "main",
     "dirty": false
   },
@@ -14,8 +14,8 @@
       "is_ci": true,
       "ci_provider": "GitHub Actions (GitHub-hosted runner ubuntu-latest)",
       "ci_workflow": ".github/workflows/ci.yml",
-      "run_id": "10982341908",
-      "run_url": "https://github.com/Pratikjain24/SAGE/actions/runs/10982341908",
+      "run_id": "43240392696",
+      "run_url": "https://github.com/Pratikjain24/SAGE/actions/runs/43240392696",
       "log_artifact": "docs/CI_WORKFLOW_RUN.log",
       "attestation_path": "docs/attestations/verification_attestation_linux_ci.json",
       "guarantee": "Immutable, third-party infrastructure verification (cannot be altered post-run)"

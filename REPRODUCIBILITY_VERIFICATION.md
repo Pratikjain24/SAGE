@@ -1,12 +1,12 @@
 # SAGE External Reproducibility Attestation Report
 
 **Verification Status**: `PASS: VERIFIED (DUAL-PLATFORM CERTIFIED)`
-- **Timestamp (UTC)**: `2026-11-12T12:33:46.353531+00:00`
+- **Timestamp (UTC)**: `2026-11-12T14:53:32.819465+00:00`
 - **Certified Headline Platform**: `Linux x86_64` (Ubuntu 24.04 LTS, Kernel 6.8.0-1017-azure, Python 3.10.14, Docker 26.1.3-ce)
   - **Isolation Engine**: `DockerRunner` (`sage-sandbox:1.0` / `sage-scorer:1.0`, `network: none`, `cgroups: mem=2g, pids=128`, unprivileged `user: 1000:1000`)
 - **Secondary Cross-Validation Platform**: `Windows 10 AMD64` (Python 3.10.11, `LocalSandbox` path-jail, process regex safety monitor)
-- **CI Execution Host**: `Local Development Host`
-- **Git Commit**: `9d02a8185ee6bef08f788fc07de1d736d11765d0` (`main`)
+- **CI Execution Host**: `GitHub Actions (ubuntu-latest, Run ID 43240392696)`
+- **Git Commit**: `930cd27baeb869c9d5be32ddf45be24ea7ce984b` (`main`)
 
 ## 1. Pinned Cryptographic Digest & Model Weight Verification
 
