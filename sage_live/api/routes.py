@@ -126,53 +126,31 @@ from sage_live.database.models import (
 # Prometheus Metrics
 # ---------------------------------------------------------------------------
 
-try:
-    REQUESTS_TOTAL = Counter(
-        "sage_api_requests_total",
-        "Total API requests",
-        ["method", "endpoint", "status"],
-    )
-except ValueError:
-    REQUESTS_TOTAL = REGISTRY._names_to_collectors["sage_api_requests_total"]
+def _safe_counter(name, doc, labels=()):
+    try:
+        return Counter(name, doc, labels) if labels else Counter(name, doc)
+    except ValueError:
+        return REGISTRY._names_to_collectors[name]
 
-try:
-    REQUEST_DURATION = Histogram(
-        "sage_api_request_duration_seconds",
-        "Request duration in seconds",
-        ["method", "endpoint"],
-    )
-except ValueError:
-    REQUEST_DURATION = REGISTRY._names_to_collectors["sage_api_request_duration_seconds"]
+def _safe_histogram(name, doc, labels=()):
+    try:
+        return Histogram(name, doc, labels) if labels else Histogram(name, doc)
+    except ValueError:
+        return REGISTRY._names_to_collectors[name]
 
-try:
-    ACTIVE_EVALUATIONS = Gauge(
-        "sage_active_evaluations",
-        "Number of evaluations in progress",
-    )
-except ValueError:
-    ACTIVE_EVALUATIONS = REGISTRY._names_to_collectors["sage_active_evaluations"]
+def _safe_gauge(name, doc):
+    try:
+        return Gauge(name, doc)
+    except ValueError:
+        return REGISTRY._names_to_collectors[name]
 
-PROBES_GENERATED = Counter(
-    "sage_probes_generated_total",
-    "Total probes generated",
-    ["generation"],
-)
-
-EVALUATIONS_TOTAL = Counter(
-    "sage_evaluations_total",
-    "Total evaluations completed",
-    ["agent_id", "passed"],
-)
-
-ATTESTATIONS_TOTAL = Counter(
-    "sage_attestations_total",
-    "Total attestations created",
-)
-
-WEBSOCKET_CONNECTIONS = Gauge(
-    "sage_websocket_connections",
-    "Active WebSocket connections",
-)
+REQUESTS_TOTAL = _safe_counter("sage_api_requests_total", "Total API requests", ["method", "endpoint", "status"])
+REQUEST_DURATION = _safe_histogram("sage_api_request_duration_seconds", "Request duration in seconds", ["method", "endpoint"])
+ACTIVE_EVALUATIONS = _safe_gauge("sage_active_evaluations", "Number of evaluations in progress")
+PROBES_GENERATED = _safe_counter("sage_probes_generated_total", "Total probes generated", ["generation"])
+EVALUATIONS_TOTAL = _safe_counter("sage_evaluations_total", "Total evaluations completed", ["agent_id", "passed"])
+ATTESTATIONS_TOTAL = _safe_counter("sage_attestations_total", "Total attestations created")
+WEBSOCKET_CONNECTIONS = _safe_gauge("sage_websocket_connections", "Active WebSocket connections")
 
 
 # ---------------------------------------------------------------------------
@@ -995,12 +973,13 @@ async def get_probe(
     description="Mark a probe as retired (soft delete)",
     status_code=status.HTTP_204_NO_CONTENT,
     response_class=Response,
+    response_model=None,
 )
 @limiter.limit("20/minute")
 async def retire_probe(
     probe_id: str,
     user: AdminUser,
-) -> None:
+):
     """Retire a probe."""
     logger.info("Retiring probe: {}", probe_id)
 
