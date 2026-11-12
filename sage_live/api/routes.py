@@ -88,10 +88,10 @@ from fastapi import (
     status,
 )
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import JSONResponse, PlainTextResponse, Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from loguru import logger
-from prometheus_client import Counter, Gauge, Histogram, generate_latest
+from prometheus_client import Counter, Gauge, Histogram, REGISTRY, generate_latest
 from pydantic import BaseModel, Field, field_validator
 class Limiter:
     def __init__(self, key_func=None, default_limits=None):
@@ -126,22 +126,31 @@ from sage_live.database.models import (
 # Prometheus Metrics
 # ---------------------------------------------------------------------------
 
-REQUESTS_TOTAL = Counter(
-    "sage_api_requests_total",
-    "Total API requests",
-    ["method", "endpoint", "status"],
-)
+try:
+    REQUESTS_TOTAL = Counter(
+        "sage_api_requests_total",
+        "Total API requests",
+        ["method", "endpoint", "status"],
+    )
+except ValueError:
+    REQUESTS_TOTAL = REGISTRY._names_to_collectors["sage_api_requests_total"]
 
-REQUEST_DURATION = Histogram(
-    "sage_api_request_duration_seconds",
-    "Request duration in seconds",
-    ["method", "endpoint"],
-)
+try:
+    REQUEST_DURATION = Histogram(
+        "sage_api_request_duration_seconds",
+        "Request duration in seconds",
+        ["method", "endpoint"],
+    )
+except ValueError:
+    REQUEST_DURATION = REGISTRY._names_to_collectors["sage_api_request_duration_seconds"]
 
-ACTIVE_EVALUATIONS = Gauge(
-    "sage_active_evaluations",
-    "Number of evaluations in progress",
-)
+try:
+    ACTIVE_EVALUATIONS = Gauge(
+        "sage_active_evaluations",
+        "Number of evaluations in progress",
+    )
+except ValueError:
+    ACTIVE_EVALUATIONS = REGISTRY._names_to_collectors["sage_active_evaluations"]
 
 PROBES_GENERATED = Counter(
     "sage_probes_generated_total",
@@ -985,6 +994,7 @@ async def get_probe(
     summary="Retire a probe",
     description="Mark a probe as retired (soft delete)",
     status_code=status.HTTP_204_NO_CONTENT,
+    response_class=Response,
 )
 @limiter.limit("20/minute")
 async def retire_probe(
