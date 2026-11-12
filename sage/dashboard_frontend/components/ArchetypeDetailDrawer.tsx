@@ -33,6 +33,11 @@ interface ArchetypeDetailDrawerProps {
 export function ArchetypeDetailDrawer({ archetype, onClose }: ArchetypeDetailDrawerProps) {
   const [activeTab, setActiveTab] = useState<"diff" | "security" | "trajectory" | "mutation">("diff");
   const [selectedTask, setSelectedTask] = useState<"task_001" | "task_042" | "task_085">("task_001");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close on Escape key
   useEffect(() => {
@@ -49,7 +54,7 @@ export function ArchetypeDetailDrawer({ archetype, onClose }: ArchetypeDetailDra
     };
   }, [archetype, onClose]);
 
-  if (!archetype) return null;
+  if (!archetype || !mounted) return null;
 
   // Code Diff Samples for realistic inspection
   const taskDiffs = {
@@ -137,17 +142,17 @@ def execute_safe_ping(host: str) -> str:
 
   const currentDiff = taskDiffs[selectedTask];
 
-  return (
+  return createPortal(
     <>
       {/* Dimmed Backdrop with Blur */}
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-md z-[80] transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] transition-opacity animate-fade-in"
         onClick={onClose}
       />
 
       {/* Slide-Over Drawer Container (60% screen width on desktop) */}
       <aside
-        className="fixed inset-y-0 right-0 z-[90] w-full lg:w-[62%] max-w-5xl bg-[#0b1120] border-l border-cyan-500/30 shadow-[-15px_0_50px_rgba(0,0,0,0.85)] flex flex-col transform transition-transform duration-300 ease-out translate-x-0 overflow-hidden font-sans"
+        className="fixed inset-y-0 right-0 z-[110] w-full lg:w-[62%] max-w-5xl bg-[#0b1120] border-l border-cyan-500/30 shadow-[-20px_0_60px_rgba(0,0,0,0.9)] flex flex-col transform transition-transform duration-300 ease-out translate-x-0 overflow-hidden font-sans"
         aria-modal="true"
         role="dialog"
       >
@@ -622,7 +627,8 @@ def execute_safe_ping(host: str) -> str:
           </button>
         </div>
       </aside>
-    </>
+    </>,
+    document.body
   );
 }
 
