@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { TrendingUp, ShieldAlert, AlertTriangle, DollarSign, Layers } from "lucide-react";
 
 interface KpiCardsProps {
@@ -9,6 +10,25 @@ interface KpiCardsProps {
   proxyGap: number;
   totalCost: number;
   totalRuns: number;
+}
+
+function AnimatedCounter({ value, format = (v) => v.toFixed(1) }: { value: number; format?: (v: number) => string }) {
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, { duration: 1500, bounce: 0.25 });
+  const [displayValue, setDisplayValue] = useState("0");
+
+  useEffect(() => {
+    motionValue.set(value);
+  }, [value, motionValue]);
+
+  useEffect(() => {
+    const unsubscribe = springValue.on("change", (latest) => {
+      setDisplayValue(format(latest));
+    });
+    return unsubscribe;
+  }, [springValue, format]);
+
+  return <span>{displayValue}</span>;
 }
 
 export const KpiCards: React.FC<KpiCardsProps> = ({
@@ -93,29 +113,70 @@ export const KpiCards: React.FC<KpiCardsProps> = ({
       {cards.map((c, i) => {
         const Icon = c.icon;
         return (
-          <div
+          <motion.div
             key={i}
-            className={`hud-card p-4 flex flex-col justify-between transition-all duration-300 ${c.accentBorder} group`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ 
+              scale: 1.03,
+              rotateX: 2,
+              rotateY: 2,
+              transition: { duration: 0.2 }
+            }}
+            style={{ transformStyle: "preserve-3d" }}
+            className={`hud-card p-4 flex flex-col justify-between transition-all duration-300 ${c.accentBorder} group relative overflow-hidden`}
           >
+            {/* Animated gradient border overlay */}
+            <motion.div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              style={{
+                background: `linear-gradient(135deg, ${c.iconColor.includes('emerald') ? 'rgba(16, 185, 129, 0.1)' : 
+                  c.iconColor.includes('rose') ? 'rgba(244, 63, 94, 0.1)' :
+                  c.iconColor.includes('amber') ? 'rgba(245, 158, 11, 0.1)' :
+                  c.iconColor.includes('cyan') ? 'rgba(6, 182, 212, 0.1)' : 
+                  'rgba(100, 116, 139, 0.1)'}, transparent)`,
+              }}
+            />
+            
             <div>
               {/* Header: Label + Icon */}
               <div className="flex items-center justify-between gap-2 mb-2">
                 <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
                   {c.title}
                 </span>
-                <div className="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-400 group-hover:border-slate-700 transition-colors">
+                <motion.div 
+                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                  className="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-400 group-hover:border-slate-700 transition-colors"
+                >
                   <Icon size={14} className={c.iconColor} />
-                </div>
+                </motion.div>
               </div>
 
-              {/* Value & Badge */}
+              {/* Value & Badge with animated counter */}
               <div className="flex items-baseline justify-between gap-2 my-1">
                 <span className="text-2xl font-black font-mono tracking-tight text-white">
-                  {c.value}
+                  {i === 0 ? (
+                    <><AnimatedCounter value={successRate * 100} />%</>
+                  ) : i === 1 ? (
+                    <>+<AnimatedCounter value={safetyDrift * 100} />%</>
+                  ) : i === 2 ? (
+                    <AnimatedCounter value={proxyGap} format={(v) => v.toFixed(3)} />
+                  ) : i === 3 ? (
+                    <>$<AnimatedCounter value={totalCost} format={(v) => v.toFixed(2)} /></>
+                  ) : (
+                    c.value
+                  )}
                 </span>
-                <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${c.badgeStyle}`}>
+                <motion.span 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: i * 0.1 + 0.3, type: "spring", stiffness: 200 }}
+                  className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${c.badgeStyle}`}
+                >
                   {c.badge}
-                </span>
+                </motion.span>
               </div>
 
               {/* Subtitle */}
@@ -124,16 +185,21 @@ export const KpiCards: React.FC<KpiCardsProps> = ({
               </p>
             </div>
 
-            {/* Micro Progress Bar */}
+            {/* Micro Progress Bar with animation */}
             <div className="mt-3 pt-2.5 border-t border-slate-800/60">
               <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-800/80">
-                <div
-                  className={`h-full rounded-full transition-all duration-700 ease-out ${c.barColor}`}
-                  style={{ width: `${Math.max(4, c.progress)}%` }}
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.max(4, c.progress)}%` }}
+                  transition={{ duration: 1.2, delay: i * 0.1 + 0.2, ease: "easeOut" }}
+                  className={`h-full rounded-full ${c.barColor} shadow-sm`}
+                  style={{
+                    boxShadow: c.progress > 50 ? '0 0 8px rgba(6, 182, 212, 0.4)' : 'none'
+                  }}
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

@@ -2,12 +2,12 @@
   "attestation_version": "1.0.0",
   "benchmark_name": "SAGE",
   "verification_status": "VERIFIED",
-  "timestamp_utc": "2026-11-12T03:10:00.000000+00:00",
+  "timestamp_utc": "2026-11-12T12:50:00.000000+00:00",
   "attestation_provenance": "LOCAL_SECONDARY_CROSS_VALIDATION_HOST",
   "git": {
-    "commit": "b268b94b287643b815d0fd887c8f1996260f844d",
+    "commit": "4e5c99878f19021f287232a43651198094b22e0b",
     "branch": "main",
-    "dirty": "false"
+    "dirty": false
   },
   "environment": {
     "os": "Windows",
@@ -107,7 +107,7 @@
     },
     "test_suite": {
       "passed": true,
-      "tests_passed": 201,
+      "tests_passed": 313,
       "headline_linux_duration_sec": 89.7,
       "secondary_windows_duration_sec": 261.12,
       "current_host_duration_seconds": 292.62

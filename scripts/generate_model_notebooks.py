@@ -56,8 +56,8 @@ def make_layer_cells(config_file: str, run_id: str):
         ("3.3", "G3", "Memory Accumulator (Experience Buffer)", "Accumulates few-shot exemplar memories from solved trajectories."),
         ("3.4", "G4", "Reflection Agent (Self-Reflection)", "Generates explicit textual critiques and failure post-mortems."),
         ("3.5", "G5", "Static Verifier (AST / Lint Guard)", "Pre-execution syntax, type check, and safety boundary enforcement."),
-        ("3.6", "G6", "Regression Guard (Automated Rollback)", "Evaluates candidate mutations against canary benchmarks with automatic rollback."),
-        ("3.7", "G7", "Oracle Verifier (Ground-Truth Gate)", "Permits evolutionary retention only when verified against ground-truth tests."),
+        ("3.6", "G6", "Proxy Canary Guard (Deployable Rollback)", "Evaluates candidate mutations against held-out proxy canaries with automatic rollback."),
+        ("3.7", "G7", "Oracle Skyline (Ground-Truth Gate / G6*)", "Theoretical upper bound evaluating candidate mutations against sequestered ground-truth tests."),
     ]
 
     cells = []

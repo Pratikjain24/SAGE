@@ -1,8 +1,8 @@
 \begin{table*}[t]
 \centering
 \small
-% SAGE Live Distributed Study: Complete Consolidated Empirical Benchmark Results (G1-G7 Live Data)
-\caption{\textbf{Empirical Benchmark Results for SAGE Archetypes ($G_1$--$G_7$)}. Evaluated on \texttt{Qwen/Qwen2.5-Coder-7B-Instruct} across $N=5$ pinned random seeds (42, 43, 44, 45, 46) on Kaggle Dual Tesla T4 GPUs ($T=5$ cycles, 100 tasks/cycle). $P_{\text{train}}$ measured across 60 training tasks per cycle; $P_{\text{test}}$ evaluated on 40 held-out tasks (Cycle 4); $\Delta P_{\text{train}} = P_{\text{train}}(3) - P_{\text{train}}(0)$ measures true training adaptation. 100\% genuine LLM inferences with 0 mock fallbacks across 9,814 total task evaluations.}
+% SAGE Live Distributed Study: Complete Consolidated Empirical Benchmark Results (G1-G6, G6* Live Data)
+\caption{\textbf{Empirical Benchmark Results for SAGE Archetypes ($G_1$--$G_6, G_6^*$)}. Evaluated on \texttt{Qwen/Qwen2.5-Coder-7B-Instruct} across $N=5$ pinned random seeds (42, 43, 44, 45, 46) on Kaggle Dual Tesla T4 GPUs ($T=5$ cycles, 100 tasks/cycle). $P_{\text{train}}$ measured across 60 training tasks per cycle; $P_{\text{test}}$ evaluated on 40 held-out tasks (Cycle 4); $\Delta P_{\text{train}} = P_{\text{train}}(3) - P_{\text{train}}(0)$ measures true training adaptation. 100\% genuine LLM inferences with 0 mock fallbacks across 9,814 total task evaluations.}
 \label{tab:live_main_results_full}
 \begin{tabular}{llcccccc}
 \toprule
@@ -13,9 +13,8 @@ G2 & Prompt Rewriter           & 0.537 & 0.700 & +0.163 & 0.800 & 0.000 & \$0.28
 G3 & Memory Accumulator        & 0.397 & 0.503 & +0.107 & 0.540 & 0.000 & \$0.2465 \\
 G4 & Reflection Agent          & 0.520 & 0.520 & $\pm$0.000 & 0.750 & 0.000 & \$0.2533 \\
 G5 & Verified Generation (AST) & 0.527 & 0.650 & +0.123 & 0.795 & 0.000 & \$0.2532 \\
-G6 & Regression Guard         & 0.523 & 0.590 & +0.067 & 0.735 & 0.000 & \$0.2525 \\
-G7 & Proxy Canary Guard        & 0.547 & 0.597 & +0.050 & 0.735 & 0.000 & \$0.2516 \\
-$G_6^*$ & Oracle Skyline (Non-Deployable) & 0.523 & 0.590 & +0.067 & 0.735 & 0.000 & \$0.2525 \\
+G6 & Proxy Canary Guard        & 0.547 & 0.597 & +0.050 & 0.735 & 0.000 & \$0.2516 \\
+G6$^*$ & Oracle Skyline        & 0.523 & 0.590 & +0.067 & 0.735 & 0.000 & \$0.2525 \\
 \bottomrule
 \end{tabular}
 \end{table*}

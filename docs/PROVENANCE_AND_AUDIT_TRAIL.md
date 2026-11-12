@@ -2,7 +2,7 @@
 ## Complete Cryptographic, Statistical, and Trajectory Proofs for All Tables and Figures
 
 > **Scope**: This document provides the complete, verifiable audit trail and mathematical proof for every table, figure, and empirical claim published in the SAGE benchmark research paper (*Safety & Agent Growth Evaluator*).
-> **Verification Command**: Run `python scripts/verify_reproducibility.py --test-count 201` to verify all SHA-256 digests, container pins, and test suites in under 5 minutes.
+> **Verification Command**: Run `python scripts/verify_reproducibility.py --test-count 313` to verify all SHA-256 digests, container pins, and test suites in under 5 minutes.
 
 ---
 
@@ -133,8 +133,8 @@ sage verify-env
 # 2. Audit all 100 tasks for pre-training contamination
 python scripts/audit_task_contamination.py
 
-# 3. Verify all 6 trajectory manifests and run the 201 regression tests
-python scripts/verify_reproducibility.py --test-count 201
+# 3. Verify all 6 trajectory manifests and run the 313 regression tests
+python scripts/verify_reproducibility.py --test-count 313
 
 # 4. Recompute metrics and re-render all figures and tables
 sage analyze --run-id pilot_20261002_173622

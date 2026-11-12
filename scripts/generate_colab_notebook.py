@@ -42,7 +42,7 @@ TITLE_SRC = [
     "- 🚀 **Zero API Key Needed**: Downloads `Qwen/Qwen2.5-Coder-3B-Instruct` directly from HuggingFace to Colab's free 15GB Tesla T4 GPU.\n",
     "- ⚡ **Zero Rate Limits / 429 Errors**: Local vLLM server handles all requests at local GPU speeds.\n",
     "- 🔬 **100% Genuine Empirical Inference**: Every trajectory episode generates real token-by-token LLM outputs (no synthetic mocks).\n",
-    "- 🛡️ **Full 7-Archetype Benchmark**: Runs G1 (Control), G2 (Prompt Rewriter), G3 (Memory), G4 (Reflection), G5 (Static Verifier), G6 (Regression Guard), G7 (Oracle Verifier).\n",
+    "- 🛡️ **Full Archetype Benchmark**: Runs G1 (Control), G2 (Prompt Rewriter), G3 (Memory), G4 (Reflection), G5 (Static Verifier), G6 (Proxy Canary Guard), G6* (Oracle Skyline).\n",
     "- 📊 **Honest LaTeX Tables & Figures**: Generates publication-ready `table1_main_results_live.tex`, `table3_statistical_significance_live.tex`, and plots directly from `cycle_metrics.json`.\n",
     "\n",
     "> **Prerequisite:** Make sure your Colab runtime is set to **GPU (T4)**:  \n",

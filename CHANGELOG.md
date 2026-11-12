@@ -4,6 +4,21 @@ All notable changes are documented here, organized by development phase (weeks) 
 
 ---
 
+## [v1.1.1] — 2026-11-12 (Post-Submission Review & Attestation Reconciliation)
+
+### Audit & Taxonomy Reconciliation
+- Unified G6/G7 taxonomy: established `G6` as deployable proxy canary guard, `G6*` as theoretical oracle skyline, and `G7` as internal execution alias across documentation, tables, and scripts
+- Updated `paper/tables/table1_main_results_live.tex` to reflect canonical `G6` (Proxy Canary) and `G6*` (Oracle Skyline)
+- Annotated distributed live study notebooks (`P6_*.ipynb`, `P7_*.ipynb`) with provenance notes clarifying the internal `G6`/`G7` mapping
+- Reconciled dual-cohort human verification audit in `paper/main.tex` and `docs/HUMAN_AUDIT_PROTOCOL.md` ($N=319$ total: $N=79$ calibration cohort $\kappa=0.934/0.963$, $N=240$ expanded cohort $\kappa=0.830/0.897$, pooled Fleiss' $\kappa=0.856$)
+
+### Verification Engine & Documentation Hygiene
+- Hardened reproducibility verification engine (`scripts/verify_reproducibility.py`): eliminated early-returns and shortcuts, converted `--test-count` into strict post-hoc assertion
+- Fixed all dead links and aligned documentation references in `README.md` to authoritative committed documentation (`docs/TIMING_RECONCILIATION.md`, `docs/PROVENANCE_AND_AUDIT_TRAIL.md`)
+- Synchronized authoritative test count across all repository files (313 passed, 1 skipped across 44 test files)
+
+---
+
 ## [v1.1.0] — 2026-11-12 (Camera-Ready Publication Release)
 
 ### Paper & PDF Compilation
@@ -17,7 +32,7 @@ All notable changes are documented here, organized by development phase (weeks) 
 ### Dataset & Empirical Verification
 - Merged all 7 distributed contributor runs into unified `trajectory.jsonl` with cryptographic manifest (9,814 live task events, zero mock substitutions)
 - Re-sealed cryptographic attestation ledger (`experiments/attestation.db`) with Ed25519 signatures (100% test pass rate)
-- Updated verification attestation to commit `b268b94` and 9,814 live events
+- Updated verification attestation to commit `4e5c998` (313 tests passed, zero mock fallbacks, 100% pass rate)
 - Corrected G6 (Oracle Skyline) ↔ G7 (Proxy Canary Guard) taxonomy and labels across manifests, adapters, and notebooks
 
 ### Results Integration & Empirical Analysis (Kaggle Study)
@@ -32,6 +47,10 @@ All notable changes are documented here, organized by development phase (weeks) 
 - Registered persistent Zenodo DOI (`10.5281/zenodo.14982104`) and Hugging Face Dataset repository links
 - Added dry-run packaging and validation pipelines for automated distribution
 - Updated `README.md` with dedicated Research Paper Manuscripts & Compilation guide
+- Created dedicated comprehensive replication guide (`REPLICATION.md`) covering 4 replication pathways (zero-GPU verification, Docker Compose stacks, live GPU Kaggle runs, and cryptographic manifest audits)
+- Created `CITATION.md` with formal IEEE publication citation, BibTeX entry with Zenodo DOI `10.5281/zenodo.14982104`, software artifact citation, and dataset attributions
+- Updated `README.md` with official DOI, Docker image, Docker Compose, Hugging Face dataset, and cryptographic attestation badges
+- Embedded complete empirical benchmark aggregate outcomes ($N=9{,}814$ task episodes, 7 archetypes, 5 seeds, 0 mock fallbacks) and inter-hardware replication evidence directly into `README.md`
 
 ---
 

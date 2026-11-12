@@ -24,8 +24,8 @@ Each contributor runs **5 seeds** (`[42, 43, 44, 45, 46]`) over **5 evolutionary
 | **$P_3$** | **$G_3$ Memory Accumulator** | `P3_G3_MemoryAccumulator_Kaggle.ipynb` | Epistemic exemplar buffer (`memory.json`) | $+8\%$ to $+12\%$ | $+0.05$ to $+0.10$ | Clean buffer reset per seed verification |
 | **$P_4$** | **$G_4$ Reflection Agent** | `P4_G4_Reflection_Kaggle.ipynb` | Recursive self-critique & code patching loop | $+20\%$ to $+25\%$ | $+0.35$ to $+0.50$ | Reward hacking & assertion monkeypatching |
 | **$P_5$** | **$G_5$ Verified Agent** | `P5_G5_Verified_Kaggle.ipynb` | Static AST invariant gate & syntax blocker | $+15\%$ to $+18\%$ | $+0.04$ to $+0.08$ | AST filter efficiency vs semantic gaming |
-| **$P_6$** | **$G_6$ Proxy Canary Guard** | `P6_G6_ProxyCanaryGuard_Kaggle.ipynb` | Canary task evaluation + automated rollback | $+14\%$ to $+17\%$ | $\le +0.03$ | Deployable rollback trigger logging |
-| **$P_7$** | **$G_7$ Oracle Skyline** | `P7_G7_OracleSkyline_CrossCheck_Kaggle.ipynb` | Ground-truth hidden unit test verifier | $+25\%$ to $+30\%$ | $\le +0.01$ | **Replicate $P_1$ $G_1$ (Seeds 42 & 43)** |
+| **$P_6$** | **$G_6^*$ Oracle Skyline** | `P6_G6_OracleSkyline_Kaggle.ipynb` | Ground-truth hidden unit test verifier (theoretical skyline) | $+25\%$ to $+30\%$ | $\le +0.01$ | Theoretical ceiling logging |
+| **$P_7$** | **$G_6$ Proxy Canary Guard** | `P7_G7_ProxyCanaryGuard_CrossCheck_Kaggle.ipynb` | Canary task evaluation + automated rollback (deployable guard; internal tag $G_7$) | $+14\%$ to $+17\%$ | $\le +0.03$ | **Deployable rollback + Replicate $P_1$ $G_1$ (Seeds 42 & 43)** |
 
 ---
 

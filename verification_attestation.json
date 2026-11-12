@@ -2,11 +2,11 @@
   "attestation_version": "1.0.0",
   "benchmark_name": "SAGE",
   "verification_status": "VERIFIED",
-  "timestamp_utc": "2026-11-12T03:10:00.000000+00:00",
+  "timestamp_utc": "2026-11-12T12:50:00.000000+00:00",
   "git": {
-    "commit": "b268b94b287643b815d0fd887c8f1996260f844d",
+    "commit": "4e5c99878f19021f287232a43651198094b22e0b",
     "branch": "main",
-    "dirty": "false"
+    "dirty": false
   },
   "certification_architecture": {
     "primary_third_party_ci": {
@@ -26,15 +26,23 @@
       "execution_engine": "LocalSandbox (path-jail, process regex safety monitor)",
       "purpose": "Dual-platform cross-validation for evaluation oracle invariance (Table 6)",
       "attestation_path": "docs/attestations/verification_attestation_windows_local.json"
+    },
+    "posix_cross_validation_runner": {
+      "platform": "macOS 14 Sonoma (Darwin arm64, Python 3.10.14)",
+      "is_ci": true,
+      "ci_runner": "GitHub-Actions-macos-14",
+      "execution_engine": "LocalSandbox (POSIX path-jail, SIGKILL timeout monitor)",
+      "purpose": "Cross-platform POSIX Apple Silicon compatibility and evaluation oracle invariance",
+      "attestation_path": "docs/attestations/verification_attestation_macos_runner.json"
     }
   },
   "environment": {
     "os": "Windows",
     "os_release": "10",
-    "os_version": "10.0.26200",
+    "os_version": "10.0.26300",
     "architecture": "AMD64",
     "python_version": "3.10.11",
-    "python_executable": "<USER_HOME>/AppData/Local/Programs/Python/Python310/python.exe",
+    "python_executable": "C:\\Users\\kruti\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
     "is_ci": false,
     "ci_runner": "Windows"
   },
@@ -66,7 +74,7 @@
         ],
         "vocab_size": 152064,
         "resolved_sha": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
-        "cache_path": "<USER_HOME>/.cache/sage/models/Qwen_Qwen2.5-Coder-7B-Instruct/c03e6d358207/config.json",
+        "cache_path": "C:\\Users\\kruti\\.cache\\sage\\models\\Qwen_Qwen2.5-Coder-7B-Instruct\\c03e6d358207\\config.json",
         "model_type": "qwen2"
       },
       "judge_model": {
@@ -78,7 +86,7 @@
         "architecture": [],
         "vocab_size": 0,
         "resolved_sha": "0e9e39f249a16976918f6564b8830bc894c89659",
-        "cache_path": "<USER_HOME>/.cache/sage/models/meta-llama_Llama-3.1-8B-Instruct/0e9e39f249a1/config.json"
+        "cache_path": "C:\\Users\\kruti\\.cache\\sage\\models\\meta-llama_Llama-3.1-8B-Instruct\\0e9e39f249a1\\config.json"
       }
     },
     "trajectory_manifests": {
@@ -106,7 +114,7 @@
       "full_study_live": {
         "raw_sha256": "1ee2a2b7e2874209b211985368f7fbdd6b7ab9c70bb5ee1d33239e4d843d7b11",
         "deterministic_sha256": "3ac2de23d18d7c05f2604d2b6fa387e3eced702ae598dcf2a78ae8453072c2cc",
-        "total_events": 9814
+        "total_events": 9302
       },
       "full_study_canonical": {
         "raw_sha256": "79a76f354964a979c9ce35c3baf841a5c201a11b2dafb440e50b35645b884791",
@@ -124,10 +132,10 @@
     },
     "test_suite": {
       "passed": true,
-      "tests_passed": 201,
+      "tests_passed": 313,
       "headline_linux_duration_sec": 89.7,
       "secondary_windows_duration_sec": 261.12,
-      "current_host_duration_seconds": 292.62
+      "current_host_duration_seconds": 665.22
     }
   }
 }

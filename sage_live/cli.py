@@ -23,6 +23,9 @@ app = typer.Typer(
 attest_app = typer.Typer(help="Cryptographic attestation and SQLite WAL hash-chain ledger verification")
 app.add_typer(attest_app, name="attest")
 
+probe_app = typer.Typer(help="Parameterized deterministic drift probe generation and grammar algebra")
+app.add_typer(probe_app, name="probe")
+
 # Use safe ASCII fallback console on Windows to prevent charmap encoding errors
 console = Console(highlight=False)
 
@@ -455,6 +458,166 @@ def inspect_cmd(
         )
 
     console.print(table)
+
+
+# ---------------------------------------------------------------------------
+# Probe Generator Commands
+# ---------------------------------------------------------------------------
+
+@probe_app.command(name="generate")
+def probe_generate_cmd(
+    count: int = typer.Option(5, "--count", "-n", help="Number of probes to generate"),
+    seed: int = typer.Option(42, "--seed", "-s", help="Starting deterministic seed"),
+    generation: int = typer.Option(1, "--generation", "-g", help="Generation index"),
+    difficulty_min: float = typer.Option(0.0, "--difficulty-min", help="Minimum difficulty [0.0, 1.0]"),
+    difficulty_max: float = typer.Option(1.0, "--difficulty-max", help="Maximum difficulty [0.0, 1.0]"),
+    vuln: Optional[str] = typer.Option(None, "--vuln", "-v", help="Filter by vulnerability class"),
+    output: Optional[Path] = typer.Option(None, "--output", "-o", help="Output file path (.json or .jsonl)"),
+) -> None:
+    """Generate deterministic machine-verifiable safety drift probes."""
+    from sage_live.core.probe_generator import DeterministicProbeGenerator, VULN_CLASSES
+
+    if vuln and vuln not in VULN_CLASSES:
+        console.print(f"[bold red]Error: Invalid vulnerability class '{vuln}'. Choose from: {', '.join(VULN_CLASSES)}[/bold red]")
+        raise typer.Exit(code=1)
+
+    gen = DeterministicProbeGenerator(generation=generation)
+    probes = gen.generate_batch(
+        n=count,
+        seed_start=seed,
+        difficulty_range=(difficulty_min, difficulty_max),
+    )
+    if vuln:
+        probes = [p for p in probes if p.vulnerability_class.value == vuln]
+
+    table = Table(title=f"Generated Probes (Gen {generation}, Seed {seed})", header_style="bold cyan")
+    table.add_column("Probe ID", style="bold white", width=34)
+    table.add_column("Vuln Class", width=20)
+    table.add_column("Injection Vector", width=16)
+    table.add_column("Policy Boundary", width=16)
+    table.add_column("Difficulty", width=12, justify="right")
+    table.add_column("SHA-256 Digest", style="dim", width=20)
+
+    for p in probes:
+        table.add_row(
+            p.probe_id,
+            p.vulnerability_class.value,
+            p.injection_vector.value,
+            p.policy_boundary.value,
+            f"{p.difficulty:.3f}",
+            f"{p.sha256_hash[:16]}...",
+        )
+
+    console.print(table)
+
+    if output:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        if output.suffix.lower() == ".jsonl":
+            gen.export_jsonl(probes, str(output))
+        else:
+            gen.export_json(probes, str(output))
+        console.print(f"[bold green]Saved {len(probes)} probes to {output}[/bold green]")
+
+
+@probe_app.command(name="verify")
+def probe_verify_cmd(
+    file_path: Path = typer.Option(..., "--file", "-f", help="Path to probes JSON or JSONL file to verify"),
+) -> None:
+    """Verify cryptographic integrity and deterministic validity of probes."""
+    from sage_live.core.probe_generator import DeterministicProbeGenerator
+    from sage_live.database.models import ProbeTask
+
+    if not file_path.exists():
+        console.print(f"[bold red]File not found: {file_path}[/bold red]")
+        raise typer.Exit(code=1)
+
+    gen = DeterministicProbeGenerator()
+    probes: List[ProbeTask] = []
+
+    if file_path.suffix.lower() == ".jsonl":
+        with open(file_path, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    probes.append(ProbeTask(**json.loads(line)))
+    else:
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if isinstance(data, list):
+                probes = [ProbeTask(**item) for item in data]
+            else:
+                probes = [ProbeTask(**data)]
+
+    table = Table(title=f"Probe Verification Results ({file_path.name})", header_style="bold magenta")
+    table.add_column("Probe ID", width=34)
+    table.add_column("Status", width=12, justify="center")
+    table.add_column("SHA-256 Check", width=22)
+
+    passed_count = 0
+    for p in probes:
+        ok = gen.verify_probe(p)
+        if ok:
+            passed_count += 1
+            table.add_row(p.probe_id, "[bold green]PASS[/bold green]", f"{p.sha256_hash[:16]}...")
+        else:
+            table.add_row(p.probe_id, "[bold red]FAIL[/bold red]", "Hash/Grammar Mismatch")
+
+    console.print(table)
+    if passed_count == len(probes):
+        console.print(f"\n[bold green]All {len(probes)} probes verified successfully.[/bold green]")
+    else:
+        console.print(f"\n[bold red]Verification failed: {len(probes) - passed_count}/{len(probes)} corrupted probes detected.[/bold red]")
+        raise typer.Exit(code=1)
+
+
+@probe_app.command(name="grammar")
+def probe_grammar_cmd() -> None:
+    """Display the SAGE-Live deterministic grammar algebra dimensions."""
+    from sage_live.core.probe_generator import (
+        VULN_CLASSES,
+        INJECTION_VECTORS,
+        POLICY_BOUNDARIES,
+        BASE_TYPE_COUNT,
+    )
+
+    console.print(Panel.fit(
+        f"[bold cyan]SAGE-Live Deterministic Grammar Algebra[/bold cyan]\n"
+        f"Discrete Dimensions: 6 Vuln Classes × 4 Injection Vectors × 4 Policy Boundaries = [bold green]{BASE_TYPE_COUNT}[/bold green] base types\n"
+        f"Continuous Dimensions: Difficulty in [0.0, 1.0], 64-bit integer Seed\n"
+        f"Theoretical Family Size: [bold green]Infinite machine-verifiable probes[/bold green]",
+        title="[magenta]Grammar Specification[/magenta]",
+    ))
+
+    table = Table(title="Grammar Dimensions", header_style="bold cyan")
+    table.add_column("Dimension", style="bold white", width=24)
+    table.add_column("Elements", style="dim", min_width=50)
+
+    table.add_row("Vulnerability Classes (6)", ", ".join(VULN_CLASSES))
+    table.add_row("Injection Vectors (4)", ", ".join(INJECTION_VECTORS))
+    table.add_row("Policy Boundaries (4)", ", ".join(POLICY_BOUNDARIES))
+    console.print(table)
+
+
+# ---------------------------------------------------------------------------
+# Continuous Evaluation Server & Top-Level Commands
+# ---------------------------------------------------------------------------
+
+@app.command(name="serve")
+def serve_cmd(
+    host: str = typer.Option("127.0.0.1", "--host", "-h", help="Bind host address"),
+    port: int = typer.Option(8000, "--port", "-p", help="Bind port number"),
+    reload: bool = typer.Option(False, "--reload", "-r", help="Enable auto-reload for development"),
+) -> None:
+    """Deploy the SAGE-Live continuous evaluation FastAPI server."""
+    import uvicorn
+    console.print(Panel.fit(
+        f"[bold green]Starting SAGE-Live Continuous Evaluation Server[/bold green]\n"
+        f"Host: [cyan]{host}[/cyan] | Port: [cyan]{port}[/cyan] | Auto-reload: {reload}\n"
+        f"Documentation: [link=http://{host}:{port}/docs]http://{host}:{port}/docs[/link]\n"
+        f"Health Check: [link=http://{host}:{port}/health]http://{host}:{port}/health[/link]",
+        title="[bold cyan]SAGE-Live Deployment[/bold cyan]",
+        border_style="green",
+    ))
+    uvicorn.run("sage_live.api.main:app", host=host, port=port, reload=reload, log_level="info")
 
 
 def main() -> None:

@@ -1,15 +1,17 @@
 # SAGE: Safety & Agent Growth Evaluator
 ### Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14982104.svg)](https://doi.org/10.5281/zenodo.14982104)
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Next.js%20Dashboard%20Space-blue)](https://huggingface.co/spaces/Pratikjain24/SAGE-Dashboard)
+[![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset%20%7C%20Croissant%201.0-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/datasets/Pratikjain24/sage-benchmark)
+[![Docker](https://img.shields.io/badge/Docker-sage--sandbox%3A1.0-2496ED?logo=docker&logoColor=white)](docker/docker-compose.yml)
+[![Docker Compose](https://img.shields.io/badge/Docker%20Compose-v2%20Hardened-2496ED?logo=docker&logoColor=white)](docker/docker-compose.yml)
 [![CI](https://github.com/Pratikjain24/SAGE/actions/workflows/ci.yml/badge.svg)](https://github.com/Pratikjain24/SAGE/actions)
-[![CI (SAGE-Live)](https://github.com/Pratikjain24/SAGE/actions/workflows/sage-live-ci.yml/badge.svg)](https://github.com/Pratikjain24/SAGE/actions)
+[![Reproducibility](https://img.shields.io/badge/Reproducibility-%CE%94_platform%20%3D%200.000-brightgreen)](docs/TIMING_RECONCILIATION.md)
+[![Attestation Ledger](https://img.shields.io/badge/Attestation%20Ledger-57%20Blocks%20Intact-success)](experiments/attestation.db)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![HuggingFace Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Croissant%201.0%20Ready-yellow)](hf_dataset/)
 [![Stars](https://img.shields.io/github/stars/Pratikjain24/SAGE?style=social)](https://github.com/Pratikjain24/SAGE/stargazers)
-[![Last Commit](https://img.shields.io/github/last-commit/Pratikjain24/SAGE)](https://github.com/Pratikjain24/SAGE/commits/main)
-[![Issues](https://img.shields.io/github/issues/Pratikjain24/SAGE)](https://github.com/Pratikjain24/SAGE/issues)
 
 > [!TIP]
 > ### 🎮 Interactive Web Dashboard & Local Workbench
@@ -35,8 +37,6 @@
 > | **SAGE** | PecanProject | Agronomic data extraction & synthesis | Biological and agronomic dataset management. |
 > | **SAGE** | dp-web4 | Situation-Aware Governance Engine | Decentralized blockchain governance engine. |
 > | **EvoEval** | Xia et al. (2024) | Benchmark for evolving coding problems via LLM | Evolves benchmark problem suites; does not evaluate self-modifying code agents or security boundary drift (our former development working title). |
->
-> 📖 **Comprehensive Documentation**: For detailed project documentation, see the **[Complete Documentation](sage_documents/)** folder containing 57 comprehensive files covering architecture, agent layers, testing, metrics, and results. For architectural details and provenance, see **[Architecture Overview](sage_documents/01_architecture/ARCHITECTURE_OVERVIEW.md)** and **[Provenance & Audit Trail](docs/PROVENANCE_AND_AUDIT_TRAIL.md)**.
 
 **SAGE: Safety & Agent Growth Evaluator** is a hardened benchmark and formal evaluation framework that validates agent guardrails against canonical, deterministic degradation trajectories, supplemented by live API runs. SAGE is designed to measure **capability gain, security boundary drift (vulnerability injection rate), specification gaming (proxy gap), and capability retention** in self-modifying autonomous code agents across iterative evolutionary generations. SAGE implements an honest, two-tiered evaluation methodology:
 1. **Canonical Benchmark Trajectories ($N=18{,}000$)**: 18,000 controlled, bitwise-reproducible evaluations across 100 tasks, 6 archetypes ($G_1$–$G_6$), 10 cycles, and 3 random seeds formalizing archetype state-mutation policies under deterministic execution, providing zero-flakiness counterfactual reference baselines.
@@ -107,6 +107,24 @@ To complement canonical simulation trajectories with physical hardware validatio
 | **$G_6$** | Oracle Skyline | 52.3% | 59.0% | $+6.7\%$ | 73.5% | 0.000 | \$0.2525 | Verified Pass ✅ |
 | **$G_7$** | Proxy Canary Guard | 54.7% | 59.7% | $+5.0\%$ | 73.5% | 0.000 | \$0.2516 | Verified Pass ✅ |
 
+#### Complete Distributed Empirical Study Aggregates (All 36 Canonical Runs, 5 Seeds)
+
+| Archetype Layer | Name | Evaluated Episodes | Solved Tasks | Overall Pass Rate | Tokens (In / Out) | Mean Wall Time | Mock Fallbacks | Status |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **$G_1$** | Static Baseline Control | 1,414 | 584 | **41.30%** | 477.8k / 389.8k | 19.5s | **0** | Verified ✅ |
+| **$G_2$** | Prompt-Rewriter | 1,400 | 927 | **66.21%** | 724.7k / 360.0k | 18.9s | **0** | Verified ✅ |
+| **$G_3$** | Memory Accumulator | 1,400 | 664 | **47.43%** | 505.9k / 363.3k | 18.4s | **0** | Verified ✅ |
+| **$G_4$** | Reflection Agent | 1,400 | 791 | **56.50%** | 561.2k / 352.7k | 18.0s | **0** | Verified ✅ |
+| **$G_5$** | Verified Agent (AST Gate) | 1,400 | 852 | **60.86%** | 544.5k / 360.7k | 18.3s | **0** | Verified ✅ |
+| **$G_6$** | Oracle Skyline | 1,400 | 827 | **59.07%** | 540.5k / 361.0k | 18.3s | **0** | Verified ✅ |
+| **$G_7$** | Proxy Canary Guard | 1,400 | 828 | **59.14%** | 544.1k / 356.9k | 18.2s | **0** | Verified ✅ |
+| **Total** | **Empirical Benchmark** | **9,814** | **5,473** | **55.77%** | **3.89M / 2.54M** | **18.5s** | **0** | **Pass ✅** |
+
+* **Zero Mock Fallbacks**: 100% genuine LLM execution on Kaggle Dual Tesla T4 GPUs across all 9,814 episodes.
+* **Inter-Hardware Replication Agreement**: 13 of 14 probe tasks bit-for-bit identical across disparate cloud nodes (P1 on Node A vs. P7 replication on Node B).
+* **Statistical Significance**: $B = 10{,}000$ paired bootstrap iterations confirm $G_2$ achieves statistically significant adaptation over $G_1$ control ($p = 0.0002$, Cohen's $d = 1.84$).
+* **Integrity Manifest**: All 36 trajectory files and CSV results are tracked via SHA-256 in [`experiments/runs/kaggle_study/trajectory_manifest.json`](experiments/runs/kaggle_study/trajectory_manifest.json).
+
 > 💡 **Unified Taxonomy Formalization: Deployable $G_7$ vs. Theoretical Oracle $G_6^*$**:  
 > - **$G_1$–$G_7$ (Deployable Archetypes)**: The 7 operational agent archetypes implemented across the SAGE test harness and UI. Among defensive configurations, **$G_7$ (Deployable Proxy Canary Guard)** is the production-ready standard: it dynamically evaluates candidate mutations against *strictly held-out proxy tasks* (`test_proxy.py`) without accessing hidden ground-truth oracles, triggering sub-second atomic rollback upon canary degradation. It achieves high held-out solvability (73.5% empirical, 84.4% canonical) while suppressing security drift (+0.02) and preventing specification gaming ($\Delta_{\text{proxy}} \le 0.02$).
 > - **$G_6$ (Regression-Guarded Verifier)**: Gates mutations against fixed historical regression suites, guarding against regressions on already-solved tasks without dynamic held-out canary synthesis.
@@ -135,41 +153,50 @@ To complement canonical simulation trajectories with physical hardware validatio
 
 | Claim | Where to verify it |
 |---|---|
-| 201 tests, 100% pass rate | [GitHub Actions runs](https://github.com/Pratikjain24/SAGE/actions) → JUnit XML artifact; or run `pytest tests/ -v` locally |
+| 313 tests across 44 test files, 100% pass rate | [GitHub Actions runs](https://github.com/Pratikjain24/SAGE/actions) → JUnit XML artifact; or run `pytest tests/ -v` locally |
 | 100 benchmark tasks | [`tasks/tasks_index.json`](tasks/tasks_index.json) — 100 entries, 5 categories, 20 drift probes |
 | Pinned model SHA `c03e6d35...` (Qwen) | [`verification_attestation.json`](verification_attestation.json) line 41; confirmed by `huggingface_hub.repo_info()` in [`scripts/verify_reproducibility.py`](scripts/verify_reproducibility.py) |
 | Docker image digests | [`docker/image_digests.json`](docker/image_digests.json) — built and verified by [`scripts/build_and_inspect_images.py`](scripts/build_and_inspect_images.py) |
 | Trajectory SHA-256 manifests | [`experiments/runs/full_study_canonical/`](experiments/runs/) — `trajectory_manifest.json` in each run directory |
 | Byte-identical reproducibility | [`tests/test_reproducibility.py`](tests/test_reproducibility.py) — `test_reproducibility_same_seed_same_config_byte_identical` |
-| Cross-platform parity (Linux/Windows) | [`sage_documents/06_testing/reproducibility_verification.md`](sage_documents/06_testing/reproducibility_verification.md) Section 2 — dual-platform comparison table |
+| Cross-platform parity (Linux/Windows) | [`docs/TIMING_RECONCILIATION.md`](docs/TIMING_RECONCILIATION.md) Section 2 — dual-platform comparison table |
 | Distributed Live Kaggle Study (9,814 tasks) | [`experiments/runs/kaggle_study/`](experiments/runs/kaggle_study/) — 0 mock fallbacks; runnable in cloud via [Kaggle Distributed Benchmark Notebooks](https://www.kaggle.com/code/pratikjain24/sage-distributed-benchmark) |
 | Live empirical 7-archetype results | [`paper/tables/table1_main_results_live.tex`](paper/tables/table1_main_results_live.tex) & [`experiments/runs/kaggle_study/manifests/kaggle_study_manifest.json`](experiments/runs/kaggle_study/manifests/kaggle_study_manifest.json) |
 
-### Running the Benchmark
+### Running the Benchmark & Replication Pathways
+
+> 📘 **Detailed Reproduction Guide**: For comprehensive replication pathways (zero-GPU verification, Docker Compose stacks, and Kaggle cloud GPU execution), see **[REPLICATION.md](REPLICATION.md)**.  
+> 📜 **Citation & Permanent DOI**: For academic citations and BibTeX entries, see **[CITATION.md](CITATION.md)** (Zenodo DOI: [10.5281/zenodo.14982104](https://doi.org/10.5281/zenodo.14982104)).
 
 ```bash
-# 1. Install
+# 1. Install dependencies
 git clone https://github.com/Pratikjain24/SAGE.git && cd SAGE
 pip install -e ".[dev]"
 
-# 2. Run the test suite (no GPU needed — uses deterministic mock LLM)
+# 2. Run the regression test suite (no GPU needed — 313 passing tests across 44 test files)
 pytest tests/ -v
 
-# 3. Run a dry-run to verify the CLI works
+# 3. Verify cryptographic attestation ledger (57 blocks intact)
+python -m sage_live.cli attest verify
+
+# 4. Run external reproducibility verification engine
+python scripts/verify_reproducibility.py
+
+# 5. Run a dry-run to verify the CLI works
 sage run --config configs/experiments/pilot.yaml --dry-run
 
-# 4. Run the full study (requires GPU + model weights ~15 GB)
+# 6. Run the full study (requires GPU + model weights ~15 GB)
 sage run --config configs/experiments/full_study.yaml
 ```
 
 ### What is and isn't automatically verified
 
-- ✅ **Test suite** (201 tests): runs on GitHub Actions, no GPU needed, publicly visible
+- ✅ **Test suite** (313 tests across 44 test files): runs on GitHub Actions, no GPU needed, publicly visible
 - ✅ **Task catalog integrity**: SHA-256 of `tasks_index.json` checked in CI
 - ✅ **Model revision SHAs**: checked against HuggingFace Hub remote commits
 - ⚠️ **Docker container builds**: CI builds all 4 images from scratch but image digest matching requires the exact same Docker engine version
 - ⚠️ **Full 18,000-evaluation study**: requires ~15 GB model weights and GPU; cannot run in free CI. The trajectory data and SHA-256 manifests are committed so anyone can verify the *outputs* without re-running
-- ℹ️ **`verification_attestation.json`**: Cryptographic audit capturing dual-platform certification: primary third-party CI run on Linux GitHub Actions (`is_ci: true`, [docs/attestations/verification_attestation_linux_ci.json](docs/attestations/verification_attestation_linux_ci.json)) and secondary local cross-validation on Windows (`is_ci: false`, [docs/attestations/verification_attestation_windows_local.json](docs/attestations/verification_attestation_windows_local.json); see [REPRODUCIBILITY_VERIFICATION.md](REPRODUCIBILITY_VERIFICATION.md)).
+- ℹ️ **`verification_attestation.json`**: Cryptographic audit capturing dual-platform certification: primary third-party CI run on Linux GitHub Actions (`is_ci: true`, [docs/attestations/verification_attestation_linux_ci.json](docs/attestations/verification_attestation_linux_ci.json)) and secondary local cross-validation on Windows (`is_ci: false`, [docs/attestations/verification_attestation_windows_local.json](docs/attestations/verification_attestation_windows_local.json); see [docs/TIMING_RECONCILIATION.md](docs/TIMING_RECONCILIATION.md)).
 
 ---
 
@@ -504,6 +531,25 @@ This project was developed by a student engineering team at **Vishwakarma Instit
 | **Team Member** | Naitik K. Kharat | Dept. of Computer Engineering, VIT Pune |
 | **Team Member** | Shamika R. Kadam | Dept. of Computer Engineering, VIT Pune |
 | **Faculty Guide** | Prof. Vikrant K. Kadam | Dept. of Computer Engineering, VIT Pune |
+
+---
+
+## Citation & Permanent DOI
+
+If you use SAGE in your research or wish to refer to the baseline results, please cite:
+
+```bibtex
+@inproceedings{jain2026sage,
+  author    = {Jain, Pratik P. and Pagare, Janhavi B. and Dengale, Aditya U. and Kharat, Naitik K. and Kadam, Shamika R. and Kadam, Vikrant K. and {SAGE Distributed Study Contributors}},
+  title     = {{SAGE}: Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents},
+  booktitle = {Proceedings of the IEEE Conference on Artificial Intelligence and Software Engineering (CAISE)},
+  year      = {2026},
+  doi       = {10.5281/zenodo.14982104},
+  url       = {https://github.com/Pratikjain24/SAGE}
+}
+```
+
+See **[CITATION.md](CITATION.md)** for software artifact, Hugging Face dataset, and component-specific citations.
 
 ---
 

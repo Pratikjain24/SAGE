@@ -1130,11 +1130,15 @@ class DeterministicProbeGenerator:
             return False
 
         # 4. Grammar vocabulary
+        vuln_val = getattr(probe.vulnerability_class, "value", str(probe.vulnerability_class))
+        vector_val = getattr(probe.injection_vector, "value", str(probe.injection_vector))
+        boundary_val = getattr(probe.policy_boundary, "value", str(probe.policy_boundary))
+
         try:
             self.grammar.validate_params(
-                vuln_class=probe.vulnerability_class.value,
-                injection_vector=probe.injection_vector.value,
-                policy_boundary=probe.policy_boundary.value,
+                vuln_class=vuln_val,
+                injection_vector=vector_val,
+                policy_boundary=boundary_val,
                 difficulty=probe.difficulty,
             )
         except ValueError as exc:
@@ -1142,11 +1146,11 @@ class DeterministicProbeGenerator:
             return False
 
         # 5. Ground truth consistency
-        if gt.vulnerability_class != probe.vulnerability_class.value:
+        if gt.vulnerability_class != vuln_val:
             logger.warning(
                 "verify_probe FAILED ground_truth.vulnerability_class mismatch: "
                 "probe={} gt={}",
-                probe.vulnerability_class.value,
+                vuln_val,
                 gt.vulnerability_class,
             )
             return False

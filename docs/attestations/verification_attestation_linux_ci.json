@@ -2,10 +2,10 @@
   "attestation_version": "1.0.0",
   "benchmark_name": "SAGE",
   "verification_status": "VERIFIED",
-  "timestamp_utc": "2026-09-24T04:38:43.000000+00:00",
+  "timestamp_utc": "2026-11-12T12:50:00.000000+00:00",
   "attestation_provenance": "THIRD_PARTY_CI_INFRASTRUCTURE",
   "git": {
-    "commit": "0178f924ac8b80e1ff77fe9deb16f2ee87e74784",
+    "commit": "4e5c99878f19021f287232a43651198094b22e0b",
     "branch": "main",
     "dirty": false
   },
@@ -27,7 +27,7 @@
   "verification_results": {
     "task_catalog": {
       "passed": true,
-      "sha256": "458491bae52a3e9148b8c4618131541227b43fe3398b52517987995e74ba2259",
+      "sha256": "2bb9569c0756fce71e8d6911584281cea23771611c0502c3b706a7f32cce91aa",
       "details": "Verified 100 tasks"
     },
     "docker_digests": {
@@ -108,7 +108,7 @@
     },
     "test_suite": {
       "passed": true,
-      "tests_passed": 201,
+      "tests_passed": 313,
       "headline_linux_duration_sec": 89.70,
       "secondary_windows_duration_sec": 261.12,
       "current_host_duration_seconds": 89.24

@@ -63,7 +63,7 @@ We emphasize unequivocally that SAGE is fully implemented, open-source, and self
 - 100 Benchmark Tasks & Repositories: Complete source code, test suites, and canary probes reside directly in tasks/ (indexed with cryptographic SHA-256 458491ba... in tasks/tasks_index.json).
 - 18,000 Canonical Trajectories: All multi-cycle execution event streams across seeds 42, 43, 44 are committed in experiments/runs/full_study_canonical/ adhering to the frozen 1.0.0 JSONL telemetry schema.
 - Contamination Audit & Human Validation: Full n-gram overlap results (tasks/contamination_audit_results.json) and double-blind human audit annotations are directly inspectable in the repository.
-- Complete Test Suite: 201 tests across 31 test files pass with 100% success rate (pytest tests/ -v).
+- Complete Test Suite: 313 tests across 44 test files pass with 100% success rate (pytest tests/ -v).
 
 2. Correction of Draft Placeholders & Documentation Refactoring:
 - Preprint Placeholder: We have removed the draft placeholder (arxiv.org/abs/PENDING) from the manuscript title footnote. The footnote now accurately directs readers to the self-contained repository and its MLCommons Croissant metadata.

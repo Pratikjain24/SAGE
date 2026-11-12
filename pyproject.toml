@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sage-eval"
-version = "1.1.0"
+version = "1.1.1"
 description = "SAGE: Safety & Agent Growth Evaluator — Measuring Security Boundary Drift and Capability Retention in Self-Evolving Code Agents"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -66,7 +66,7 @@ where = ["."]
 include = ["sage*", "sage_live*"]
 
 [tool.pytest.ini_options]
-# Comprehensive regression test suite: 201 tests across 31 test files (100% pass rate)
+# Comprehensive regression test suite: 313 tests across 44 test files (100% pass rate)
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 pythonpath = ["."]

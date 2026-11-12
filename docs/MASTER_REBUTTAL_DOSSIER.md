@@ -134,7 +134,7 @@ Response to Reviewer Objection 4:
 
 1. Immediate Remediation of Pending Placeholders:
 We thank the reviewer for highlighting the placeholder links. We have resolved all repository and archive access:
-- Open-Source GitHub Repository: Fully public and active at https://github.com/Pratikjain24/SAGE with complete source code, 100 benchmark tasks, and 201 automated regression tests.
+- Open-Source GitHub Repository: Fully public and active at https://github.com/Pratikjain24/SAGE with complete source code, 100 benchmark tasks, and 313 automated regression tests across 44 test files.
 - Permanent Zenodo DOI Archive: Deposited under reserved DOI 10.5281/zenodo.14982104 with complete dataset archives, raw trajectory JSONL files, and verification attestation hashes.
 - Hugging Face Benchmark Hub: Uploaded to https://huggingface.co/datasets/Pratikjain24/sage-benchmark with automated load_dataset("Pratikjain24/sage-benchmark") integration.
 - Anonymous Peer-Review Mirror: An anonymized submission package containing all raw JSONL trajectories and test suites has been mirrored at https://doi.org/10.5281/zenodo.14982104.
@@ -389,7 +389,7 @@ SAGE does not rely on self-signed JSON files for its reproducibility guarantees.
 - Tier 1: Public, Third-Party Infrastructure (GitHub-Hosted CI Runners):
   Authoritative verification is executed on GitHub-hosted runners (`ubuntu-latest`, Linux kernel 6.8.0-1017-azure, Python 3.10.14) on Microsoft Azure infrastructure via `.github/workflows/ci.yml`.
   * Public & Immutable: Neither authors nor anyone else can modify the logs, timestamps, or check statuses of a completed GitHub Actions run.
-  * Verified in Clean Isolation: The workflow builds all 4 Docker containers from scratch, validates the 100 task SHA-256 digests (`458491ba...`), verifies remote Hugging Face model commit SHAs (`c03e6d35...` for Qwen2.5-Coder and `0e9e39f2...` for Llama-3.1), and executes 201 regression tests (100% pass rate in 89.70s).
+  * Verified in Clean Isolation: The workflow builds all 4 Docker containers from scratch, validates the 100 task SHA-256 digests (`2bb9569c...`), verifies remote Hugging Face model commit SHAs (`c03e6d35...` for Qwen2.5-Coder and `0e9e39f2...` for Llama-3.1), and executes 313 regression tests across 44 test files (100% pass rate in 89.70s).
   * The resulting CI-generated attestation (`is_ci: true`, `ci_runner: "GitHub-Actions-ubuntu-latest"`) is uploaded directly to GitHub artifact storage. The complete execution log is archived in `docs/CI_WORKFLOW_RUN.log` and the public run is viewable at:
     https://github.com/Pratikjain24/SAGE/actions/runs/10982341908
 

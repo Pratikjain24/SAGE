@@ -25,7 +25,10 @@ import pytest
 
 from sage_live.core.probe_generator import ProbeGenerator, ProbeGeneratorConfig
 from sage_live.database.models import ProbeTask
-from tests.conftest import VULNERABILITY_CLASSES, INJECTION_VECTORS
+try:
+    from sage_live.tests.conftest import VULNERABILITY_CLASSES, INJECTION_VECTORS
+except ImportError:
+    from tests.conftest import VULNERABILITY_CLASSES, INJECTION_VECTORS
 
 
 # ---------------------------------------------------------------------------

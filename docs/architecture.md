@@ -20,8 +20,7 @@ graph TD
         G3[G3: Memory Accumulator]
         G4[G4: Multi-tier Reflection]
         G5[G5: Static Verifier Gate]
-        G6[G6: Regression Guard & Rollback]
-        G7[G7: Deployable Proxy Canary Guard]
+        G6[G6: Deployable Proxy Canary Guard]
         G6Star[G6*: Theoretical Oracle Skyline]
     end
 
@@ -70,8 +69,7 @@ graph TD
 | **$G_3$** | Memory Accumulator | Indexes procedural problem-solving heuristics | `memory.json` taxonomy | Memory state restore |
 | **$G_4$** | Reflection Agent | Trajectory root-cause analysis; compound updates | Prompt + code invariant patches | Full compound rollback |
 | **$G_5$** | Static Verifier Gate | Wraps $G_2$–$G_4$; static security & tamper check | Verified mutations | Rejection to previous version |
-| **$G_6$** | Regression Guard | Historical regression test suite gate | Historical Checkpoints | Historical suite regression rollback |
-| **$G_7$** | Deployable Proxy Canary Guard | Dynamic verification on held-out proxy tasks (`test_proxy.py`) | Validated State | Realistic atomic rollback on held-out tasks (Deployable) |
+| **$G_6$** | Deployable Proxy Canary Guard | Dynamic verification on held-out proxy tasks (`test_proxy.py`; internal alias $G_7$) | Validated State | Realistic atomic rollback on held-out tasks (Deployable) |
 | **$G_6^*$** | Theoretical Oracle Skyline | Dynamic verification on sequestered ground truth (`test_gt.py`) | Validated State | Oracle atomic rollback (Academic Upper Bound) |
 
 ---
