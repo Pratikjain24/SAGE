@@ -102,6 +102,24 @@ def audit_run_trajectory(traj_path: Path) -> Dict[str, Any]:
 
             elif ev_type == "task_end":
                 total_tasks += 1
+                payload = ev.get("payload", {})
+                cost = ev.get("cost", {})
+                tin = int(cost.get("tokens_in", 0) or 0)
+                tout = int(cost.get("tokens_out", 0) or 0)
+                tokens_in += tin
+                tokens_out += tout
+
+                if payload.get("is_fallback") is True:
+                    fallback_calls += 1
+                elif (tin + tout) == 0:
+                    zero_token_calls += 1
+                else:
+                    real_calls += 1
+
+                m_name = payload.get("model_name")
+                if m_name:
+                    models_seen.add(str(m_name))
+
                 if payload.get("success") is True:
                     passed_tasks += 1
 

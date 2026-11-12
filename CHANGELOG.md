@@ -20,6 +20,13 @@ All notable changes are documented here, organized by development phase (weeks) 
 - Updated verification attestation to commit `b268b94` and 9,814 live events
 - Corrected G6 (Oracle Skyline) ↔ G7 (Proxy Canary Guard) taxonomy and labels across manifests, adapters, and notebooks
 
+### Results Integration & Empirical Analysis (Kaggle Study)
+- Automated extraction and organization of all 7 contributor package archives into `experiments/runs/kaggle_study/` (36 runs, 9,814 task episodes, 0 mock fallbacks)
+- Generated full-dataset SHA-256 manifests (`MANIFEST.sha256`, `SHA256_MANIFEST.json`, `trajectory_manifest.json`) cataloging 1,008 files
+- Executed paired bootstrap hypothesis testing ($B=10{,}000$) and Holm-Bonferroni step-down analysis via `scripts/analyze_kaggle_study.py`
+- Rendered live publication figures (`fig_live_learning_curves.png`, `fig_live_pareto_frontier.png`, `fig_live_generalization_gap.png`, `fig_live_cross_check_replication.png`)
+- Replaced all placeholders across documentation, updated result tables with live empirical data, and wired Kaggle distributed benchmark notebooks into reproducibility sections
+
 ### Community & Archival Metadata
 - Updated `CITATION.cff` to version 1.1.0 crediting 7 distributed study contributors and 7 archetypes
 - Registered persistent Zenodo DOI (`10.5281/zenodo.14982104`) and Hugging Face Dataset repository links

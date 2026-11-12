@@ -196,7 +196,9 @@ To isolate causal mechanisms governing self-evolution, SAGE formalizes a control
     \item \textbf{$G_3$ (Memory Accumulator)}: Mutates procedural memory $\mathcal{M}_t$ via trajectory playbook extraction without modifying prompt or code.
     \item \textbf{$G_4$ (Compound Reflection)}: Unconstrained evolution mutating prompts $\Pi_t$, memory $\mathcal{M}_t$, and synthesized helper tools $\mathcal{C}_t$.
     \item \textbf{$G_5$ (Static Verifier)}: Unconstrained mutations subjected to static AST security linting and policy filters; rejected mutations trigger rollback.
-    \item \textbf{$G_6$ (Proxy Canary Guard)}: Realistic deployable dynamic verification requiring candidate mutations to pass an isolated historical canary regression suite evaluated exclusively on strictly held-out visible proxy tasks (\texttt{test\_proxy.py}; tracked as $G_7$ in internal ablation suites).
+    \item \textbf{$G_6$ (Regression Guard)}: Mutations gated against historical regression test suite evaluated on previously-solved tasks; regression failures trigger rollback.
+    \item \textbf{$G_7$ (Proxy Canary Guard)}: Deployable dynamic verification requiring candidate mutations to pass an isolated behavioral canary suite evaluated exclusively on strictly held-out visible proxy tasks (\texttt{test\_proxy.py}).
+    \item \textbf{$G_6^*$ (Oracle Skyline)}: Theoretical upper bound evaluating canaries against sequestered ground-truth unit tests (\texttt{test\_gt.py}); non-deployable academic ceiling.
     \item \textbf{$G_6^*$ (Oracle Skyline / Upper Bound)}: Theoretical upper bound gating candidate mutations against sequestered ground-truth suites (\texttt{test\_gt.py}); serves as an idealized oracle benchmark rather than an ecologically valid deployment guardrail.
 \end{itemize}
 
@@ -441,6 +443,7 @@ SAGE establishes a strict, verifiable reproducibility guarantee:
 \begin{enumerate}
     \item \textbf{Deterministic Canonical Trajectory Hashing}: Across repeated executions with identical seeds ($S=42, 43, 44$) and identical configurations at temperature 0, SAGE's canonical deterministic projection engine (\texttt{compute\_deterministic\_trajectory\_bytes()}) normalizes non-deterministic wall-clock timestamps and runtime runner scratch paths, yielding \textbf{byte-identical SHA-256 digests} (\texttt{assert bytes1 == bytes2} and \texttt{assert hash1 == hash2}, verified by \texttt{tests/test\_reproducibility.py}).
     \item \textbf{Cross-Platform Oracle Invariance}: All 201 verification tests across 31 test files pass with 100\% conformance (201 passed, 1 skipped due to rootless Linux Docker requirement), executing in 89.70s on Linux CI and 261.43s on Windows hosts with $\Delta_{\text{platform}} = 0.000$ oracle metric divergence under calibration, proving the evaluation harness is immune to POSIX vs. Win32 line-ending, path-delimiter, and subprocess collection artifacts. Under live neural inference, both platforms exhibit statistically indistinguishable degradation distributions ($p_{\text{KS}} = 0.52 > 0.05$).
+    \item \textbf{Distributed Live Study Reproducibility \& Kaggle Artifacts}: All seven distributed empirical benchmark notebooks ($P_1\_G_1$ through $P_7\_G_7$) are published open-source in \texttt{notebooks/distributed/} and hosted as executable cloud sessions on Kaggle (\url{https://www.kaggle.com/code/pratikjain24/sage-distributed-benchmark}), enabling complete replication of all 9,814 task episodes on Dual Tesla T4 GPUs with pinned model revisions and deterministic cryptographic manifests.
 \end{enumerate}
 
 \subsection{Compute Reconciliation and Token Accounting}

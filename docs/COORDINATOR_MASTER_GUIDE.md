@@ -62,16 +62,16 @@ mkdir -p paper/figures
 Send each contributor **their assigned notebook** (`P1_...ipynb` through `P7_...ipynb`) along with the following exact copy-pasteable instructions:
 
 ```markdown
-### Instructions for SAGE Distributed Study Contributor [INSERT P1..P7]
+### Instructions for SAGE Distributed Study Contributors ($P_1\text{--}P_7$)
 
-Welcome! You are assigned to benchmark Layer [INSERT G1..G7] for the SAGE Empirical Study.
-Your assigned notebook: [INSERT P1_G1_Static_Kaggle.ipynb etc.]
+Welcome! You are assigned to benchmark your designated Layer ($G_1\text{--}G_7$) for the SAGE Empirical Study.
+Your assigned notebook: Select your designated notebook from `notebooks/distributed/` (`P1_G1_Static_Kaggle.ipynb` through `P7_G7_ProxyCanaryGuard_CrossCheck_Kaggle.ipynb`) or open the published Kaggle benchmark environment at [https://www.kaggle.com/code/pratikjain24/sage-distributed-benchmark](https://www.kaggle.com/code/pratikjain24/sage-distributed-benchmark).
 
 Please follow these exact steps:
 
 1. Log into your Kaggle account (verify phone number if needed to enable GPU).
 2. Create a New Notebook: Go to kaggle.com -> Click '+ Create' -> 'New Notebook'.
-3. Import Notebook: Click 'File' -> 'Import Notebook' -> Upload your assigned .ipynb file.
+3. Import Notebook: Click 'File' -> 'Import Notebook' -> Upload your assigned .ipynb file (or open the shared Kaggle project).
 4. Configure Settings (Right-Hand Sidebar — CRITICAL):
    - Accelerator: Select 'GPU T4 x2' (Dual Tesla T4 16GB, total 32GB VRAM).
    - Internet: Toggle to 'ON'.
@@ -88,8 +88,8 @@ Please follow these exact steps:
    - The notebook automatically detects past completed seeds and resumes where it left off!
 7. Download Your Deliverable:
    - When the run completes, go to the notebook's 'Output' tab.
-   - Download the file named: [INSERT G1..G7]_seeds42-46.zip.
-   - Upload this ZIP file to the shared Google Drive folder for the Coordinator.
+   - Download the file named `<GROUP>_seeds42-46.zip` (e.g., `G1_seeds42-46.zip` through `G7_seeds42-46.zip`).
+   - Deliver this ZIP file to the Coordinator or place in `experiments/runs/kaggle_study/archives/`.
 ```
 
 ---

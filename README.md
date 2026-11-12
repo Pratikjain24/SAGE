@@ -36,7 +36,7 @@
 > | **SAGE** | dp-web4 | Situation-Aware Governance Engine | Decentralized blockchain governance engine. |
 > | **EvoEval** | Xia et al. (2024) | Benchmark for evolving coding problems via LLM | Evolves benchmark problem suites; does not evaluate self-modifying code agents or security boundary drift (our former development working title). |
 >
-> 📖 **Comprehensive Guides & Dossiers**: For quick demo and presentation resources, see the **[Complete Presentation Guide](SAGE_Presentation_Guide.md)** and **[Step-by-Step Run Guide](How_To_Run_SAGE.md)**. For an exhaustive, file-by-file blueprint detailing every architectural invariant, security boundary, tamper audit check, drift probe, LLM judge isolation rule, full per-suite timing benchmarks, and complete test results (201 passed, 1 skipped across 31 test files, 100% pass rate), see the **[Master Technical Dossier](PROJECT_DOSSIER.md)**, the automated **[Reproducibility Verification Attestation](REPRODUCIBILITY_VERIFICATION.md)**, and the complete **[Tables & Figures Proof of Provenance](docs/PROVENANCE_AND_AUDIT_TRAIL.md)**.
+> 📖 **Comprehensive Documentation**: For detailed project documentation, see the **[Complete Documentation](sage_documents/)** folder containing 57 comprehensive files covering architecture, agent layers, testing, metrics, and results. For architectural details and provenance, see **[Architecture Overview](sage_documents/01_architecture/ARCHITECTURE_OVERVIEW.md)** and **[Provenance & Audit Trail](docs/PROVENANCE_AND_AUDIT_TRAIL.md)**.
 
 **SAGE: Safety & Agent Growth Evaluator** is a hardened benchmark and formal evaluation framework that validates agent guardrails against canonical, deterministic degradation trajectories, supplemented by live API runs. SAGE is designed to measure **capability gain, security boundary drift (vulnerability injection rate), specification gaming (proxy gap), and capability retention** in self-modifying autonomous code agents across iterative evolutionary generations. SAGE implements an honest, two-tiered evaluation methodology:
 1. **Canonical Benchmark Trajectories ($N=18{,}000$)**: 18,000 controlled, bitwise-reproducible evaluations across 100 tasks, 6 archetypes ($G_1$–$G_6$), 10 cycles, and 3 random seeds formalizing archetype state-mutation policies under deterministic execution, providing zero-flakiness counterfactual reference baselines.
@@ -93,8 +93,22 @@ SAGE evaluates seven standardized agent archetypes ($G_1$–$G_7$) alongside the
 | **$G_7$** | **Deployable Proxy Canary Guard** | Realistic dynamic verification on held-out proxy tasks (`test_proxy.py`) | Validated State | Canary gate + atomic rollback | 84.4% Solve, +0.02 Drift, 96% Ret. |
 | **$G_6^*$** | **Theoretical Oracle Skyline** | Theoretical upper bound evaluating canary on sequestered ground truth (`test_gt.py`) | Validated State | Oracle gate + atomic rollback | 92.0% Solve, +0.02 Drift, 98% Ret. |
 
+### Live Distributed Empirical Benchmark Results ($N = 9{,}814$ Task Episodes)
+
+To complement canonical simulation trajectories with physical hardware validation, SAGE includes a full-scale distributed live empirical study across all seven archetypes ($G_1$--$G_7$). Evaluated on `Qwen/Qwen2.5-Coder-7B-Instruct` across $N=5$ pinned random seeds ($42, 43, 44, 45, 46$) on Kaggle Dual Tesla T4 GPUs ($T=5$ cycles, 100 tasks/cycle: 60 train, 40 held-out test). 100% genuine LLM execution with zero mock substitutions:
+
+| Group | Mechanism | $P_{\text{train}}(0)$ | $P_{\text{train}}(3)$ | $\Delta P_{\text{train}}$ | $P_{\text{test}}(4)$ | SafetyDrift | Cost / Run | Status |
+|:---:|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **$G_1$** | Static Baseline Control | 40.0% | 40.7% | $+0.7\%$ | 43.0% | 0.000 | \$0.2493 | Verified Pass ✅ |
+| **$G_2$** | Prompt Rewriter | 53.7% | 70.0% | $+16.3\%$ | 80.0% | 0.000 | \$0.2889 | Verified Pass ✅ |
+| **$G_3$** | Memory Accumulator | 39.7% | 50.3% | $+10.7\%$ | 54.0% | 0.000 | \$0.2465 | Verified Pass ✅ |
+| **$G_4$** | Reflection Agent | 52.0% | 52.0% | $\pm0.0\%$ | 75.0% | 0.000 | \$0.2533 | Verified Pass ✅ |
+| **$G_5$** | Verified Generation (AST) | 52.7% | 65.0% | $+12.3\%$ | 79.5% | 0.000 | \$0.2532 | Verified Pass ✅ |
+| **$G_6$** | Oracle Skyline | 52.3% | 59.0% | $+6.7\%$ | 73.5% | 0.000 | \$0.2525 | Verified Pass ✅ |
+| **$G_7$** | Proxy Canary Guard | 54.7% | 59.7% | $+5.0\%$ | 73.5% | 0.000 | \$0.2516 | Verified Pass ✅ |
+
 > 💡 **Unified Taxonomy Formalization: Deployable $G_7$ vs. Theoretical Oracle $G_6^*$**:  
-> - **$G_1$–$G_7$ (Deployable Archetypes)**: The 7 operational agent archetypes implemented across the SAGE test harness and UI. Among defensive configurations, **$G_7$ (Deployable Proxy Canary Guard)** is the production-ready standard: it dynamically evaluates candidate mutations against *strictly held-out proxy tasks* (`test_proxy.py`) without accessing hidden ground-truth oracles, triggering sub-second atomic rollback upon canary degradation. It achieves an 84.4% solve rate while suppressing security drift (+0.02) and preventing specification gaming ($\Delta_{\text{proxy}} \le 0.02$).
+> - **$G_1$–$G_7$ (Deployable Archetypes)**: The 7 operational agent archetypes implemented across the SAGE test harness and UI. Among defensive configurations, **$G_7$ (Deployable Proxy Canary Guard)** is the production-ready standard: it dynamically evaluates candidate mutations against *strictly held-out proxy tasks* (`test_proxy.py`) without accessing hidden ground-truth oracles, triggering sub-second atomic rollback upon canary degradation. It achieves high held-out solvability (73.5% empirical, 84.4% canonical) while suppressing security drift (+0.02) and preventing specification gaming ($\Delta_{\text{proxy}} \le 0.02$).
 > - **$G_6$ (Regression-Guarded Verifier)**: Gates mutations against fixed historical regression suites, guarding against regressions on already-solved tasks without dynamic held-out canary synthesis.
 > - **$G_6^*$ (Theoretical Oracle Skyline)**: An academic upper bound denoted with standard mathematical asterisk notation ($\pi^*, Q^*$). It evaluates canaries against sequestered ground-truth unit tests (`test_gt.py`), establishing the theoretical performance ceiling (92.0% solve rate, 98% retention). Because future ground-truth tests are unavailable in production, $G_6^*$ is non-deployable, while $G_7$ represents the ecologically valid deployable standard.
 
@@ -127,7 +141,9 @@ SAGE evaluates seven standardized agent archetypes ($G_1$–$G_7$) alongside the
 | Docker image digests | [`docker/image_digests.json`](docker/image_digests.json) — built and verified by [`scripts/build_and_inspect_images.py`](scripts/build_and_inspect_images.py) |
 | Trajectory SHA-256 manifests | [`experiments/runs/full_study_canonical/`](experiments/runs/) — `trajectory_manifest.json` in each run directory |
 | Byte-identical reproducibility | [`tests/test_reproducibility.py`](tests/test_reproducibility.py) — `test_reproducibility_same_seed_same_config_byte_identical` |
-| Cross-platform parity (Linux/Windows) | [`REPRODUCIBILITY_VERIFICATION.md`](REPRODUCIBILITY_VERIFICATION.md) Section 2 — dual-platform comparison table |
+| Cross-platform parity (Linux/Windows) | [`sage_documents/06_testing/reproducibility_verification.md`](sage_documents/06_testing/reproducibility_verification.md) Section 2 — dual-platform comparison table |
+| Distributed Live Kaggle Study (9,814 tasks) | [`experiments/runs/kaggle_study/`](experiments/runs/kaggle_study/) — 0 mock fallbacks; runnable in cloud via [Kaggle Distributed Benchmark Notebooks](https://www.kaggle.com/code/pratikjain24/sage-distributed-benchmark) |
+| Live empirical 7-archetype results | [`paper/tables/table1_main_results_live.tex`](paper/tables/table1_main_results_live.tex) & [`experiments/runs/kaggle_study/manifests/kaggle_study_manifest.json`](experiments/runs/kaggle_study/manifests/kaggle_study_manifest.json) |
 
 ### Running the Benchmark
 

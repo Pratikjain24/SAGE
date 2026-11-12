@@ -132,18 +132,19 @@ def verify_trajectory_manifest(manifest_file: Path) -> Tuple[bool, Dict[str, Any
 
 
 def run_tests(override_count: Optional[int] = None, override_duration: Optional[float] = None) -> Tuple[bool, int, float, str]:
-    """Execute full pytest test suite and capture results."""
-    if override_count is not None:
-        dur = override_duration if override_duration is not None else 292.62
-        return True, override_count, dur, f"{override_count} passed in {dur:.2f}s"
-    test_count_env = os.environ.get("SAGE_TEST_COUNT") or os.environ.get("EVOEVAL_TEST_COUNT")
-    if test_count_env:
-        count = int(test_count_env)
-        dur = float(os.environ.get("SAGE_TEST_DURATION") or os.environ.get("EVOEVAL_TEST_DURATION", "292.62"))
-        return True, count, dur, f"{count} passed in {dur:.2f}s"
-
+    """Execute full pytest test suite and capture results.
+    
+    NOTE: override_count and environment variables are REMOVED to enforce
+    actual pytest execution. This prevents shortcuts that bypass verification.
+    As per PROVENANCE_AND_AUDIT_TRAIL.md line 137: "This must be removed or 
+    made to actually execute."
+    """
+    # REMOVED: Early returns with override_count - this was a testing shortcut
+    # REMOVED: Environment variable shortcuts - all tests must run for real
+    
+    print("      Running pytest test suite (this will take 2-5 minutes)...")
     t0 = time.time()
-    cmd = [sys.executable, "-m", "pytest", "tests/", "-q"]
+    cmd = [sys.executable, "-m", "pytest", "tests/", "-v", "--tb=short"]
     proc = subprocess.run(cmd, capture_output=True, text=True)
     dur = time.time() - t0
     output = proc.stdout + proc.stderr
@@ -156,16 +157,17 @@ def run_tests(override_count: Optional[int] = None, override_duration: Optional[
         passed_count = int(m.group(1))
 
     success = (proc.returncode == 0) and (passed_count >= 135)
+    
+    if not success:
+        print(f"      ⚠️  Test execution failed or insufficient passes")
+        print(f"      Return code: {proc.returncode}")
+        print(f"      Passed: {passed_count} (minimum required: 135)")
+    
     return success, passed_count, dur, output
 
 
 def main() -> int:
-    import argparse
-    parser = argparse.ArgumentParser(description="SAGE External Verification Engine")
-    parser.add_argument("--test-count", type=int, default=None, help="Pre-verified test pass count")
-    parser.add_argument("--test-duration", type=float, default=None, help="Pre-verified test duration (seconds)")
-    args, _ = parser.parse_known_args()
-
+    """Main verification engine - NO shortcuts allowed."""
     root = Path.cwd()
     print("=" * 80)
     print("SAGE External Verification & Reproducibility Attestation Engine")
@@ -332,7 +334,7 @@ def main() -> int:
 
     # 6. Execute Test Suite
     print("[6/6] Executing Complete Regression Test Suite (pytest tests/)...")
-    tests_ok, passed_tests, test_duration, test_output = run_tests(args.test_count, args.test_duration)
+    tests_ok, passed_tests, test_duration, test_output = run_tests()
     print(f"      Status: {'PASS' if tests_ok else 'FAIL'} | Passed: {passed_tests} tests in {test_duration:.2f}s")
 
     all_passed = task_ok and docker_ok and models_ok and manifest_ok and artifacts_ok and tests_ok
