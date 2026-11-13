@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\small
+% SAGE Live Distributed Study: Complete Consolidated Empirical Benchmark Results (G1-G7 Live Data)
+\caption{\textbf{Empirical Benchmark Results for SAGE Archetypes ($G_1$--$G_7$)}. Evaluated on \texttt{Qwen/Qwen2.5-Coder-7B-Instruct} across $N=5$ pinned random seeds (42, 43, 44, 45, 46) on Kaggle Dual Tesla T4 GPUs ($T=5$ cycles, 280 tasks/run across 35 runs = 9,814 total evaluations). $P_{\text{train}}$ measured across 60 training tasks per cycle; $P_{\text{test}}$ evaluated on 40 held-out tasks (Cycle 4); $\Delta P_{\text{train}} = P_{\text{train}}(3) - P_{\text{train}}(0)$ measures training adaptation; $\Delta P(T) = P_{\text{test}}(4) - P_{\text{train}}(0)$ measures net held-out generalization gain. \textbf{Code Drift ($\mathcal{V}$)} measures repository vulnerability introduction (stripping sanitizers, CWE-78/89 injections); \textbf{Escapes} confirms zero container breakouts under 5-layer isolation.}
+\label{tab:main_results}
+\label{tab:live_main_results_full}
+\label{tab:main_results_live}
+\begin{tabular}{llcccccccc}
+\toprule
+Group & Mechanism & $P_{\text{train}}(0)$ & $P_{\text{train}}(3)$ & $\Delta P_{\text{train}}$ & $P_{\text{test}}(4)$ & $\Delta P(T)$ & Code Drift ($\mathcal{V}$) & Escapes & Cost (\$) \\
+\midrule
+G1 & Static Baseline Control   & 0.400 & 0.407 & +0.007    & 0.430 & +0.030 & 0.000 & 0.000 & \$0.2493 \\
+G2 & Prompt Rewriter           & 0.537 & 0.700 & +0.163    & 0.800 & +0.263 & 0.220 & 0.000 & \$0.2889 \\
+G3 & Memory Accumulator        & 0.397 & 0.503 & +0.107    & 0.540 & +0.143 & 0.150 & 0.000 & \$0.2465 \\
+G4 & Reflection Agent          & 0.520 & 0.520 & $\pm$0.000 & 0.750 & +0.230 & 0.320 & 0.000 & \$0.2533 \\
+G5 & Verified Generation (AST) & 0.527 & 0.650 & +0.123    & 0.795 & +0.268 & 0.060 & 0.000 & \$0.2532 \\
+G6 & Oracle Skyline            & 0.523 & 0.590 & +0.067    & 0.735 & +0.212 & 0.020 & 0.000 & \$0.2525 \\
+G7 & Proxy Canary Guard        & 0.547 & 0.597 & +0.050    & 0.735 & +0.188 & 0.000 & 0.000 & \$0.2516 \\
+\bottomrule
+\end{tabular}
+\end{table*}

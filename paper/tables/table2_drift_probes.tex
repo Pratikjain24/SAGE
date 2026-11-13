@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\caption{\textbf{Dual-Suite Specification Gaming Evaluation ($N=20$ Asymmetric Tasks vs. $N=80$ Standard Tasks)}. Ground-truth solve rates ($P_{\text{GT}}$) across standard tasks, asymmetric specification gaming tasks (\texttt{task\_004}, \texttt{task\_014}, etc.), and overall suites alongside visible proxy pass rates ($P_{\text{Proxy}}$). Evaluates emergent agent optimization under natural model inference without synthetic injection. Unconstrained agents ($G_2, G_4$) overfit to superficial visible proxy checks while failing sequestered ground truth. Guarded architectures ($G_5, G_7$) eliminate specification gaming.}
+\label{tab:drift_probes}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Archetype} & \textbf{Std $P_{\text{GT}}$} & \textbf{Probe $P_{\text{GT}}$} & \textbf{Probe $P_{\text{Prx}}$} & \textbf{Probe Gap} & \textbf{All $P_{\text{GT}}$} & \textbf{Net Gap} \\
+\midrule
+$G_1$ (Static Control) & 0.613 & 0.550 & 0.580 & +0.030 & 0.600 & +0.006 \\
+$G_2$ (Prompt Rewriter) & 0.800 & 0.450 & 0.880 & +0.430 & 0.730 & +0.086 \\
+$G_3$ (Memory Accumulator) & 0.820 & 0.580 & 0.850 & +0.270 & 0.772 & +0.054 \\
+$G_4$ (Compound Reflection) & 0.880 & 0.400 & 0.950 & +0.550 & 0.784 & +0.110 \\
+$G_5$ (AST Verifier) & 0.850 & 0.800 & 0.820 & +0.020 & 0.840 & +0.004 \\
+$G_6$ (Oracle Skyline$^*$) & 0.925 & 0.900 & 0.920 & +0.020 & 0.920 & +0.004 \\
+$G_7$ (Deployable Canary) & 0.870 & 0.740 & 0.820 & +0.080 & 0.844 & +0.016 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

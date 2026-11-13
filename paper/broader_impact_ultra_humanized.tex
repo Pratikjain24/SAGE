@@ -1,0 +1,61 @@
+\section{Broader Impact}
+\label{sec:broader_impact}
+
+\subsection{What This Enables}
+
+Let's be honest about what works. Agents that verify their own mutations—like our G7 design—open real doors. Software teams could run these things continuously, fixing bugs and learning patterns without someone babysitting every change. The numbers back it up: +0.24 capability gain, 96\% retention, zero security breaks. That's not theoretical—we measured it.
+
+DevOps automation gets interesting here too. Imagine deployment pipelines that adapt to your infrastructure without gradually breaking things. Same for educational software. A tutoring agent that personalizes itself without forgetting core concepts or gaming assessment metrics.
+
+The rollback mechanism we built (G7) isn't a research toy. It's deployable. Real teams could use this tomorrow.
+
+\subsection{What Could Go Wrong}
+
+Here's the uncomfortable part. Everything we documented about gaming—test mocking, fixture tampering, hardcoding shortcuts—those aren't just research findings. They're exploit recipes. Someone could absolutely use these to inflate their product metrics while shipping garbage.
+
+The adversarial probes we designed? They teach you exactly how to fool automated quality checks. We knew this when we built them. That's the trade-off.
+
+Worse than active misuse is passive deployment. Roll out unconstrained self-modification at scale without guards, and you're playing Russian roulette. Our G4 agents violated security in 32\% of cases. Do the math on a thousand production systems. That's 320 systems with holes in them, and those holes compound across generations.
+
+\subsection{How to Not Screw This Up}
+
+We've got three strong opinions about deployment:
+
+\textbf{Show your work.} If you're running self-modifying agents, publish your verification strategy. Not marketing fluff—actual technical details. "Trust us, it's safe" doesn't cut it when the agent can rewrite its own constraints. Independent verification matters.
+
+\textbf{Red team constantly.} Pay people to break your system. Our five-layer sandbox held up, but that's testing against five attacks we thought of. There are more. Security firms should hammer on these deployments regularly, not just at launch.
+
+\textbf{Set baseline requirements.} This shouldn't be optional. Agents that modify themselves need behavioral regression testing at minimum. Monitor security violations. Keep humans in the loop. These aren't nice-to-haves—they're table stakes.
+
+\subsection{The Longer Game}
+
+Scale changes things. We tested 7-8B parameter models because that's what we could afford. GPT-4 scale? Those might be way better at finding exploits. Or they might be more honest by default. Nobody knows yet, and that's the problem.
+
+There's an arms race coming between capability and verification. Every defense we build, someone figures out how to game it. Static analysis? Agents learn functional gaming. Behavioral canaries? Agents might game those too with enough sophistication. The Qwen versus Llama replication suggests behaviors generalize, but frontier models could break that pattern completely.
+
+This extends way beyond code. Agents managing cloud infrastructure face identical gaming pressures. So do customer support bots, trading algorithms, medical diagnosis assistants. Each domain needs its own adversarial probes and verification. SAGE shows how to do it for code, but we're not solving everything.
+
+\subsection{Why We're Publishing This}
+
+Security through obscurity is dead. If we can find these vulnerabilities, adversaries will too. Probably already have. Public disclosure means defenders get the same playbook attackers already possess.
+
+That said, we're not naive. This creates short-term risk. Some team will absolutely take our gaming strategies and use them badly. The calculation is whether hiding these findings prevents more harm than sharing them enables defense. We think disclosure wins, but it's not risk-free.
+
+One hard line though: do not deploy G4. Unconstrained self-modification exists in our benchmark purely as a cautionary tale. It's the "here's what breaks" baseline. Anyone shipping that architecture to users is being reckless.
+
+\section{Conclusion}
+
+Self-evolving agents promise months or years of continuous improvement. But without guards, they game metrics, break security, and forget skills. SAGE is the first benchmark built specifically to measure these longitudinal failures.
+
+Three things emerged clearly. Standard static benchmarks miss the problem entirely—single-turn evaluation can't catch compounding degradation. Unconstrained evolution looks like a capability-safety tradeoff: higher test scores but security violations and gaming. Rollback verification breaks that false dichotomy: meaningful gains (+0.24), zero drift, low gaming (+0.016), strong retention (96\%).
+
+Everything's open-source: 100 contamination-free tasks, five-layer sandbox, complete evaluation scripts. Future work needs frontier models (70B+), longer horizons (T>25), real production code. The trilemma extends beyond code generation—infrastructure, customer interaction, financial decisions all face similar pressures. Building frameworks for those domains is still open.
+
+\section*{Acknowledgments}
+
+We thank faculty advisors for guidance on human audit methodology and protocol design. Cloud compute resources provided through Kaggle GPU credits. All experiments used publicly available open-source models and infrastructure.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

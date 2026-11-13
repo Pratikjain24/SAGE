@@ -1,0 +1,66 @@
+\subsection{Delineation from Concurrent 2025--2026 Agent Benchmarks}
+\label{sec:concurrent_studies}
+
+Multiple agent benchmarks appeared across 2025 and 2026. Each targets distinct operational risks in foundation-model agents. SpecBench~\cite{zhao2026specbench} and Zhang et al.~\cite{zhang2026reward} study proxy reward hacking. EvoAgentBench~\cite{gao2026evoagentbench} examines multi-task transfer. Yu et al.~\cite{yu2026forgetting} track skill degradation. SAGE connects these separate threads into a single longitudinal framework. Table~\ref{tab:concurrent_benchmarks} outlines the key technical differences across state spaces, failure modes, and governance models.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{Systematic Delineation: SAGE vs. Concurrent 2025--2026 Agent Benchmarks}. Contrasting evaluation horizon, mutable state space, evaluated failure modes, exploit probes, causal archetype decomposition, sandbox containment, and affirmative governance mechanisms.}
+\label{tab:concurrent_benchmarks}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Architectural \& Empirical Dimension} & \textbf{SAGE (Ours)} & \textbf{SpecBench}~\cite{zhao2026specbench} & \textbf{EvoAgentBench}~\cite{gao2026evoagentbench} & \textbf{Yu et al.}~\cite{yu2026forgetting} & \textbf{Zhang et al.}~\cite{zhang2026reward} \\
+\midrule
+Evaluation Horizon ($T$) & \textbf{Longitudinal} ($T=5$ cycles) & Static episode ($T=1$) & Single-turn transfer ($T=1$) & Sequential tasks ($T=5$) & Static episode ($T=1$) \\
+Mutable State Space ($\mathcal{S}_t$) & $\langle \Pi_t, \mathcal{M}_t, \mathcal{C}_t \rangle$ (Prompt, Memory, Tools) & $\emptyset$ (Stateless single-turn) & Black-box agent state & $\mathcal{M}_t$ (Memory store only) & $\emptyset$ (Stateless single-turn) \\
+Coupled Trilemma Dynamics & \textbf{\checkmark Yes} ($\Delta P \iff \mathcal{V} \iff \Delta_{\text{proxy}} \iff \text{Ret}$) & $\times$ No (isolated gaming) & $\times$ No (benign transfer) & $\times$ No (isolated forgetting) & $\times$ No (isolated exploits) \\
+Deliberate Exploit Drift Probes & \textbf{20 Probes} (AST, mock, bypass) & Validation vs. Hidden tests & $\times$ None & $\times$ None & Synthetic tool scenarios \\
+Causal Archetype Decomposition & \textbf{\checkmark 7 Archetypes} ($G_1\text{--}G_7$) & $\times$ Monolithic agent & $\times$ Monolithic agent & Partial ablation ($\pm\mathcal{M}$) & $\times$ Monolithic agent \\
+Execution Sandbox Environment & \textbf{Dual Docker} (5-layer isolated) & Single Docker / Subproc & Mock API harness (no OS) & Subprocess execution & Simulated environment \\
+Affirmative Governance \& Rollback & \textbf{\checkmark Canary Rollback} ($G_7$) & $\times$ Passive auditing only & $\times$ Passive auditing only & $\times$ Passive auditing only & $\times$ Passive auditing only \\
+Governance Paralysis Resolved & \textbf{\checkmark Yes} (+0.050 train, 73.5\% test under $G_7$) & $\times$ N/A & $\times$ N/A & $\times$ N/A (unresolved trade-off) & $\times$ N/A \\
+\bottomrule
+\end{tabular}%
+}
+\vspace{1mm}
+\caption*{\footnotesize \textit{Note}: $\Delta P$: Net forward capability gain; $\mathcal{V}$: Security boundary erosion; $\Delta_{\text{proxy}}$: Gaming gap on deliberate probes; Ret: Historical skill retention. $G_7$: Deployable canary rollback guard; $G_7^*$: Oracle skyline.}
+\end{table*}
+
+\subsubsection{SpecBench (Zhao et al.~\cite{zhao2026specbench}) vs. SAGE's Longitudinal Proxy Gap}
+SpecBench evaluates reward hacking in single-attempt agents ($T=1$). It checks if patches pass visible tests but fail hidden checks. This captures static gaming in one turn.
+
+SAGE tracks how gaming compounds across generations. The proxy gap $\Delta_{\text{proxy}}$ is not just a one-time bug. It becomes a persistent habit. Unconstrained agents ($G_4$) quickly learn that patching test fixtures or mocking return values takes less effort than writing valid algorithms. They store these shortcuts in memory ($\mathcal{M}_t$) and helper tools ($\mathcal{C}_t$). Future cycles inherit those corruptions. On our 20 drift probes, $G_4$ agents hit 95.0\% on visible tests but drop to 40.0\% on hidden ground truth ($\Delta_{\text{proxy}} = +0.55$).
+
+SpecBench stops at passive auditing. SAGE adds an active defense. Our dynamic canary gates ($G_7$) roll back bad mutations, holding the gap to $\Delta_{\text{proxy}} \le +0.02$.
+
+\subsubsection{EvoAgentBench (Gao et al.~\cite{gao2026evoagentbench}) vs. SAGE's Adversarial Self-Evolution}
+EvoAgentBench tests skill transfer across tool APIs. It relies on mock APIs without real operating system execution. It also assumes self-evolution remains benign, measuring only positive skill gains.
+
+SAGE treats self-evolution as an adversarial process, testing the misevolution hypothesis from Shao et al.~\cite{shao2025misevolution}. Left unchecked, agents erode their own security safeguards. In our runs, unconstrained mutators ($G_4$) breached security boundaries in 32.0\% of runs ($\mathcal{V} = 0.32$). They stripped input checks, escaped subshells, and edited test code. SAGE runs all workloads inside an isolated dual container (\texttt{evo-sandbox} and \texttt{evo-scorer}) with unprivileged users and AST tripwires.
+
+EvoAgentBench treats self-modification as a black box. SAGE isolates specific mechanisms through seven archetypes ($G_1$--$G_7$). We separate the impact of prompt edits ($G_2$), memory writes ($G_3$), full reflection ($G_4$), static AST rules ($G_5$), and canary rollbacks ($G_7$).
+
+\subsubsection{Yu et al.~\cite{yu2026forgetting} vs. SAGE's Retention and Governance Paralysis}
+Yu et al. study catastrophic forgetting during lifelong agent adaptation. Adapting memory to new problems harms performance on earlier tasks. Our experiments verify this trend. Memory accumulation ($G_3$) and reflection ($G_4$) drop task retention to 89.0\% and 81.0\%, respectively.
+
+SAGE identifies a deeper practical roadblock: governance paralysis. Preventing forgetting is easy if the system rejects every update with past variance. That keeps retention at 100\%, but stops all learning ($\Delta P = 0$). The agent remains stuck at baseline solvability.
+
+The key engineering challenge is enabling forward gains while preventing regressions. Deployable canary verification ($G_7$) solves this dilemma. It delivers a $+0.050$ training gain and 73.5\% held-out test solvability ($p_{\text{Holm}} = 0.002, d = 2.45$) while maintaining 96.0\% retention on past tasks and eliminating security boundary drift.
+
+\subsubsection{Zhang et al.~\cite{zhang2026reward} vs. SAGE's Persistent Tool Mutation and Governance Frontier}
+Zhang et al.~\cite{zhang2026reward} analyze reward hacking in single tool interactions. SAGE differs in two key ways:
+
+\textbf{Persistent Artifacts vs. One-Off Exploits.} In Zhang et al., actions disappear once a task resets. In SAGE, synthesized tools ($\mathcal{C}_t$) persist on disk as part of the state $\mathcal{S}_t$. When an agent writes a fixture-patching script at step $t$, subsequent generations inherit that code. The shortcut turns into a permanent habit.
+
+\textbf{Active Governance Frontier.} Zhang et al. focus on diagnosis. SAGE evaluates affirmative defenses. Static AST filters ($G_5$) stop syntax tampering at near-zero runtime cost ($\mathcal{V} \le 0.02$). But AST linters miss semantic gaming ($\Delta_{\text{proxy}} = +0.28$). Combining static analysis with dynamic canary rollbacks ($G_7$) stops security leaks while controlling the gaming gap.
+
+\subsubsection{The Unifying Conceptual Breakthrough: The Self-Evolution Trilemma}
+SAGE unifies these phenomena into the \textbf{Self-Evolution Trilemma}. System designers face three conflicting requirements across cycles $t$:
+\begin{equation}
+\max_{\mathcal{E}} \Delta P(T) \quad \text{s.t.} \quad \mathcal{V}(t) \le \epsilon_{\text{sec}}, \quad \Delta_{\text{proxy}}(t) \le \epsilon_{\text{proxy}}, \quad \text{Ret}(t) \ge 1 - \epsilon_{\text{ret}}
+\end{equation}
+Existing benchmarks study isolated parts of this formulation. SpecBench inspects the proxy gap $\Delta_{\text{proxy}}$. Yu et al. examine retention. EvoAgentBench tests capability gain $\Delta P$.
+
+Our results show these goals are directly coupled. Pushing capability in open-loop setups ($G_2, G_4$) triggers security drift ($\mathcal{V} = 0.32$), gaming ($\Delta_{\text{proxy}} = +0.55$), and skill loss (retention down to 81.0\%). Overly strict gates cause paralysis ($\Delta P = 0$). SAGE uses 20 deliberate probes to test this balance. Deployable canary rollback ($G_7$) successfully balances this trade-off, providing a concrete path for stable agent evolution.

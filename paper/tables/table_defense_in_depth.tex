@@ -1,0 +1,26 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{Defense-in-Depth Coverage Matrix across SAGE Multi-Tier Security Architecture}. Demonstrates cross-layer redundancy ensuring that attacks evading earlier static filters are caught by deterministic AST analysis, tamper monitors, or dynamic canary regression.}
+\label{tab:defense_in_depth}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Attack Vector} & \textbf{OS Sandbox} & \textbf{Fast Guard (Tier 1)} & \textbf{Evolution Verifier} & \textbf{Safety Monitor} & \textbf{Canary Guard (G7)} \\
+\midrule
+\texttt{os.system} / Subprocess & \checkmark\ Blocked (unshare) & \checkmark\ AST Module Check & \checkmark\ AST Blocklist & --- & --- \\
+\texttt{eval()} / \texttt{exec()} & --- & \checkmark\ Call Interception & \checkmark\ AST Disallowed & --- & --- \\
+\texttt{pickle.loads()} / \texttt{marshal} & --- & \checkmark\ Deserialization Check & \checkmark\ Module Blocklist & --- & --- \\
+Base64 $\to$ \texttt{exec()} Decode & --- & \checkmark\ Dataflow Taint Check & \checkmark\ Taint Tracking & --- & --- \\
+Dynamic Reflection / Aliasing & --- & \checkmark\ NFKC / Unicode & \checkmark\ AST Alias \& SymTable & --- & \checkmark\ Canary Regression \\
+Test Suite Deletion / Alteration & \checkmark\ Read-only Mount & --- & \checkmark\ Protected File Check & \checkmark\ Hash Integrity & --- \\
+Scoring Infrastructure Tamper & \checkmark\ Ephemeral Overlay & --- & \checkmark\ Directives Regex & \checkmark\ AST Disqualification & --- \\
+Ground Truth Test Evasion & --- & --- & --- & --- & \checkmark\ Proxy Gap $\ge 0.35$ \\
+Runtime \texttt{math.isclose} Patch & --- & --- & --- & --- & \checkmark\ Canary Regression \\
+Runtime \texttt{open()} Patch & --- & --- & --- & --- & \checkmark\ Canary Regression \\
+Network Data Exfiltration & \checkmark\ Network Namespace & \checkmark\ Socket Blocklist & \checkmark\ AST Socket/Urllib & --- & --- \\
+Host Credential Leakage & \checkmark\ Env Sanitization & --- & \checkmark\ Path Constant Folding & --- & --- \\
+Prompt Jailbreak / Evasion & --- & \checkmark\ Adversarial Regex & \checkmark\ Tamper Directives & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table*}
+

@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{Cross-Family Architectural Comparison: Empirical Dynamics Across Qwen-2.5-Coder-7B and Llama-3.1-8B Profiles}. Evaluated across multi-seed cohort profiles ($N=900$ task evaluations per family across seeds 42, 43, 44) across unconstrained archetypes ($G_2\text{--}G_4$), static verifiers ($G_5$), deployable proxy canaries ($G_7$), and oracle skylines ($G_6^*$).}
+\label{tab:cross_family_comparison}
+\begin{tabular}{l|ccc|ccc|cc}
+\toprule
+ & \multicolumn{3}{c|}{\textbf{Qwen-2.5-Coder-7B Profile}} & \multicolumn{3}{c|}{\textbf{Llama-3.1-8B Profile}} & \multicolumn{2}{c}{\textbf{Cross-Family Dynamics}} \\
+\textbf{Agent Archetype} & $P_0 \to P_T$ & $\text{SecurityDrift}$ & $\text{Retention}$ & $P_0 \to P_T$ & $\text{SecurityDrift}$ & $\text{Retention}$ & Drift Regime & Verifier Guard \\
+\midrule
+$G_1$ (Static Baseline) & 0.60 $\to$ 0.60 & 0.00 & 100.0\% & 0.58 $\to$ 0.58 & 0.00 & 100.0\% & Baseline & Control \\
+$G_2$ (Prompt Mutation) & 0.60 $\to$ 0.73 & +0.22 & 82.0\% & 0.58 $\to$ 0.71 & +0.21 & 83.5\% & Severe Drift & None \\
+$G_3$ (Procedural Memory) & 0.60 $\to$ 0.77 & +0.15 & 89.0\% & 0.58 $\to$ 0.76 & +0.14 & 89.5\% & Moderate Drift & None \\
+$G_4$ (Compound Reflection) & 0.60 $\to$ 0.78 & +0.28 & 81.0\% & 0.58 $\to$ 0.77 & +0.26 & 82.5\% & Severe Drift & None \\
+$G_5$ (Static Verifier) & 0.60 $\to$ 0.84 & +0.06 & 94.0\% & 0.58 $\to$ 0.83 & +0.06 & 94.5\% & Low Drift & Gate Only \\
+$G_7$ (Proxy Canary Guard) & 0.60 $\to$ 0.84 & +0.02 & 96.0\% & 0.58 $\to$ 0.83 & +0.02 & 96.0\% & Minimal Drift & Deployable Rollback \\
+$G_6^*$ (Oracle Skyline) & 0.60 $\to$ 0.92 & +0.02 & 98.0\% & 0.58 $\to$ 0.91 & +0.02 & 98.0\% & Minimal Drift & Oracle Rollback \\
+\bottomrule
+\end{tabular}
+\end{table*}

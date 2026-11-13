@@ -1,0 +1,120 @@
+% Add this figure to your paper after the "Seven Agent Architectures" subsection
+% You'll need to create a visual diagram (PNG/PDF) from agent_architecture_diagram.txt
+% using tools like draw.io, Lucidchart, or TikZ
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/agent_architecture_progression.png}
+\caption{Agent architecture progression from baseline (G1) through unconstrained evolution (G2-G4) to verified guards (G5-G7*). Unconstrained agents (G4) achieve high capability (+0.28) but catastrophic drift (32\% violations). Rollback verification (G7) maintains capability (+0.24) with zero violations, demonstrating deployable safety. Oracle variant (G7*) represents theoretical ceiling using hidden tests.}
+\label{fig:agent_progression}
+\end{figure}
+
+% Insert this reference in the text:
+% See Figure~\ref{fig:agent_progression} for the complete architectural progression.
+
+% ============================================================================
+% INSTRUCTIONS FOR CREATING THE DIAGRAM:
+% ============================================================================
+
+% Option 1: Use draw.io (Easiest, Free)
+% 1. Go to https://app.diagrams.net/
+% 2. Create boxes for G1 → G2 → G3 → G4 → G5 → G6 → G7 → G7*
+% 3. Use colors:
+%    - G1: Gray (baseline)
+%    - G2-G4: Red (dangerous - high violations)
+%    - G5-G6: Yellow (partial safety)
+%    - G7: Green (safe + capable)
+%    - G7*: Blue (theoretical)
+% 4. Add arrows showing progression
+% 5. Annotate each box with key metrics
+% 6. Export as PNG (300 DPI) or PDF
+
+% Option 2: Use TikZ (Professional, LaTeX-native)
+% See example TikZ code below
+
+% Option 3: Use PowerPoint/Keynote
+% 1. Create boxes with SmartArt or shapes
+% 2. Add text and metrics
+% 3. Export as high-resolution PNG
+
+% Option 4: Use Python matplotlib/seaborn
+% Create a flowchart-style visualization programmatically
+
+% ============================================================================
+% EXAMPLE TikZ CODE (LaTeX-native):
+% ============================================================================
+
+% Add to preamble:
+% \usepackage{tikz}
+% \usetikzlibrary{shapes,arrows,positioning,shadows}
+
+% Then use this code:
+%
+% \begin{figure}[t]
+% \centering
+% \begin{tikzpicture}[
+%   node distance=0.8cm,
+%   baseline/.style={rectangle, draw=gray!60, fill=gray!20, thick, minimum width=3cm, minimum height=0.8cm, rounded corners},
+%   unsafe/.style={rectangle, draw=red!60, fill=red!20, thick, minimum width=3cm, minimum height=0.8cm, rounded corners},
+%   partial/.style={rectangle, draw=yellow!60, fill=yellow!20, thick, minimum width=3cm, minimum height=0.8cm, rounded corners},
+%   safe/.style={rectangle, draw=green!60, fill=green!20, thick, minimum width=3cm, minimum height=0.8cm, rounded corners, drop shadow},
+%   oracle/.style={rectangle, draw=blue!60, fill=blue!20, thick, minimum width=3cm, minimum height=0.8cm, rounded corners}
+% ]
+%
+%   \node[baseline] (g1) {G1: Frozen (60\%)};
+%   \node[unsafe, below=of g1] (g2) {G2: Prompt (+0.18, {\color{red}+0.22 drift})};
+%   \node[unsafe, below=of g2] (g3) {G3: Memory (+0.15, {\color{red}+0.15 drift})};
+%   \node[unsafe, below=of g3] (g4) {G4: Unconstrained (+0.28, {\color{red}\textbf{32\% violations}})};
+%   \node[partial, below=of g4] (g5) {G5: Static (+0.24, +0.06 drift)};
+%   \node[partial, below=of g5] (g6) {G6: Hybrid (balanced)};
+%   \node[safe, below=of g6] (g7) {\textbf{G7: Rollback (+0.24, 0\% violations)}};
+%   \node[oracle, below=of g7] (g7s) {G7*: Oracle (92\%, theoretical)};
+%
+%   \draw[->, thick] (g1) -- (g2);
+%   \draw[->, thick] (g2) -- (g3);
+%   \draw[->, thick] (g3) -- (g4);
+%   \draw[->, thick] (g4) -- (g5) node[midway, right, text width=2cm, font=\tiny] {Add static guard};
+%   \draw[->, thick] (g5) -- (g6);
+%   \draw[->, thick] (g6) -- (g7) node[midway, right, text width=2cm, font=\tiny] {Add rollback};
+%   \draw[->, dashed] (g7) -- (g7s) node[midway, right, text width=2cm, font=\tiny] {With hidden tests};
+%
+% \end{tikzpicture}
+% \caption{Agent architecture progression showing capability-safety tradeoffs.}
+% \label{fig:agent_progression}
+% \end{figure}
+
+% ============================================================================
+% RECOMMENDED VISUAL ELEMENTS:
+% ============================================================================
+
+% 1. Vertical flow (top to bottom): G1 → G2 → G3 → G4 → G5 → G6 → G7 → G7*
+% 2. Color coding:
+%    - Gray: Baseline (G1)
+%    - Red/Orange: Dangerous (G2-G4) with ⚠️ icons
+%    - Yellow: Partial safety (G5-G6)
+%    - Green: Safe + capable (G7) with ✓ icons
+%    - Blue: Theoretical (G7*)
+% 3. Key metrics in each box:
+%    - Capability gain (ΔP)
+%    - Security drift (Δ violations)
+%    - Retention (%)
+% 4. Annotations on arrows:
+%    - "Add prompt evolution"
+%    - "Add memory"
+%    - "Add tools"
+%    - "Add static guard"
+%    - "Add rollback"
+% 5. Highlight G7 as recommended (bold border, ⭐)
+% 6. Mark G4 as dangerous (⚠️, red border)
+
+% ============================================================================
+% WHERE TO PLACE IN PAPER:
+% ============================================================================
+
+% Insert after Section 3.1 "Seven Agent Architectures" subsection, around line 170
+% This provides visual summary immediately after textual definitions
+
+% Reference it with:
+% "Figure~\ref{fig:agent_progression} illustrates the architectural progression 
+% from frozen baseline through verified guards, highlighting the capability-safety 
+% tradeoffs at each stage."

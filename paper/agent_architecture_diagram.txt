@@ -1,0 +1,151 @@
+# SAGE Agent Architecture Progression Diagram
+# This text diagram can be converted to a figure using TikZ or draw.io
+
+============================================================================
+                    SAGE AGENT ARCHITECTURE TAXONOMY
+============================================================================
+
+BASELINE (No Self-Modification)
+┌─────────────────────────────────────────────────────────────────────┐
+│  G1: Frozen Baseline                                                │
+│  • State: S_t = S_0 (constant)                                      │
+│  • Evolution: None                                                  │
+│  • Purpose: Control condition                                       │
+│  • Performance: 60% (baseline)                                      │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+============================================================================
+UNCONSTRAINED EVOLUTION (Progressive Complexity)
+============================================================================
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  G2: Prompt Evolution                                               │
+│  • State: Only Π_t evolves                                          │
+│  • Evolution: System prompt rewritten based on feedback             │
+│  • Capability: +0.18 gain                                           │
+│  • Drift: +0.22 (high security violations)                          │
+│  • Gaming: +0.28 (severe)                                           │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  G3: Memory Accumulation                                            │
+│  • State: Only M_t grows                                            │
+│  • Evolution: Builds procedural knowledge base                      │
+│  • Capability: +0.15 gain                                           │
+│  • Drift: +0.15 (moderate)                                          │
+│  • Retention: 89% (some forgetting)                                 │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  G4: Unconstrained Reflection ⚠️ DANGEROUS                          │
+│  • State: Π_t, M_t, C_t all mutate freely                           │
+│  • Evolution: No restrictions                                       │
+│  • Capability: +0.28 gain (highest)                                 │
+│  • ⚠️ Drift: +0.28 (catastrophic - 32% violations)                  │
+│  • ⚠️ Gaming: +0.55 (severe - learns shortcuts)                     │
+│  • ⚠️ Retention: 81% (catastrophic forgetting)                      │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+============================================================================
+VERIFIED EVOLUTION (Safety Mechanisms)
+============================================================================
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  G5: Static Verification                                            │
+│  • Base: G4 + AST analyzer                                          │
+│  • Guard: Blocks syntactic exploits (test mocking, patching)        │
+│  • Capability: +0.24 gain                                           │
+│  • ✓ Drift: +0.06 (low - blocks syntax exploits)                    │
+│  • ✓ Gaming: +0.02 (blocks mocking)                                 │
+│  • ✓ Retention: 94% (good preservation)                             │
+│  • Limitation: Misses functional gaming (hardcoded logic)           │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  G6: Hybrid Guard                                                   │
+│  • Base: G5 + partial regression testing                            │
+│  • Guard: Static + limited behavioral checks                        │
+│  • Trade-off: Balances cost vs safety                               │
+│  • Limitation: Vulnerable to sophisticated gaming                   │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  G7: Rollback Verification ⭐ RECOMMENDED                            │
+│  • Base: Comprehensive behavioral regression testing                │
+│  • Guard: Mutations accepted only if retention holds                │
+│  • Tests: Uses visible test assertions (deployable)                 │
+│  • ✓ Capability: +0.24 gain (d=0.47, p<0.001)                       │
+│  • ✓ Drift: +0.02 (minimal - 0% violations)                         │
+│  • ✓ Gaming: +0.016 (low)                                           │
+│  • ✓ Retention: 96% (excellent preservation)                        │
+│  • ✓ Deployable: Uses only visible tests                            │
+│  • Cost: Higher computational overhead                              │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  G7*: Oracle Ceiling (Theoretical Upper Bound)                      │
+│  • Base: G7 with hidden ground-truth tests                          │
+│  • Guard: Mutations gated by sequestered tests                      │
+│  • ✓ Capability: 92% accuracy (highest honest)                      │
+│  • ✓ Drift: +0.02 (minimal)                                         │
+│  • ✓ Gaming: +0.004 (near-perfect honesty)                          │
+│  • ✓ Retention: 98% (near-perfect preservation)                     │
+│  • ❌ Not Deployable: Requires hidden test access                    │
+│  • Purpose: Theoretical ceiling for comparison                      │
+└─────────────────────────────────────────────────────────────────────┘
+
+============================================================================
+KEY INSIGHTS
+============================================================================
+
+1. UNCONSTRAINED EVOLUTION (G2-G4):
+   ✓ Achieves highest raw capability gains (+0.28)
+   ✗ Catastrophic security drift (32% violations)
+   ✗ Severe gaming behaviors (+0.55 on probes)
+   ✗ Substantial forgetting (retention drops to 81%)
+
+2. STATIC VERIFICATION (G5):
+   ✓ Blocks syntactic exploits (test mocking, patching)
+   ✓ Low computational overhead
+   ✗ Cannot detect functional gaming (hardcoded shortcuts)
+
+3. BEHAVIORAL ROLLBACK (G7):
+   ✓ Maintains capability gains (+0.24)
+   ✓ Zero security violations
+   ✓ Low gaming (+0.016)
+   ✓ Strong retention (96%)
+   ✓ Deployable in production
+   ✗ Higher computational cost
+
+4. THE TRILEMMA:
+   Cannot maximize ALL of: capability, security, gaming prevention, retention
+   G7 successfully navigates the Pareto frontier
+
+============================================================================
+DEPLOYMENT RECOMMENDATION
+============================================================================
+
+Production systems should use:
+  G7 (Rollback Verification) - deployable, balanced, proven
+
+Avoid:
+  G4 (Unconstrained) - dangerous, 32% violation rate
+  G7* (Oracle) - not deployable (requires hidden tests)
+
+Research baseline:
+  G1 (Frozen) - control condition for comparisons
+
+============================================================================
+
+Legend:
+  ✓ = Strength / Passes requirement
+  ✗ = Weakness / Fails requirement
+  ⚠️ = Warning / Dangerous
+  ⭐ = Recommended for deployment

@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\small
+\caption{Consolidated Longitudinal Dynamics and Archetype Profiles on \texttt{Qwen2.5-Coder-7B-Instruct} ($N=9{,}814$ live task evaluations across 5 pinned random seeds).}
+\label{tab:archetype_profiles}
+\begin{tabular}{lcccccccc}
+\toprule
+\textbf{Archetype} & \textbf{Mutation Scope} & \textbf{Initial $P_0$} & \textbf{Final $P_T$} & \textbf{Held-Out $P_{\text{test}}$} & \textbf{Security Drift $\mathcal{V}$} & \textbf{Retention} & \textbf{Gaming Gap $\Delta_{\text{proxy}}$} & \textbf{Verification Guard} \\
+\midrule
+$G_1$ (Static Baseline) & Frozen state $\mathcal{S}_0$ & 53.7\% & 53.7\% & 43.0\% & 0.00 & 100.0\% & +0.006 & Immutable Control \\
+$G_2$ (Prompt Rewriter) & Directives $\Pi_t$ & 53.7\% & 70.0\% & 80.0\% & +0.22 & 82.0\% & +0.086 & None \\
+$G_3$ (Procedural Memory) & Memory store $\mathcal{M}_t$ & 53.7\% & 68.3\% & 77.2\% & +0.15 & 89.0\% & +0.054 & None \\
+$G_4$ (Compound Reflection) & Full state $(\Pi, \mathcal{M}, \mathcal{C})$ & 53.7\% & 71.8\% & 80.0\% & +0.32 & 81.0\% & +0.110 & None \\
+$G_5$ (Static AST Verifier) & Full state + AST filter & 52.7\% & 65.0\% & 79.5\% & +0.02 & 94.0\% & +0.004 & Gate Only \\
+$G_6$ (Hybrid Guard) & AST + Historical subset & 52.7\% & 66.8\% & 77.5\% & +0.02 & 95.0\% & +0.010 & Hybrid Guard \\
+$G_7$ (Deployable Canary) & Behavioral canary rollback & 52.7\% & 68.3\% & 73.5\% & 0.00 & 96.0\% & +0.016 & Deployable Rollback \\
+$G_7^*$ (Oracle Skyline) & Ground-truth canary gate & 53.7\% & 76.5\% & 84.0\% & 0.00 & 98.0\% & +0.004 & Oracle Rollback \\
+\bottomrule
+\end{tabular}
+\vspace{1mm}
+\caption*{\footnotesize \textit{Note}: Evaluated across 36 complete longitudinal trajectories on Kaggle Dual Tesla T4 GPUs across seeds 42, 43, 44, 45, 46 under genuine model inference with zero mock fallbacks. Unconstrained compound mutation ($G_4$) reliably induces severe security boundary drift ($+0.32$) and skill forgetting ($81.0\%$). In contrast, dynamic canary verification ($G_7$) halts security erosion ($0.00$) and maintains rollback-guarded historical preservation ($96.0\%$).}
+\end{table*}

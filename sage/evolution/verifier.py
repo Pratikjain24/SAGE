@@ -135,20 +135,102 @@ class EvolutionVerifier:
             "webbrowser",                     # can open URLs
             "zipimport", "zipfile",           # can import from arbitrary .zip files
             "shutil", "http", "httpx",
+            "builtins", "__builtin__",
         }
 
+        # Symbol & alias tables for test harnesses and execution sinks
+        pytest_symbols = {"pytest"}
+        unittest_symbols = {"unittest"}
+        testcase_symbols = {"TestCase"}
+        dangerous_aliases = set(DANGEROUS_CALLS)
+
+        # Pass 1: Build symbol table & propagate aliases across imports and assignments
         for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    mod_root = alias.name.split(".")[0]
+                    target_name = alias.asname or alias.name
+                    if mod_root in DANGEROUS_MODULES:
+                        violations.append(f"Forbidden module import in proposed mutation: {alias.name}")
+                        dangerous_aliases.add(target_name)
+                    elif mod_root == "pytest":
+                        pytest_symbols.add(target_name)
+                    elif mod_root == "unittest":
+                        unittest_symbols.add(target_name)
+            elif isinstance(node, ast.ImportFrom):
+                mod_root = (node.module or "").split(".")[0]
+                if mod_root in DANGEROUS_MODULES:
+                    violations.append(f"Forbidden module import in proposed mutation: {node.module}")
+                elif mod_root == "unittest":
+                    for alias in node.names:
+                        target_name = alias.asname or alias.name
+                        if alias.name == "TestCase":
+                            testcase_symbols.add(target_name)
+                        elif alias.name.startswith("assert"):
+                            testcase_symbols.add(target_name)
+                elif mod_root == "pytest":
+                    for alias in node.names:
+                        pytest_symbols.add(alias.asname or alias.name)
+            elif isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name):
+                        if isinstance(node.value, ast.Name):
+                            if node.value.id in pytest_symbols:
+                                pytest_symbols.add(target.id)
+                            elif node.value.id in unittest_symbols:
+                                unittest_symbols.add(target.id)
+                            elif node.value.id in testcase_symbols:
+                                testcase_symbols.add(target.id)
+                            elif node.value.id in dangerous_aliases:
+                                dangerous_aliases.add(target.id)
+                        elif isinstance(node.value, ast.Attribute):
+                            if isinstance(node.value.value, ast.Name):
+                                if node.value.value.id in unittest_symbols and node.value.attr == "TestCase":
+                                    testcase_symbols.add(target.id)
+
+        # Pass 2: Audit operations, invocations, monkeypatching, and mutations
+        for node in ast.walk(tree):
+            # Check attribute mutation and test harness monkeypatching
+            if isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for target in targets:
+                    if isinstance(target, ast.Attribute):
+                        # e.g. p.main = ... or pytest.skip = ...
+                        if isinstance(target.value, ast.Name) and target.value.id in pytest_symbols:
+                            violations.append(f"Forbidden test harness tampering: monkeypatching {target.value.id}.{target.attr}")
+                        # e.g. tc.assertTrue = ... or TestCase.assertEqual = ...
+                        elif isinstance(target.value, ast.Name) and target.value.id in testcase_symbols:
+                            violations.append(f"Forbidden test assertion monkeypatching: {target.value.id}.{target.attr}")
+                        elif target.attr.startswith("assert") or target.attr in {"main", "skip"}:
+                            violations.append(f"Forbidden test assertion monkeypatching: .{target.attr} = ...")
+                    elif isinstance(target, ast.Subscript):
+                        # sys.modules['pytest'] = ...
+                        if isinstance(target.value, ast.Attribute) and target.value.attr == "modules":
+                            key = self._resolve_ast_string_expr(target.slice) if hasattr(target, "slice") else None
+                            if key in {"pytest", "unittest"}:
+                                violations.append(f"Forbidden test harness suppression via sys.modules['{key}']")
+
             if isinstance(node, ast.Call):
                 if isinstance(node.func, ast.Name):
-                    if node.func.id in DANGEROUS_CALLS:
+                    if node.func.id in dangerous_aliases or node.func.id in DANGEROUS_CALLS:
                         violations.append(f"Forbidden dynamic execution call: {node.func.id}()")
+                    elif node.func.id == "__import__":
+                        mod_name = None
+                        if len(node.args) >= 1:
+                            mod_name = self._resolve_ast_string_expr(node.args[0])
+                        if mod_name and (mod_name in DANGEROUS_MODULES or mod_name.split('.')[0] in DANGEROUS_MODULES):
+                            violations.append(f"Forbidden dynamic import: __import__('{mod_name}')")
+                        elif not mod_name and len(node.args) >= 1:
+                            violations.append("Forbidden obfuscated dynamic __import__ invocation")
+                    elif node.func.id == "setattr" and len(node.args) >= 2:
+                        attr_name = self._resolve_ast_string_expr(node.args[1])
+                        obj_name = node.args[0].id if isinstance(node.args[0], ast.Name) else ""
+                        if obj_name in pytest_symbols or obj_name in testcase_symbols or (attr_name and (attr_name.startswith("assert") or attr_name in {"main", "skip"})):
+                            violations.append(f"Forbidden test harness tampering via setattr({obj_name}, '{attr_name}')")
                     elif node.func.id == "getattr":
                         target_method = None
                         if len(node.args) >= 2:
-                            if isinstance(node.args[1], ast.Constant):
-                                target_method = str(node.args[1].value)
-                            elif isinstance(node.args[1], ast.BinOp):
-                                violations.append("Forbidden obfuscated dynamic attribute reflection via getattr(..., <BinOp>)")
+                            target_method = self._resolve_ast_string_expr(node.args[1])
 
                         DANGEROUS_GETATTR_TARGETS = {
                             "system", "popen", "spawn", "exec", "eval", "compile",
@@ -159,6 +241,8 @@ class EvolutionVerifier:
                             violations.append(
                                 f"getattr targeting dangerous method: {target_method}"
                             )
+                        elif not target_method and len(node.args) >= 2:
+                            violations.append("Forbidden obfuscated dynamic attribute reflection via getattr")
                         else:
                             target = ""
                             if hasattr(ast, "unparse") and len(node.args) >= 1:
@@ -305,6 +389,8 @@ class EvolutionVerifier:
     def _audit_ast_security(self, code_str: str) -> List[str]:
         """Extract and audit all Python code blocks or expressions from mutation text."""
         import ast
+        import unicodedata
+        code_str = unicodedata.normalize("NFKC", code_str)
         violations = []
         try:
             tree = ast.parse(code_str)
@@ -341,6 +427,8 @@ class EvolutionVerifier:
         text_corpus = ""
         for k, v in proposed_changes.items():
             text_corpus += f"\n{k}: {str(v)}"
+        import unicodedata
+        text_corpus = unicodedata.normalize("NFKC", text_corpus)
 
         # 1. Forbidden Command/Code check
         forbidden_hits = []

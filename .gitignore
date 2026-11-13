@@ -43,6 +43,7 @@ models/
 
 # Archive files
 *.zip
+!paper/*.zip
 *.tar.gz
 
 # Scratch scripts
@@ -57,3 +58,7 @@ experiments/compliance_drafts/
 
 # Telemetry logs
 experiments/telemetry/
+
+# Nested task git repositories
+tasks/repos/*/.git/
+tasks/repos/*/.git

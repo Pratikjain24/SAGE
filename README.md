@@ -303,6 +303,24 @@ SAGE/
 
 ---
 
+## 📄 Research Paper & Manuscripts
+
+The complete camera-ready manuscripts, PDFs, editable Word documents, LaTeX sources, figures, tables, and extended appendices are available in the [`paper/`](paper/) directory:
+
+| Document | Format | Description |
+|---|---|---|
+| **[`main.pdf`](paper/main.pdf)** | PDF (206 KB) | **Full IEEE Manuscript** (12 sections, all tables, figures, proofs & appendices) |
+| **[`main_ieee6page.pdf`](paper/main_ieee6page.pdf)** | PDF (87 KB) | **Condensed 6-Page IEEE Conference Submission** |
+| **[`SAGE_IEEE_Research_Paper.docx`](paper/SAGE_IEEE_Research_Paper.docx)** | DOCX (1.04 MB) | **Editable Microsoft Word Manuscript** |
+| **[`SAGE_IEEE_Research_Paper.pdf`](paper/SAGE_IEEE_Research_Paper.pdf)** | PDF (1.10 MB) | Compiled PDF version of Word manuscript |
+| **[`SAGE_Overleaf_Upload.zip`](paper/SAGE_Overleaf_Upload.zip)** | ZIP (6.8 MB) | Complete self-contained Overleaf project archive (1-click import) |
+| **[`main.tex`](paper/main.tex)** | LaTeX | Full IEEE LaTeX source with all 4 appendices |
+| **[`archive_neurips_extended_report.tex`](paper/archive_neurips_extended_report.tex)** | LaTeX | Extended technical report with complete Appendices A–J |
+| **[`figures/`](paper/figures/)** | PNG | All 17 high-resolution publication figures |
+| **[`tables/`](paper/tables/)** | LaTeX / JSON | All 34 modular LaTeX tables, statistical test reports, and catalogs |
+
+---
+
 ## 👥 Project Team & Institutional Affiliation
 
 Developed by an engineering research team at **Vishwakarma Institute of Technology (VIT), Pune, India**, under faculty advisory guidance:

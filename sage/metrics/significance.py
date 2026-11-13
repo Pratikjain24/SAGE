@@ -891,8 +891,9 @@ class StatisticalSignificanceAnalyzer:
         ])
         for p in report.pooled_comparisons:
             p_str = format_bootstrap_p(p.p_value_holm, n_bootstraps=report.n_bootstraps, style="inequality", include_symbol=False)
+            sig_label = "**Significant ($p < 0.05$)**" if p.is_significant else "Fail to reject ($p \\ge 0.05$)"
             lines.append(
-                f"| `{p.metric_name}` | {p.mean_a:.3f} | {p.mean_b:.3f} | {p.mean_diff:+.3f} | {p.cohens_d:+.2f} | {p.cliffs_delta:+.2f} | {p_str} | **Significant ($p < 0.05$)** |"
+                f"| `{p.metric_name}` | {p.mean_a:.3f} | {p.mean_b:.3f} | {p.mean_diff:+.3f} | {p.cohens_d:+.2f} | {p.cliffs_delta:+.2f} | {p_str} | {sig_label} |"
             )
 
         return "\n".join(lines)
