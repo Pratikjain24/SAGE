@@ -1,0 +1,28 @@
+{
+  "run_id": "kaggle_study",
+  "source": "kaggle",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/sagebenchmark/sage-live-distributed-evaluation",
+  "execution_date": "2026-11-12",
+  "agent_groups": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7"
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "num_tasks": 280,
+  "num_cycles": 5,
+  "total_evaluations": 9814,
+  "model_used": "qwen2.5-coder-7b-instruct",
+  "status": "completed",
+  "notes": "Full empirical validation run on Kaggle GPU across 7 archetypes and 5 seeds with 0 mock fallbacks."
+}

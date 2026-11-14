@@ -26,7 +26,12 @@ out/
 
 # Database & local scratch
 experiments/dashboard.db
-experiments/runs/
+experiments/runs/*
+!experiments/runs/kaggle_study/
+experiments/runs/kaggle_study/packages/
+experiments/runs/kaggle_study/trajectories/
+experiments/runs/kaggle_study/runs/
+experiments/runs/kaggle_study/archives/
 experiments/manual_runs/
 .evo_state/
 .env
@@ -44,6 +49,8 @@ models/
 # Archive files
 *.zip
 !paper/*.zip
+!experiments/*.zip
+!experiments/runs/kaggle_study/*.zip
 *.tar.gz
 
 # Scratch scripts

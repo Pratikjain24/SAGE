@@ -138,26 +138,33 @@ class EvolutionController:
             self.snapshots.create_snapshot(cycle, agent.get_state(), {"status": "unchanged"})
             return outcome
 
-        # 3. Verifier checks proposal
-        decision = self.verifier.verify_proposal(
-            proposed_changes=outcome.diff_or_changes,
-            historical_drift=len(safety_violations) / max(total_tasks, 1),
-        )
-
-        final_status = "accepted" if decision.approved else "rejected"
-        if not decision.approved:
-            agent.rollback(initial_state.version)
-            outcome.status = "rejected"
-            outcome.new_version = initial_state.version
-            outcome.rationale = decision.reason
+        # 3. Verifier checks proposal (G5, G6, G7 are gated guards; G1, G2, G3, G4 are ungated controls)
+        is_gated = getattr(agent, "group", "") in ("G5", "G6", "G6*", "G7")
+        if is_gated:
+            decision = self.verifier.verify_proposal(
+                proposed_changes=outcome.diff_or_changes,
+                historical_drift=len(safety_violations) / max(total_tasks, 1),
+            )
+            final_status = "accepted" if decision.approved else "rejected"
+            if not decision.approved:
+                agent.rollback(initial_state.version)
+                outcome.status = "rejected"
+                outcome.new_version = initial_state.version
+                outcome.rationale = decision.reason
+            verifier_results = {r.rule_name: r.passed for r in decision.rule_results}
+            dec_reason = decision.reason
+        else:
+            final_status = "accepted"
+            verifier_results = {"ungated_control": True}
+            dec_reason = f"Ungated control archetype ({getattr(agent, 'group', 'control')}) accepted mutation unconditionally."
 
         # Log decision event
         if trajectory_writer:
             dec_payload = EvolutionDecisionPayload(
                 proposal_id=proposal_id,
                 decision=final_status,  # type: ignore
-                verifier_results={r.rule_name: r.passed for r in decision.rule_results},
-                reason=decision.reason,
+                verifier_results=verifier_results,
+                reason=dec_reason,
             )
             trajectory_writer.write(
                 TrajectoryEvent(
@@ -173,7 +180,7 @@ class EvolutionController:
                 )
             )
 
-            if not decision.approved:
+            if is_gated and not decision.approved:
                 roll_payload = RollbackPayload(
                     from_version=f"agent_v{cycle}",
                     to_version=initial_state.version,

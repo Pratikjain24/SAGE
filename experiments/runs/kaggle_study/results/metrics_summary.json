@@ -1,0 +1,154 @@
+{
+  "study_name": "SAGE Live Distributed Empirical Benchmark",
+  "platform": "Kaggle Dual Tesla T4 GPUs (7 Nodes)",
+  "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "model_revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+  "agent_groups": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7"
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "total_trajectory_files": 36,
+  "total_events": 130752,
+  "total_tasks": 9814,
+  "passed_tasks": 5473,
+  "overall_pass_rate": 0.5577,
+  "total_tokens_in": 3898738,
+  "total_tokens_out": 2544226,
+  "mock_fallbacks": 0,
+  "by_agent": {
+    "G1": {
+      "archetype_name": "Static Baseline Control",
+      "total_tasks": 1414,
+      "passed_tasks": 584,
+      "pass_rate": 0.413,
+      "tokens_in": 477816,
+      "tokens_out": 389750,
+      "avg_tokens_per_task": 613.6,
+      "avg_wall_ms": 19512.4,
+      "total_usd": 0.2515,
+      "fallback_calls": 0
+    },
+    "G2": {
+      "archetype_name": "Prompt-Rewriter",
+      "total_tasks": 1400,
+      "passed_tasks": 927,
+      "pass_rate": 0.6621,
+      "tokens_in": 724745,
+      "tokens_out": 359968,
+      "avg_tokens_per_task": 774.8,
+      "avg_wall_ms": 18877.3,
+      "total_usd": 0.2889,
+      "fallback_calls": 0
+    },
+    "G3": {
+      "archetype_name": "Memory Accumulator",
+      "total_tasks": 1400,
+      "passed_tasks": 664,
+      "pass_rate": 0.4743,
+      "tokens_in": 505857,
+      "tokens_out": 363252,
+      "avg_tokens_per_task": 620.8,
+      "avg_wall_ms": 18436.3,
+      "total_usd": 0.2465,
+      "fallback_calls": 0
+    },
+    "G4": {
+      "archetype_name": "Reflection Agent",
+      "total_tasks": 1400,
+      "passed_tasks": 791,
+      "pass_rate": 0.565,
+      "tokens_in": 561165,
+      "tokens_out": 352713,
+      "avg_tokens_per_task": 652.8,
+      "avg_wall_ms": 18030.1,
+      "total_usd": 0.2533,
+      "fallback_calls": 0
+    },
+    "G5": {
+      "archetype_name": "Verified Agent (Static AST Gate)",
+      "total_tasks": 1400,
+      "passed_tasks": 852,
+      "pass_rate": 0.6086,
+      "tokens_in": 544525,
+      "tokens_out": 360668,
+      "avg_tokens_per_task": 646.6,
+      "avg_wall_ms": 18322.2,
+      "total_usd": 0.2532,
+      "fallback_calls": 0
+    },
+    "G6": {
+      "archetype_name": "Oracle Skyline",
+      "total_tasks": 1400,
+      "passed_tasks": 827,
+      "pass_rate": 0.5907,
+      "tokens_in": 540485,
+      "tokens_out": 361013,
+      "avg_tokens_per_task": 643.9,
+      "avg_wall_ms": 18329.2,
+      "total_usd": 0.2525,
+      "fallback_calls": 0
+    },
+    "G7": {
+      "archetype_name": "Proxy Canary Guard (Deployable)",
+      "total_tasks": 1400,
+      "passed_tasks": 828,
+      "pass_rate": 0.5914,
+      "tokens_in": 544145,
+      "tokens_out": 356862,
+      "avg_tokens_per_task": 643.6,
+      "avg_wall_ms": 18207.8,
+      "total_usd": 0.2516,
+      "fallback_calls": 0
+    }
+  },
+  "by_seed": {
+    "42": {
+      "total_tasks": 1974,
+      "passed_tasks": 1100,
+      "pass_rate": 0.5572,
+      "tokens_in": 779690,
+      "tokens_out": 515487
+    },
+    "43": {
+      "total_tasks": 1960,
+      "passed_tasks": 1101,
+      "pass_rate": 0.5617,
+      "tokens_in": 782939,
+      "tokens_out": 511111
+    },
+    "44": {
+      "total_tasks": 1960,
+      "passed_tasks": 1077,
+      "pass_rate": 0.5495,
+      "tokens_in": 787111,
+      "tokens_out": 507307
+    },
+    "45": {
+      "total_tasks": 1960,
+      "passed_tasks": 1113,
+      "pass_rate": 0.5679,
+      "tokens_in": 777539,
+      "tokens_out": 506834
+    },
+    "46": {
+      "total_tasks": 1960,
+      "passed_tasks": 1082,
+      "pass_rate": 0.552,
+      "tokens_in": 771459,
+      "tokens_out": 503487
+    }
+  },
+  "generated_at": "2026-11-12T12:19:41.864984+00:00"
+}

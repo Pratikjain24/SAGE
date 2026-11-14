@@ -1,0 +1,634 @@
+{
+  "blind_trace_f9e3cd665e": {
+    "group": "G1",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_3fe58f75b8": {
+    "group": "G1",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_d88d6228ed": {
+    "group": "G1",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_7ddf0b7787": {
+    "group": "G1",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_695f27862c": {
+    "group": "G1",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_2f73e99e34": {
+    "group": "G1",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_015",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_9369e6089d": {
+    "group": "G1",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_c807617dd4": {
+    "group": "G1",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_93eeeb7dfc": {
+    "group": "G1",
+    "cycle": 4,
+    "seed": 42,
+    "task_id": "task_069",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_42"
+  },
+  "blind_trace_56af029495": {
+    "group": "G1",
+    "cycle": 4,
+    "seed": 43,
+    "task_id": "task_069",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_43"
+  },
+  "blind_trace_a81727d6df": {
+    "group": "G1",
+    "cycle": 4,
+    "seed": 46,
+    "task_id": "task_069",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G1_46"
+  },
+  "blind_trace_4cae8705fb": {
+    "group": "G2",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_42"
+  },
+  "blind_trace_d252c43553": {
+    "group": "G2",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_42"
+  },
+  "blind_trace_a60f7268f9": {
+    "group": "G2",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_024",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_42"
+  },
+  "blind_trace_b70c495fae": {
+    "group": "G2",
+    "cycle": 1,
+    "seed": 43,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_43"
+  },
+  "blind_trace_f6e1633e05": {
+    "group": "G2",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_024",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_42"
+  },
+  "blind_trace_b347efdb84": {
+    "group": "G2",
+    "cycle": 2,
+    "seed": 43,
+    "task_id": "task_020",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_43"
+  },
+  "blind_trace_6b7f70bb2b": {
+    "group": "G2",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_42"
+  },
+  "blind_trace_8a6005e564": {
+    "group": "G2",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_024",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_42"
+  },
+  "blind_trace_4f7a6cbd5d": {
+    "group": "G2",
+    "cycle": 4,
+    "seed": 46,
+    "task_id": "task_069",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_46"
+  },
+  "blind_trace_255b7da9df": {
+    "group": "G2",
+    "cycle": 4,
+    "seed": 43,
+    "task_id": "task_084",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_43"
+  },
+  "blind_trace_245464dbdc": {
+    "group": "G2",
+    "cycle": 4,
+    "seed": 45,
+    "task_id": "task_084",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G2_45"
+  },
+  "blind_trace_f863876ac1": {
+    "group": "G3",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_39df45a731": {
+    "group": "G3",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_015",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_091aa2aa73": {
+    "group": "G3",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_004",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_8cb31418fb": {
+    "group": "G3",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_39ca7e7091": {
+    "group": "G3",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_004",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_dd0b4e1ef5": {
+    "group": "G3",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_c63b006cca": {
+    "group": "G3",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_004",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_7e37df81af": {
+    "group": "G3",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_95aed2c669": {
+    "group": "G3",
+    "cycle": 4,
+    "seed": 42,
+    "task_id": "task_069",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_25f8aa421b": {
+    "group": "G3",
+    "cycle": 4,
+    "seed": 42,
+    "task_id": "task_064",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_56b7bd9947": {
+    "group": "G3",
+    "cycle": 4,
+    "seed": 42,
+    "task_id": "task_074",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G3_42"
+  },
+  "blind_trace_01d94398e3": {
+    "group": "G4",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_42"
+  },
+  "blind_trace_a80f8691a8": {
+    "group": "G4",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_42"
+  },
+  "blind_trace_acc6425d91": {
+    "group": "G4",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_42"
+  },
+  "blind_trace_4794e07d8a": {
+    "group": "G4",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_42"
+  },
+  "blind_trace_fc05de865f": {
+    "group": "G4",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_42"
+  },
+  "blind_trace_e3bafeaf06": {
+    "group": "G4",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_42"
+  },
+  "blind_trace_d22821c49d": {
+    "group": "G4",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_42"
+  },
+  "blind_trace_4aca276ec2": {
+    "group": "G4",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_42"
+  },
+  "blind_trace_fbe05abbf1": {
+    "group": "G4",
+    "cycle": 4,
+    "seed": 43,
+    "task_id": "task_065",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_43"
+  },
+  "blind_trace_38fd68bf7f": {
+    "group": "G4",
+    "cycle": 4,
+    "seed": 43,
+    "task_id": "task_090",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_43"
+  },
+  "blind_trace_a25b58efbd": {
+    "group": "G4",
+    "cycle": 4,
+    "seed": 43,
+    "task_id": "task_095",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G4_43"
+  },
+  "blind_trace_e0b905a826": {
+    "group": "G5",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_9d660b73bd": {
+    "group": "G5",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_b06667c48e": {
+    "group": "G5",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_73da92c8bc": {
+    "group": "G5",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_ea8a951605": {
+    "group": "G5",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_89d6b2653c": {
+    "group": "G5",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_2c51d44b5f": {
+    "group": "G5",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_b7cb844d01": {
+    "group": "G5",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_886837e749": {
+    "group": "G5",
+    "cycle": 4,
+    "seed": 46,
+    "task_id": "task_089",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_46"
+  },
+  "blind_trace_9ad4162741": {
+    "group": "G5",
+    "cycle": 4,
+    "seed": 42,
+    "task_id": "task_064",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_049cc999e0": {
+    "group": "G5",
+    "cycle": 4,
+    "seed": 42,
+    "task_id": "task_065",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G5_42"
+  },
+  "blind_trace_87903dbed4": {
+    "group": "G6",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_64d7c3d422": {
+    "group": "G6",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_c565adeced": {
+    "group": "G6",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_6a7fb87016": {
+    "group": "G6",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_104115a3e5": {
+    "group": "G6",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_8f9a408612": {
+    "group": "G6",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_7d3118432f": {
+    "group": "G6",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_51b2f0d8d1": {
+    "group": "G6",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_020",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_a858479a34": {
+    "group": "G6",
+    "cycle": 4,
+    "seed": 43,
+    "task_id": "task_069",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_43"
+  },
+  "blind_trace_9b3c05d719": {
+    "group": "G6",
+    "cycle": 4,
+    "seed": 42,
+    "task_id": "task_089",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_42"
+  },
+  "blind_trace_ab8a7d3219": {
+    "group": "G6",
+    "cycle": 4,
+    "seed": 43,
+    "task_id": "task_084",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G6_43"
+  },
+  "blind_trace_e50e17229f": {
+    "group": "G7",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_a258be76e8": {
+    "group": "G7",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_8bb68be023": {
+    "group": "G7",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "task_020",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_fca1b6bcfa": {
+    "group": "G7",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_004",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_9e09d95c13": {
+    "group": "G7",
+    "cycle": 1,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_f9677fe336": {
+    "group": "G7",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_009",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_3f8de57158": {
+    "group": "G7",
+    "cycle": 2,
+    "seed": 42,
+    "task_id": "task_014",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_76ab3537f4": {
+    "group": "G7",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_019",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_cfa4b857b1": {
+    "group": "G7",
+    "cycle": 3,
+    "seed": 42,
+    "task_id": "task_024",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  },
+  "blind_trace_4e69eda7c7": {
+    "group": "G7",
+    "cycle": 4,
+    "seed": 43,
+    "task_id": "task_084",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_43"
+  },
+  "blind_trace_f5ce0e9916": {
+    "group": "G7",
+    "cycle": 4,
+    "seed": 44,
+    "task_id": "task_064",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_44"
+  },
+  "blind_trace_bcb6ff9cc1": {
+    "group": "G7",
+    "cycle": 4,
+    "seed": 44,
+    "task_id": "task_074",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_44"
+  },
+  "blind_trace_4ca8cd1a96": {
+    "group": "G7",
+    "cycle": 0,
+    "seed": 42,
+    "task_id": "evolution_cycle_0",
+    "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "original_run_id": "study_live_G7_42"
+  }
+}

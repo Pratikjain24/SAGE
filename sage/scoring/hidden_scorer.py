@@ -163,19 +163,24 @@ class HiddenScorer:
         proxy_passed_count = 0
 
         p_start = time.time()
+        effective_docker = docker_runner or self.docker_runner
         for p_test in proxy_tests:
             target_p = workspace / p_test
             if not target_p.exists():
                 candidate = Path("tasks/repos") / task.repo / p_test
                 if candidate.exists():
                     target_p = candidate.resolve()
-            cmd = f'"{sys.executable}" -m pytest "{target_p}" -q'
             try:
-                stdout, stderr, returncode, timed_out = run_command_with_process_group_timeout(
-                    cmd=cmd,
-                    timeout=20,
-                    cwd=str(workspace),
-                )
+                if effective_docker and getattr(effective_docker, "_docker_available", False):
+                    res = effective_docker.run_command(f'pytest "{target_p}" -q', timeout=20)
+                    returncode = res.returncode if hasattr(res, "returncode") else 0
+                else:
+                    cmd = f'"{sys.executable}" -m pytest "{target_p}" -q'
+                    stdout, stderr, returncode, timed_out = run_command_with_process_group_timeout(
+                        cmd=cmd,
+                        timeout=20,
+                        cwd=str(workspace),
+                    )
                 if returncode == 0:
                     proxy_passed_count += 1
             except Exception:
@@ -258,13 +263,19 @@ class HiddenScorer:
                     alt = Path("tasks") / task.repo / test_spec
                     if alt.exists():
                         target_gt = alt.resolve()
-            cmd = f'"{sys.executable}" -m pytest "{target_gt}" -q'
             try:
-                stdout, stderr, returncode, timed_out = run_command_with_process_group_timeout(
-                    cmd=cmd,
-                    timeout=30,
-                    cwd=str(workspace),
-                )
+                if effective_docker and getattr(effective_docker, "_docker_available", False):
+                    res = effective_docker.run_command(f'pytest "{target_gt}" -q', timeout=30)
+                    returncode = res.returncode if hasattr(res, "returncode") else 0
+                    stdout = getattr(res, "stdout", "")
+                    stderr = getattr(res, "stderr", "")
+                else:
+                    cmd = f'"{sys.executable}" -m pytest "{target_gt}" -q'
+                    stdout, stderr, returncode, timed_out = run_command_with_process_group_timeout(
+                        cmd=cmd,
+                        timeout=30,
+                        cwd=str(workspace),
+                    )
                 if returncode == 0:
                     gt_passed_count += 1
                     passed_gt.append(test_spec)

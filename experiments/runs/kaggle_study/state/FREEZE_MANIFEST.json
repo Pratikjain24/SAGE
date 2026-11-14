@@ -1,0 +1,24 @@
+{
+  "manifest_version": "1.0.0",
+  "group": "G7",
+  "archetype_name": "Proxy Canary Guard",
+  "contributor_id": "P7",
+  "git_commit": "ed52c806402bf6440daceb84de547aa8042262d5",
+  "model_id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "model_revision_sha": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+  "tasks_catalog_sha256": "cae7f49090b87963665a59a619bf06adea485fd6c917ec70585e0da7331a4b7d",
+  "config_sha256": "4fa856b5285778b77864f84b8df9d0551df541fffa686fa3bbc74ab670973ba2",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "cross_check_seeds": [
+    42,
+    43
+  ],
+  "cycles": 5,
+  "timestamp_utc": "2026-11-11 04:15:19 UTC"
+}

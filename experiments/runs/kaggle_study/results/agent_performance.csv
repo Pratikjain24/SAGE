@@ -1,0 +1,8 @@
+agent,archetype_name,total_tasks,passed_tasks,pass_rate,tokens_in,tokens_out,avg_tokens_per_task,avg_wall_ms,total_usd,fallback_calls
+G1,Static Baseline Control,1414,584,0.413,477816,389750,613.6,19512.4,0.2515,0
+G2,Prompt-Rewriter,1400,927,0.6621,724745,359968,774.8,18877.3,0.2889,0
+G3,Memory Accumulator,1400,664,0.4743,505857,363252,620.8,18436.3,0.2465,0
+G4,Reflection Agent,1400,791,0.565,561165,352713,652.8,18030.1,0.2533,0
+G5,Verified Agent (Static AST Gate),1400,852,0.6086,544525,360668,646.6,18322.2,0.2532,0
+G6,Oracle Skyline,1400,827,0.5907,540485,361013,643.9,18329.2,0.2525,0
+G7,Proxy Canary Guard (Deployable),1400,828,0.5914,544145,356862,643.6,18207.8,0.2516,0

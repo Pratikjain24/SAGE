@@ -1,0 +1,861 @@
+{
+  "overall_valid": true,
+  "total_submissions": 7,
+  "submissions": [
+    {
+      "submission_path": "C:\\Users\\kruti\\Downloads\\EvoEval\\EvoEval\\experiments\\runs\\kaggle_study\\packages\\G1_seeds42-46",
+      "contributor_id": "P1",
+      "group": "G1",
+      "seeds_claimed": [],
+      "notes_found": true,
+      "runs_found": 5,
+      "state_markers_found": 0,
+      "runs": [
+        {
+          "run_id": "study_live_G1_42",
+          "group": "G1",
+          "seed": 42,
+          "total_events": 4197,
+          "total_tasks": 280,
+          "passed_tasks": 114,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 94625,
+          "total_tokens_out": 78336,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "4f3bfa8d04754095eefb66249bee5433f1811839a1dcd5ffec72c72658bc2c73",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G1_43",
+          "group": "G1",
+          "seed": 43,
+          "total_events": 4199,
+          "total_tasks": 280,
+          "passed_tasks": 119,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 94625,
+          "total_tokens_out": 77285,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "c3103e3b5543beaec4b7797ae6f99ad9a4a73c23452a442cde167bfe6e88f189",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G1_44",
+          "group": "G1",
+          "seed": 44,
+          "total_events": 4201,
+          "total_tasks": 280,
+          "passed_tasks": 112,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 94625,
+          "total_tokens_out": 76365,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "d0ff723e27396158443ddc4d162c3248fd794d6863e615d5ef861ab509b4f1a4",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G1_45",
+          "group": "G1",
+          "seed": 45,
+          "total_events": 4199,
+          "total_tasks": 280,
+          "passed_tasks": 109,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 94625,
+          "total_tokens_out": 77171,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "05657232f157d0596611932807bc0e3697ea18431db52dcae109d1af4d07d540",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G1_46",
+          "group": "G1",
+          "seed": 46,
+          "total_events": 4203,
+          "total_tasks": 280,
+          "passed_tasks": 123,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 94625,
+          "total_tokens_out": 77441,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "b80b448214b76bb7901904a66f0c606b88402fdb40dfc8092d1782f5c61f071b",
+          "is_valid": true,
+          "errors": []
+        }
+      ],
+      "is_valid": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "submission_path": "C:\\Users\\kruti\\Downloads\\EvoEval\\EvoEval\\experiments\\runs\\kaggle_study\\packages\\G2_seeds42-46",
+      "contributor_id": "P2",
+      "group": "G2",
+      "seeds_claimed": [],
+      "notes_found": true,
+      "runs_found": 5,
+      "state_markers_found": 0,
+      "runs": [
+        {
+          "run_id": "study_live_G2_42",
+          "group": "G2",
+          "seed": 42,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 186,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 140221,
+          "total_tokens_out": 72590,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "4630ee0d7cbbe10543dfe1c12b70b145157da81d27326519726db25f6a5448ab",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G2_43",
+          "group": "G2",
+          "seed": 43,
+          "total_events": 3650,
+          "total_tasks": 280,
+          "passed_tasks": 190,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 140401,
+          "total_tokens_out": 72198,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "343c0b9c2f621868da7647d7481ebe208e7fa6026bd0997dc5df118c86c5f33c",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G2_44",
+          "group": "G2",
+          "seed": 44,
+          "total_events": 3650,
+          "total_tasks": 280,
+          "passed_tasks": 180,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 157641,
+          "total_tokens_out": 71610,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "ca2317c2aca49a4bd2bdd574dfa829142550bfa55a56cc2ec87ae58c3351bf79",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G2_45",
+          "group": "G2",
+          "seed": 45,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 196,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 147461,
+          "total_tokens_out": 71179,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "0d1d9d5a6d4691fcd3d18db4ec728ce3c76ad4a2c4c1e2cfc04444c037791750",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G2_46",
+          "group": "G2",
+          "seed": 46,
+          "total_events": 3650,
+          "total_tasks": 280,
+          "passed_tasks": 175,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 139021,
+          "total_tokens_out": 72391,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "927104deae03c5365b472fc77fbd0c12349d3effe4be0acfc4640b24ff1c07a2",
+          "is_valid": true,
+          "errors": []
+        }
+      ],
+      "is_valid": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "submission_path": "C:\\Users\\kruti\\Downloads\\EvoEval\\EvoEval\\experiments\\runs\\kaggle_study\\packages\\G3_seeds42-46",
+      "contributor_id": "P3",
+      "group": "G3",
+      "seeds_claimed": [],
+      "notes_found": true,
+      "runs_found": 5,
+      "state_markers_found": 0,
+      "runs": [
+        {
+          "run_id": "study_live_G3_42",
+          "group": "G3",
+          "seed": 42,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 123,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 100629,
+          "total_tokens_out": 73414,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "031227b664b2f8ff8620ea0af5a996d1d2114660f8574d7f7e94b9a5f4cf4ce8",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G3_43",
+          "group": "G3",
+          "seed": 43,
+          "total_events": 3651,
+          "total_tasks": 280,
+          "passed_tasks": 135,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 101409,
+          "total_tokens_out": 72431,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "26157df4614aa31e064b278752d15b8af866ce2e8f174c2e035d5e0f5c32b10b",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G3_44",
+          "group": "G3",
+          "seed": 44,
+          "total_events": 3653,
+          "total_tasks": 280,
+          "passed_tasks": 133,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 101541,
+          "total_tokens_out": 72818,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "a4d7d092fedaea9708cd33cbbc27d7a71a70b4ebe9a5507250452dc36779cfc7",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G3_45",
+          "group": "G3",
+          "seed": 45,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 139,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 100909,
+          "total_tokens_out": 73401,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "e9ddfb3079296c04e8055c24eac50845600c2a80b8b302432180135fa9b4b837",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G3_46",
+          "group": "G3",
+          "seed": 46,
+          "total_events": 3651,
+          "total_tasks": 280,
+          "passed_tasks": 134,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 101369,
+          "total_tokens_out": 71188,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "0995491ab0e1205494aaa683bb20e1153cd8e3e26b038338018d129802675320",
+          "is_valid": true,
+          "errors": []
+        }
+      ],
+      "is_valid": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "submission_path": "C:\\Users\\kruti\\Downloads\\EvoEval\\EvoEval\\experiments\\runs\\kaggle_study\\packages\\G4_seeds42-46",
+      "contributor_id": "P4",
+      "group": "G4",
+      "seeds_claimed": [],
+      "notes_found": true,
+      "runs_found": 5,
+      "state_markers_found": 0,
+      "runs": [
+        {
+          "run_id": "study_live_G4_42",
+          "group": "G4",
+          "seed": 42,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 152,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 114161,
+          "total_tokens_out": 69931,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "194d71959324c2bdead84d5c5c4cb62006078cdb09186c14b30b281f202a8496",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G4_43",
+          "group": "G4",
+          "seed": 43,
+          "total_events": 3651,
+          "total_tasks": 280,
+          "passed_tasks": 170,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 122081,
+          "total_tokens_out": 71516,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "09050f3e25558980f5ba2733e3ca27ada4a3fd07435a180a3e2d57acb4892d73",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G4_44",
+          "group": "G4",
+          "seed": 44,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 161,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 108861,
+          "total_tokens_out": 72692,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "63ee0bfa5eda984c9f2724ec32f0fc277725ec64f0170a888034ff8cd5c41161",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G4_45",
+          "group": "G4",
+          "seed": 45,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 164,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 107161,
+          "total_tokens_out": 68985,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "15510f04d6886be8fa029ba806cce633a8fb7767fac3a37894f20e967c55985b",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G4_46",
+          "group": "G4",
+          "seed": 46,
+          "total_events": 3654,
+          "total_tasks": 280,
+          "passed_tasks": 144,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 108901,
+          "total_tokens_out": 69589,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "d79329e1ace228bab212c624b3629bbd5757bbb98f04b125eba18b5c78780a49",
+          "is_valid": true,
+          "errors": []
+        }
+      ],
+      "is_valid": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "submission_path": "C:\\Users\\kruti\\Downloads\\EvoEval\\EvoEval\\experiments\\runs\\kaggle_study\\packages\\G5_seeds42-46",
+      "contributor_id": "P5",
+      "group": "G5",
+      "seeds_claimed": [],
+      "notes_found": true,
+      "runs_found": 5,
+      "state_markers_found": 0,
+      "runs": [
+        {
+          "run_id": "study_live_G5_42",
+          "group": "G5",
+          "seed": 42,
+          "total_events": 3651,
+          "total_tasks": 280,
+          "passed_tasks": 184,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 105181,
+          "total_tokens_out": 72980,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "89e1360ef0984ab155ec950d37f9c11802cf017400af21e3db106d9cd4af4a2c",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G5_43",
+          "group": "G5",
+          "seed": 43,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 165,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 109441,
+          "total_tokens_out": 72345,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "9c0f987c45787ee4ef86c2d48d2ed24bab87f27c1582f19a4a070a5cfacd6d6e",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G5_44",
+          "group": "G5",
+          "seed": 44,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 167,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 110581,
+          "total_tokens_out": 71832,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "68977efdd4ed8be0fda5caa13639c69a10d246535a04b05d86d9c3f18eee39da",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G5_45",
+          "group": "G5",
+          "seed": 45,
+          "total_events": 3648,
+          "total_tasks": 280,
+          "passed_tasks": 171,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 109441,
+          "total_tokens_out": 73250,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "3a6826dae68de4dae86c161a4e1e1e0585ecc7e0ebf1dba19fc6395d66e3ca36",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G5_46",
+          "group": "G5",
+          "seed": 46,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 165,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 109881,
+          "total_tokens_out": 70261,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "e2fe7ca19feaabc51d12bf4404a5509a05af29793f3ebbac59e49a6d1fe7b777",
+          "is_valid": true,
+          "errors": []
+        }
+      ],
+      "is_valid": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "submission_path": "C:\\Users\\kruti\\Downloads\\EvoEval\\EvoEval\\experiments\\runs\\kaggle_study\\packages\\G6_seeds42-46",
+      "contributor_id": "P6",
+      "group": "G6",
+      "seeds_claimed": [],
+      "notes_found": true,
+      "runs_found": 5,
+      "state_markers_found": 0,
+      "runs": [
+        {
+          "run_id": "study_live_G6_42",
+          "group": "G6",
+          "seed": 42,
+          "total_events": 3650,
+          "total_tasks": 280,
+          "passed_tasks": 165,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 106661,
+          "total_tokens_out": 72383,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "aac831ab0c4bb941cfa44dc2072179de2fa3765b7873de3b20507b355098d72f",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G6_43",
+          "group": "G6",
+          "seed": 43,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 155,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 107821,
+          "total_tokens_out": 74311,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "7e367bfa4c64294fde2db6dc4f14a4d190ba05cf543e233ec41692e24e025e98",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G6_44",
+          "group": "G6",
+          "seed": 44,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 170,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 106861,
+          "total_tokens_out": 71768,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "d04fa1ae16110dc507cbab4f768a1f3a392b998857697296d9eb14223bfa86ad",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G6_45",
+          "group": "G6",
+          "seed": 45,
+          "total_events": 3653,
+          "total_tasks": 280,
+          "passed_tasks": 169,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 111181,
+          "total_tokens_out": 72036,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "d33ffb1faeaef441e453ad9538cd4fd4b5f5244463ed523180fe446a0831f711",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G6_46",
+          "group": "G6",
+          "seed": 46,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 168,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 107961,
+          "total_tokens_out": 70515,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "5c0b4e829135c4419b48f6dce260235832ba1f2ad2b87886769d00a5013739d7",
+          "is_valid": true,
+          "errors": []
+        }
+      ],
+      "is_valid": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "submission_path": "C:\\Users\\kruti\\Downloads\\EvoEval\\EvoEval\\experiments\\runs\\kaggle_study\\packages\\G7_seeds42-46",
+      "contributor_id": "P7",
+      "group": "G7",
+      "seeds_claimed": [],
+      "notes_found": true,
+      "runs_found": 6,
+      "state_markers_found": 0,
+      "runs": [
+        {
+          "run_id": "study_live_G1check_42",
+          "group": "G1",
+          "seed": 42,
+          "total_events": 211,
+          "total_tasks": 14,
+          "passed_tasks": 7,
+          "real_calls": 14,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 4691,
+          "total_tokens_out": 3152,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": false,
+          "manifest_error": null,
+          "trajectory_sha256": "5300fdad11e2ab176b5221155c95862153e558c236a2c6c912c8ac583d44c47d",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G7_42",
+          "group": "G7",
+          "seed": 42,
+          "total_events": 3650,
+          "total_tasks": 280,
+          "passed_tasks": 169,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 113521,
+          "total_tokens_out": 72701,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "b94eb33e55ffeb4cb88993eebe8c26aaf30a773cd2e0a8b1a5798541dec106e5",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G7_43",
+          "group": "G7",
+          "seed": 43,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 167,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 107161,
+          "total_tokens_out": 71025,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "da6ce1161832f09d75d6f2c2d4b618a2a988089bb74b390e1e15f1821debf198",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G7_44",
+          "group": "G7",
+          "seed": 44,
+          "total_events": 3652,
+          "total_tasks": 280,
+          "passed_tasks": 154,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 107001,
+          "total_tokens_out": 70222,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "5c6c6ff817c14343d19030fa9e2aac371851c27d398b73b3941444e85e48c436",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G7_45",
+          "group": "G7",
+          "seed": 45,
+          "total_events": 3650,
+          "total_tasks": 280,
+          "passed_tasks": 165,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 106761,
+          "total_tokens_out": 70812,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "4ae977cb76b0a7955e7cf053e73d0b0715dd7d05f9ca0849f4cf73bf3834bdb3",
+          "is_valid": true,
+          "errors": []
+        },
+        {
+          "run_id": "study_live_G7_46",
+          "group": "G7",
+          "seed": 46,
+          "total_events": 3650,
+          "total_tasks": 280,
+          "passed_tasks": 173,
+          "real_calls": 280,
+          "fallback_calls": 0,
+          "zero_token_calls": 0,
+          "total_tokens_in": 109701,
+          "total_tokens_out": 72102,
+          "models_seen": [
+            "Qwen/Qwen2.5-Coder-7B-Instruct"
+          ],
+          "manifest_verified": true,
+          "manifest_error": null,
+          "trajectory_sha256": "48796989dc367c5362f66ed4b0475543e1e931904a2b312214bb821344e082f9",
+          "is_valid": true,
+          "errors": []
+        }
+      ],
+      "is_valid": true,
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "audited_at": "2026-11-12T12:11:46.235341+00:00"
+}

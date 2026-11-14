@@ -128,6 +128,12 @@ The study encompassed **9,800 canonical task evaluations** (60 train tasks, 40 h
   <img src="docs/assets/fig_live_pareto_frontier.png" alt="Pareto Frontier Tradeoff" width="48%" />
 </p>
 
+> [!NOTE]
+> ### 📦 P1–P7 Distributed Study Package Download
+> The complete empirical dataset from the 7 Kaggle Dual Tesla T4 contributor nodes (P1–P7, 9,814 task episodes, 130,752 events across 36 runs with zero mock fallbacks) is available as an all-in-one archive:
+> - **Complete Study ZIP**: [`experiments/SAGE_P1_P7_Kaggle_Study.zip`](experiments/SAGE_P1_P7_Kaggle_Study.zip) (5.05 MB)
+> - **Extracted Directory**: [`experiments/runs/kaggle_study/`](experiments/runs/kaggle_study/) (Manifests, per-seed results CSV/JSON, LaTeX tables, figures, human audit labels, and environment records)
+
 ---
 
 ## 🖥️ Interactive Full-Stack Observatory

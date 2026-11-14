@@ -1,0 +1,659 @@
+{
+  "total_runs": 36,
+  "total_events": 130752,
+  "total_tasks": 9814,
+  "passed_tasks": 5473,
+  "overall_solve_rate": 0.5577,
+  "total_tokens_in": 3898738,
+  "total_tokens_out": 2544226,
+  "runs": {
+    "study_live_G1_42": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G1_42",
+      "raw_sha256": "4f3bfa8d04754095eefb66249bee5433f1811839a1dcd5ffec72c72658bc2c73",
+      "deterministic_sha256": "4b451883676de122dee469b601e60f9e3195920f962dc89a51f63455b03dfff4",
+      "total_events": 4197,
+      "total_tasks": 280,
+      "passed_tasks": 114,
+      "pass_rate": 0.4071,
+      "fallback_calls": 0,
+      "tokens_in": 94625,
+      "tokens_out": 78336,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:38.432373+00:00",
+      "run_path": "runs\\study_live_G1_42"
+    },
+    "study_live_G1_43": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G1_43",
+      "raw_sha256": "c3103e3b5543beaec4b7797ae6f99ad9a4a73c23452a442cde167bfe6e88f189",
+      "deterministic_sha256": "9e52c285ce5f7ad157ca11be056fe081a060a6efd94e2d68d1411d3cbb56ab93",
+      "total_events": 4199,
+      "total_tasks": 280,
+      "passed_tasks": 119,
+      "pass_rate": 0.425,
+      "fallback_calls": 0,
+      "tokens_in": 94625,
+      "tokens_out": 77285,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:38.612050+00:00",
+      "run_path": "runs\\study_live_G1_43"
+    },
+    "study_live_G1_44": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G1_44",
+      "raw_sha256": "d0ff723e27396158443ddc4d162c3248fd794d6863e615d5ef861ab509b4f1a4",
+      "deterministic_sha256": "951ddb73219714e61a17d131be6393fd2c27a8d8de96385e85bf0058d00a1a41",
+      "total_events": 4201,
+      "total_tasks": 280,
+      "passed_tasks": 112,
+      "pass_rate": 0.4,
+      "fallback_calls": 0,
+      "tokens_in": 94625,
+      "tokens_out": 76365,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:38.758755+00:00",
+      "run_path": "runs\\study_live_G1_44"
+    },
+    "study_live_G1_45": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G1_45",
+      "raw_sha256": "05657232f157d0596611932807bc0e3697ea18431db52dcae109d1af4d07d540",
+      "deterministic_sha256": "2a5fbacd57f76de112b1eb153c1a795a7807beeeddc7fcdd17c311985b0b59f3",
+      "total_events": 4199,
+      "total_tasks": 280,
+      "passed_tasks": 109,
+      "pass_rate": 0.3893,
+      "fallback_calls": 0,
+      "tokens_in": 94625,
+      "tokens_out": 77171,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:39.023130+00:00",
+      "run_path": "runs\\study_live_G1_45"
+    },
+    "study_live_G1_46": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G1_46",
+      "raw_sha256": "b80b448214b76bb7901904a66f0c606b88402fdb40dfc8092d1782f5c61f071b",
+      "deterministic_sha256": "bbe6db77d5a564e7eec67be5f9e8181c8ce8653ed78014759e5425312d246ef0",
+      "total_events": 4203,
+      "total_tasks": 280,
+      "passed_tasks": 123,
+      "pass_rate": 0.4393,
+      "fallback_calls": 0,
+      "tokens_in": 94625,
+      "tokens_out": 77441,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:39.383658+00:00",
+      "run_path": "runs\\study_live_G1_46"
+    },
+    "study_live_G2_42": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G2_42",
+      "raw_sha256": "4630ee0d7cbbe10543dfe1c12b70b145157da81d27326519726db25f6a5448ab",
+      "deterministic_sha256": "fb9f7f8e5e785f3d6301c7672a6d6cdc75ce8fae9f42d645befd1f9035f6a1fe",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 186,
+      "pass_rate": 0.6643,
+      "fallback_calls": 0,
+      "tokens_in": 140221,
+      "tokens_out": 72590,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:39.729082+00:00",
+      "run_path": "runs\\study_live_G2_42"
+    },
+    "study_live_G2_43": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G2_43",
+      "raw_sha256": "343c0b9c2f621868da7647d7481ebe208e7fa6026bd0997dc5df118c86c5f33c",
+      "deterministic_sha256": "9fc1233dab63e112052629ac937407fb9a60be9fc5f048fdcb56be16e314fabb",
+      "total_events": 3650,
+      "total_tasks": 280,
+      "passed_tasks": 190,
+      "pass_rate": 0.6786,
+      "fallback_calls": 0,
+      "tokens_in": 140401,
+      "tokens_out": 72198,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:39.940438+00:00",
+      "run_path": "runs\\study_live_G2_43"
+    },
+    "study_live_G2_44": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G2_44",
+      "raw_sha256": "ca2317c2aca49a4bd2bdd574dfa829142550bfa55a56cc2ec87ae58c3351bf79",
+      "deterministic_sha256": "8457b72644c860cbc3f5f5dc58e3cc3f3159211ff5cfddd96f5dc49b99b3dbd7",
+      "total_events": 3650,
+      "total_tasks": 280,
+      "passed_tasks": 180,
+      "pass_rate": 0.6429,
+      "fallback_calls": 0,
+      "tokens_in": 157641,
+      "tokens_out": 71610,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:40.087294+00:00",
+      "run_path": "runs\\study_live_G2_44"
+    },
+    "study_live_G2_45": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G2_45",
+      "raw_sha256": "0d1d9d5a6d4691fcd3d18db4ec728ce3c76ad4a2c4c1e2cfc04444c037791750",
+      "deterministic_sha256": "4fa65be333e76a90fdb7c6b8c6e9e3f7a45126931ba6e5f2221bd89f32b7283d",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 196,
+      "pass_rate": 0.7,
+      "fallback_calls": 0,
+      "tokens_in": 147461,
+      "tokens_out": 71179,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:40.251810+00:00",
+      "run_path": "runs\\study_live_G2_45"
+    },
+    "study_live_G2_46": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G2_46",
+      "raw_sha256": "927104deae03c5365b472fc77fbd0c12349d3effe4be0acfc4640b24ff1c07a2",
+      "deterministic_sha256": "a3001266c1356d1ca1cf755eab3b397fa785f2c046b863b3b522d53222c32855",
+      "total_events": 3650,
+      "total_tasks": 280,
+      "passed_tasks": 175,
+      "pass_rate": 0.625,
+      "fallback_calls": 0,
+      "tokens_in": 139021,
+      "tokens_out": 72391,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:40.458372+00:00",
+      "run_path": "runs\\study_live_G2_46"
+    },
+    "study_live_G3_42": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G3_42",
+      "raw_sha256": "031227b664b2f8ff8620ea0af5a996d1d2114660f8574d7f7e94b9a5f4cf4ce8",
+      "deterministic_sha256": "18963ee40ed0aa1132e32aac7be2f93ded81daa2fb636fa562ab48115bbd299e",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 123,
+      "pass_rate": 0.4393,
+      "fallback_calls": 0,
+      "tokens_in": 100629,
+      "tokens_out": 73414,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:40.753551+00:00",
+      "run_path": "runs\\study_live_G3_42"
+    },
+    "study_live_G3_43": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G3_43",
+      "raw_sha256": "26157df4614aa31e064b278752d15b8af866ce2e8f174c2e035d5e0f5c32b10b",
+      "deterministic_sha256": "dbe2d2682af3878b99349ab16734a20b059beb0abbd21d86bf98c003edeb29b2",
+      "total_events": 3651,
+      "total_tasks": 280,
+      "passed_tasks": 135,
+      "pass_rate": 0.4821,
+      "fallback_calls": 0,
+      "tokens_in": 101409,
+      "tokens_out": 72431,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:40.967507+00:00",
+      "run_path": "runs\\study_live_G3_43"
+    },
+    "study_live_G3_44": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G3_44",
+      "raw_sha256": "a4d7d092fedaea9708cd33cbbc27d7a71a70b4ebe9a5507250452dc36779cfc7",
+      "deterministic_sha256": "789b57999a167b7195860a5ebceac4f872f6529ad600695fbc4db4770c96b7cf",
+      "total_events": 3653,
+      "total_tasks": 280,
+      "passed_tasks": 133,
+      "pass_rate": 0.475,
+      "fallback_calls": 0,
+      "tokens_in": 101541,
+      "tokens_out": 72818,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:41.162909+00:00",
+      "run_path": "runs\\study_live_G3_44"
+    },
+    "study_live_G3_45": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G3_45",
+      "raw_sha256": "e9ddfb3079296c04e8055c24eac50845600c2a80b8b302432180135fa9b4b837",
+      "deterministic_sha256": "b96c9f3464ff17f7af081379ec9787140970c4c7913695c15d01c7c6689f7a54",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 139,
+      "pass_rate": 0.4964,
+      "fallback_calls": 0,
+      "tokens_in": 100909,
+      "tokens_out": 73401,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:41.379253+00:00",
+      "run_path": "runs\\study_live_G3_45"
+    },
+    "study_live_G3_46": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G3_46",
+      "raw_sha256": "0995491ab0e1205494aaa683bb20e1153cd8e3e26b038338018d129802675320",
+      "deterministic_sha256": "22e2d6ee37114c57ea1bc4839c1d3ec8fb5211d6acd1f83d6ac1ffdb9cb99894",
+      "total_events": 3651,
+      "total_tasks": 280,
+      "passed_tasks": 134,
+      "pass_rate": 0.4786,
+      "fallback_calls": 0,
+      "tokens_in": 101369,
+      "tokens_out": 71188,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:41.543056+00:00",
+      "run_path": "runs\\study_live_G3_46"
+    },
+    "study_live_G4_42": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G4_42",
+      "raw_sha256": "194d71959324c2bdead84d5c5c4cb62006078cdb09186c14b30b281f202a8496",
+      "deterministic_sha256": "8b47980b84975d59f9a406f5dfe6779ff0288a71c336774c35b6f6b5023ab82f",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 152,
+      "pass_rate": 0.5429,
+      "fallback_calls": 0,
+      "tokens_in": 114161,
+      "tokens_out": 69931,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:41.725731+00:00",
+      "run_path": "runs\\study_live_G4_42"
+    },
+    "study_live_G4_43": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G4_43",
+      "raw_sha256": "09050f3e25558980f5ba2733e3ca27ada4a3fd07435a180a3e2d57acb4892d73",
+      "deterministic_sha256": "2b55a404ccfd5c7941d742cfefcea2918636887b0f7d7cec3c9601924845a5a8",
+      "total_events": 3651,
+      "total_tasks": 280,
+      "passed_tasks": 170,
+      "pass_rate": 0.6071,
+      "fallback_calls": 0,
+      "tokens_in": 122081,
+      "tokens_out": 71516,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:41.924138+00:00",
+      "run_path": "runs\\study_live_G4_43"
+    },
+    "study_live_G4_44": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G4_44",
+      "raw_sha256": "63ee0bfa5eda984c9f2724ec32f0fc277725ec64f0170a888034ff8cd5c41161",
+      "deterministic_sha256": "b46b1636d2bbf9f7b37470569a35207fccd6e480ec129d2dd2db41581abb4abe",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 161,
+      "pass_rate": 0.575,
+      "fallback_calls": 0,
+      "tokens_in": 108861,
+      "tokens_out": 72692,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:42.143200+00:00",
+      "run_path": "runs\\study_live_G4_44"
+    },
+    "study_live_G4_45": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G4_45",
+      "raw_sha256": "15510f04d6886be8fa029ba806cce633a8fb7767fac3a37894f20e967c55985b",
+      "deterministic_sha256": "e769fbc86e62c8081aa1f8fd8b3f4755a64d1157d654e0621ace6b37b51ad3eb",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 164,
+      "pass_rate": 0.5857,
+      "fallback_calls": 0,
+      "tokens_in": 107161,
+      "tokens_out": 68985,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:42.316457+00:00",
+      "run_path": "runs\\study_live_G4_45"
+    },
+    "study_live_G4_46": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G4_46",
+      "raw_sha256": "d79329e1ace228bab212c624b3629bbd5757bbb98f04b125eba18b5c78780a49",
+      "deterministic_sha256": "5db95087dd46defd371a5e3b523f81befe14dae2f3454708580d0926933091a3",
+      "total_events": 3654,
+      "total_tasks": 280,
+      "passed_tasks": 144,
+      "pass_rate": 0.5143,
+      "fallback_calls": 0,
+      "tokens_in": 108901,
+      "tokens_out": 69589,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:42.496446+00:00",
+      "run_path": "runs\\study_live_G4_46"
+    },
+    "study_live_G5_42": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G5_42",
+      "raw_sha256": "89e1360ef0984ab155ec950d37f9c11802cf017400af21e3db106d9cd4af4a2c",
+      "deterministic_sha256": "f03f9698c85f47df5a9374d975feed261a06a5fadb5c14321627e5bbe816f391",
+      "total_events": 3651,
+      "total_tasks": 280,
+      "passed_tasks": 184,
+      "pass_rate": 0.6571,
+      "fallback_calls": 0,
+      "tokens_in": 105181,
+      "tokens_out": 72980,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:42.725435+00:00",
+      "run_path": "runs\\study_live_G5_42"
+    },
+    "study_live_G5_43": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G5_43",
+      "raw_sha256": "9c0f987c45787ee4ef86c2d48d2ed24bab87f27c1582f19a4a070a5cfacd6d6e",
+      "deterministic_sha256": "ed14990120cda29d2b8989d1da1ab8d4ef715122e5fd6235191d4f0c40f7b772",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 165,
+      "pass_rate": 0.5893,
+      "fallback_calls": 0,
+      "tokens_in": 109441,
+      "tokens_out": 72345,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:42.882763+00:00",
+      "run_path": "runs\\study_live_G5_43"
+    },
+    "study_live_G5_44": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G5_44",
+      "raw_sha256": "68977efdd4ed8be0fda5caa13639c69a10d246535a04b05d86d9c3f18eee39da",
+      "deterministic_sha256": "49d28a91543863a52fc6594c154dd8521988f669aa0f2e056718a4e1d8b28979",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 167,
+      "pass_rate": 0.5964,
+      "fallback_calls": 0,
+      "tokens_in": 110581,
+      "tokens_out": 71832,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:43.032681+00:00",
+      "run_path": "runs\\study_live_G5_44"
+    },
+    "study_live_G5_45": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G5_45",
+      "raw_sha256": "3a6826dae68de4dae86c161a4e1e1e0585ecc7e0ebf1dba19fc6395d66e3ca36",
+      "deterministic_sha256": "1f536184751919bbe950801a3e0ef017496c8d2f24369a2e76357024a80ddaf2",
+      "total_events": 3648,
+      "total_tasks": 280,
+      "passed_tasks": 171,
+      "pass_rate": 0.6107,
+      "fallback_calls": 0,
+      "tokens_in": 109441,
+      "tokens_out": 73250,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:43.171143+00:00",
+      "run_path": "runs\\study_live_G5_45"
+    },
+    "study_live_G5_46": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G5_46",
+      "raw_sha256": "e2fe7ca19feaabc51d12bf4404a5509a05af29793f3ebbac59e49a6d1fe7b777",
+      "deterministic_sha256": "ab9bca91a03b46343a033ca4af67a4a11d8b242fb9cbef68287c2d5bdf7202ec",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 165,
+      "pass_rate": 0.5893,
+      "fallback_calls": 0,
+      "tokens_in": 109881,
+      "tokens_out": 70261,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:43.350364+00:00",
+      "run_path": "runs\\study_live_G5_46"
+    },
+    "study_live_G6_42": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G6_42",
+      "raw_sha256": "aac831ab0c4bb941cfa44dc2072179de2fa3765b7873de3b20507b355098d72f",
+      "deterministic_sha256": "b3d911a65be795bb8a3d61f230ebcda16fcc853f91011729e368787adbc00da3",
+      "total_events": 3650,
+      "total_tasks": 280,
+      "passed_tasks": 165,
+      "pass_rate": 0.5893,
+      "fallback_calls": 0,
+      "tokens_in": 106661,
+      "tokens_out": 72383,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:43.528095+00:00",
+      "run_path": "runs\\study_live_G6_42"
+    },
+    "study_live_G6_43": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G6_43",
+      "raw_sha256": "7e367bfa4c64294fde2db6dc4f14a4d190ba05cf543e233ec41692e24e025e98",
+      "deterministic_sha256": "b8a757ef1a05799bfc248d680a3afa95e353bb457588540ca91c872a28ffcb22",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 155,
+      "pass_rate": 0.5536,
+      "fallback_calls": 0,
+      "tokens_in": 107821,
+      "tokens_out": 74311,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:43.712747+00:00",
+      "run_path": "runs\\study_live_G6_43"
+    },
+    "study_live_G6_44": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G6_44",
+      "raw_sha256": "d04fa1ae16110dc507cbab4f768a1f3a392b998857697296d9eb14223bfa86ad",
+      "deterministic_sha256": "130356e13f9d5811a9411c536d62981a56050e22aad4ca975659f8a9f3113bc1",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 170,
+      "pass_rate": 0.6071,
+      "fallback_calls": 0,
+      "tokens_in": 106861,
+      "tokens_out": 71768,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:43.906043+00:00",
+      "run_path": "runs\\study_live_G6_44"
+    },
+    "study_live_G6_45": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G6_45",
+      "raw_sha256": "d33ffb1faeaef441e453ad9538cd4fd4b5f5244463ed523180fe446a0831f711",
+      "deterministic_sha256": "b83b5ad745644c7e0ab8ef39a0adac7e84ec9d5396215c0074990176fd02c699",
+      "total_events": 3653,
+      "total_tasks": 280,
+      "passed_tasks": 169,
+      "pass_rate": 0.6036,
+      "fallback_calls": 0,
+      "tokens_in": 111181,
+      "tokens_out": 72036,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:44.073741+00:00",
+      "run_path": "runs\\study_live_G6_45"
+    },
+    "study_live_G6_46": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G6_46",
+      "raw_sha256": "5c0b4e829135c4419b48f6dce260235832ba1f2ad2b87886769d00a5013739d7",
+      "deterministic_sha256": "0acfb0f178340bc16d7856eb69a00177a90390fc3011fe4bed3f8f374f98efcd",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 168,
+      "pass_rate": 0.6,
+      "fallback_calls": 0,
+      "tokens_in": 107961,
+      "tokens_out": 70515,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:44.268885+00:00",
+      "run_path": "runs\\study_live_G6_46"
+    },
+    "study_live_G1check_42": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G1check_42",
+      "raw_sha256": "5300fdad11e2ab176b5221155c95862153e558c236a2c6c912c8ac583d44c47d",
+      "deterministic_sha256": "3afe511bc8bf727538588554da719d45e1dcd42df3c6537f2b476ca653a61851",
+      "total_events": 211,
+      "total_tasks": 14,
+      "passed_tasks": 7,
+      "pass_rate": 0.5,
+      "fallback_calls": 0,
+      "tokens_in": 4691,
+      "tokens_out": 3152,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:44.325227+00:00",
+      "run_path": "runs\\study_live_G1check_42"
+    },
+    "study_live_G7_42": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G7_42",
+      "raw_sha256": "b94eb33e55ffeb4cb88993eebe8c26aaf30a773cd2e0a8b1a5798541dec106e5",
+      "deterministic_sha256": "1a66c9f2c557f84174f343b02633fdb152e9e5777557ab56d04dd940a323ef8d",
+      "total_events": 3650,
+      "total_tasks": 280,
+      "passed_tasks": 169,
+      "pass_rate": 0.6036,
+      "fallback_calls": 0,
+      "tokens_in": 113521,
+      "tokens_out": 72701,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:44.494216+00:00",
+      "run_path": "runs\\study_live_G7_42"
+    },
+    "study_live_G7_43": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G7_43",
+      "raw_sha256": "da6ce1161832f09d75d6f2c2d4b618a2a988089bb74b390e1e15f1821debf198",
+      "deterministic_sha256": "0b25a04a7b961959f520779c9bab0029b6282dd8843f16c76e12b6da938d6a41",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 167,
+      "pass_rate": 0.5964,
+      "fallback_calls": 0,
+      "tokens_in": 107161,
+      "tokens_out": 71025,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:44.666279+00:00",
+      "run_path": "runs\\study_live_G7_43"
+    },
+    "study_live_G7_44": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G7_44",
+      "raw_sha256": "5c6c6ff817c14343d19030fa9e2aac371851c27d398b73b3941444e85e48c436",
+      "deterministic_sha256": "b8d007d624e43a451e0ce4de5a6a15a35c637758b7103c100ce153f3ed159a1f",
+      "total_events": 3652,
+      "total_tasks": 280,
+      "passed_tasks": 154,
+      "pass_rate": 0.55,
+      "fallback_calls": 0,
+      "tokens_in": 107001,
+      "tokens_out": 70222,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:44.824247+00:00",
+      "run_path": "runs\\study_live_G7_44"
+    },
+    "study_live_G7_45": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G7_45",
+      "raw_sha256": "4ae977cb76b0a7955e7cf053e73d0b0715dd7d05f9ca0849f4cf73bf3834bdb3",
+      "deterministic_sha256": "512ea6088d2134f50a91a0f4b8983768dcd58123b013062a3f932edf8ceee7ec",
+      "total_events": 3650,
+      "total_tasks": 280,
+      "passed_tasks": 165,
+      "pass_rate": 0.5893,
+      "fallback_calls": 0,
+      "tokens_in": 106761,
+      "tokens_out": 70812,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:44.987352+00:00",
+      "run_path": "runs\\study_live_G7_45"
+    },
+    "study_live_G7_46": {
+      "manifest_version": "1.0.0",
+      "run_id": "study_live_G7_46",
+      "raw_sha256": "48796989dc367c5362f66ed4b0475543e1e931904a2b312214bb821344e082f9",
+      "deterministic_sha256": "9a8f5bc6296c7f2026c1c0a117ac428584d8e42975d3fd97317f9cca3132c6fa",
+      "total_events": 3650,
+      "total_tasks": 280,
+      "passed_tasks": 173,
+      "pass_rate": 0.6179,
+      "fallback_calls": 0,
+      "tokens_in": 109701,
+      "tokens_out": 72102,
+      "models": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct"
+      ],
+      "generated_at": "2026-11-12T12:11:45.169779+00:00",
+      "run_path": "runs\\study_live_G7_46"
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "study_name": "SAGE Distributed Live Benchmark Study",
+  "version": "1.1.0",
+  "platform": "Kaggle Dual Tesla T4 GPUs",
+  "model_id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "model_revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+  "contributor_count": 7,
+  "total_runs": 36,
+  "total_tasks": 9814,
+  "total_events": 130752,
+  "total_tokens_in": 3898738,
+  "total_tokens_out": 2544226,
+  "mock_fallbacks": 0,
+  "cross_check": {
+    "probe_tasks": 14,
+    "p1_g1_solve_rate": 0.44642857142857145,
+    "p7_cross_solve_rate": 0.5,
+    "delta": 0.05357142857142855,
+    "agreed_tasks": 13,
+    "total_probes": 14,
+    "passed": true
+  },
+  "contributors": [
+    {
+      "pid": "P1",
+      "group": "G1",
+      "name": "Static Baseline Control",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "pid": "P2",
+      "group": "G2",
+      "name": "Prompt-Rewriter",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "pid": "P3",
+      "group": "G3",
+      "name": "Memory Accumulator",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "pid": "P4",
+      "group": "G4",
+      "name": "Reflection Agent",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "pid": "P5",
+      "group": "G5",
+      "name": "Verified Agent (Static AST Gate)",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "pid": "P6",
+      "group": "G6",
+      "name": "Oracle Skyline",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "pid": "P7",
+      "group": "G7",
+      "name": "Proxy Canary Guard (Deployable)",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    }
+  ],
+  "archives": {
+    "G1": {
+      "source_path": "C:\\Users\\kruti\\Downloads\\G1_seeds42-46.zip",
+      "archive_name": "G1_seeds42-46.zip",
+      "size_bytes": 550830,
+      "sha256": "f984d8711185d19ac5a5289b810f83037abe6d1d340a1c5046971eceec05b9ac",
+      "contributor_id": "P1",
+      "archetype_name": "Static Baseline Control"
+    },
+    "G2": {
+      "source_path": "C:\\Users\\kruti\\Downloads\\G2_seeds42-46.zip",
+      "archive_name": "G2_seeds42-46.zip",
+      "size_bytes": 570643,
+      "sha256": "abd2f41f04fe5f883ddb9da9e6e87fbf6643e16c17ee0de68ada473683fc7842",
+      "contributor_id": "P2",
+      "archetype_name": "Prompt-Rewriter"
+    },
+    "G3": {
+      "source_path": "C:\\Users\\kruti\\Downloads\\G3_seeds42-46.zip",
+      "archive_name": "G3_seeds42-46.zip",
+      "size_bytes": 717162,
+      "sha256": "52ff90db5c9db25254b4f4e4c020d241a8b4789be1ae8080378376f06ac17234",
+      "contributor_id": "P3",
+      "archetype_name": "Memory Accumulator"
+    },
+    "G4": {
+      "source_path": "C:\\Users\\kruti\\Downloads\\G4_seeds42-46.zip",
+      "archive_name": "G4_seeds42-46.zip",
+      "size_bytes": 557580,
+      "sha256": "7b9bf6d2389ae191cb2b0ee154165313d16e453a761b9b8d14810a2fef0f49bf",
+      "contributor_id": "P4",
+      "archetype_name": "Reflection Agent"
+    },
+    "G5": {
+      "source_path": "C:\\Users\\kruti\\Downloads\\G5_seeds42-46.zip",
+      "archive_name": "G5_seeds42-46.zip",
+      "size_bytes": 572105,
+      "sha256": "4100f40673d6ee4d0ce1900245e1d7c96a528779c7846ba9e6cfb7c490fb0f39",
+      "contributor_id": "P5",
+      "archetype_name": "Verified Agent (Static AST Gate)"
+    },
+    "G6": {
+      "source_path": "C:\\Users\\kruti\\Downloads\\G6_seeds42-46.zip",
+      "archive_name": "G6_seeds42-46.zip",
+      "size_bytes": 562518,
+      "sha256": "be6f90843c5d1a48c609b0a937d17b29e8242e37ddbf51e856a1109df407041b",
+      "contributor_id": "P6",
+      "archetype_name": "Oracle Skyline"
+    },
+    "G7": {
+      "source_path": "C:\\Users\\kruti\\Downloads\\G7_seeds42-46.zip",
+      "archive_name": "G7_seeds42-46.zip",
+      "size_bytes": 563433,
+      "sha256": "b4968dd22583a30e2b7dc7e6602b11987cb08c958f337f70df8c02d2bb345939",
+      "contributor_id": "P7",
+      "archetype_name": "Proxy Canary Guard (Deployable)"
+    }
+  },
+  "generated_at": "2026-11-12T12:11:46.240337+00:00"
+}
